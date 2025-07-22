@@ -49,6 +49,10 @@ def home():
 @app.route('/api/login', methods=['POST'])
 def login_user():
     data = request.get_json()
+    
+    # Debug
+    print("Received login request:", data)
+    
     if not data:
         return make_response(jsonify({"success": False, "message": "リクエストボディが空です"}), 400)
 
