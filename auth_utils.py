@@ -1,4 +1,4 @@
-from Annotopia.utils.connect_db import get_db_connection
+from utils.connect_db import get_db_connection
     
 def authenticate_user(username, password):
     """

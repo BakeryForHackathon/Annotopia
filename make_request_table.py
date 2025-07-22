@@ -19,7 +19,7 @@ or　完了
   ]
 }"""
 
-from Annotopia.utils.connect_db import get_db_connection
+from utils.connect_db import get_db_connection
 from psycopg2.extras import RealDictCursor
 
 def get_requests(user_id):
