@@ -1,8 +1,8 @@
 from flask import Flask
 from flask import Flask, request, make_response, jsonify
 from flask_cors import CORS
-from Annotopia.auth_utils import authenticate_user 
-from Annotopia.make_request_table import get_requests  
+from auth_utils import authenticate_user 
+from make_request_table import get_requests  
 
 app = Flask(__name__, static_folder="./build/static", template_folder="./build")
 CORS(app) #Cross Origin Resource Sharing
