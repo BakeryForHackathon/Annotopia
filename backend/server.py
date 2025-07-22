@@ -44,13 +44,13 @@ def home():
     #         "user": None
     #     }
     #     return make_response(jsonify(response_data), 401) # 401 Unauthorized
-    
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
 
 
-@app.route("/login", methods=['POST'])
+@app.route('/api/login', methods=['POST'])
 def login_user():
     data = request.get_json()
     if not data:

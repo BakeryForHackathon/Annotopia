@@ -21,7 +21,11 @@ const LoginPage = () => {
 
     try {
       // バックエンドの/api/loginエンドポイントにPOSTリクエストを送信
-      const response = await axios.post('http://127.0.0.1:5001/api/login', {
+      const API_URL = process.env.NODE_ENV === 'development'
+        ? 'http://127.0.0.1:5001'
+        : 'https://annotopia-1jhd.onrender.com';
+
+      const response = await axios.post('${API_URL}/api/login', {
         username: username,
         password: password,
       });
