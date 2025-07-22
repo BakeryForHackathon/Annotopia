@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
-import styles from './DashboardPage.module.css';
+import styles from './OrderPage.module.css';
 
-const DashboardPage = () => {
+const OrderPage = () => {
   return (
     <main className={styles.main}>
       <Link to="/new-request" className={styles.actionButton}>
@@ -12,4 +12,4 @@ const DashboardPage = () => {
   );
 };
 
-export default DashboardPage;
+export default OrderPage;

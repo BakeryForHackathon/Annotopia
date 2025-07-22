@@ -31,7 +31,7 @@ const LoginPage = () => {
         // ログイン成功
         alert('ログインに成功しました！');
         // 次の画面（例: /dashboard）に遷移。stateでユーザー情報を渡す
-        navigate('/dashboard', { state: { user: response.data.user } });
+        navigate('/order', { state: { user: response.data.user } });
       } else {
         // ログイン失敗
         alert('ユーザー名またはパスワードが違います。');

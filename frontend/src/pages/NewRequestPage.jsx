@@ -1,5 +1,4 @@
-import React from 'react';
-import commonStyles from './DashboardPage.module.css'; // mainの基本スタイルを共通で利用
+import commonStyles from './OrderPage.module.css'; // mainの基本スタイルを共通で利用
 import formStyles from './NewRequestPage.module.css';   // このページ固有のフォームスタイル
 
 const NewRequestPage = () => {
