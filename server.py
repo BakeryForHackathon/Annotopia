@@ -46,14 +46,6 @@ def home():
     #     return make_response(jsonify(response_data), 401) # 401 Unauthorized
 
 
-# if __name__ == '__main__':
-#     app.run(host='0.0.0.0', port=5001)
-if __name__ == '__main__':
-    import os
-    port = int(os.environ.get('PORT', 5001))
-    app.run(host='0.0.0.0', port=port)
-
-
 @app.route('/api/login', methods=['POST'])
 def login_user():
     data = request.get_json()
@@ -81,3 +73,7 @@ def login_user():
         return make_response(jsonify(response_data), 200)
     else:
         return make_response(jsonify({"success": False, "message": "無効なユーザー名またはパスワードです"}), 401)
+
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5001)
