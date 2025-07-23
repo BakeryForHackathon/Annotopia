@@ -9,14 +9,13 @@
   overflow-y: auto;
 }
 
-/* --- ✨ ここからが修正箇所です --- */
 .progressContainer {
   width: 100%;
   background-color: #E0E0E0;
   border-radius: 10px;
   height: 20px;
   overflow: hidden;
-  position: relative; /* 子要素を絶対配置するための基準点 */
+  position: relative;
 }
 
 .progressBar {
@@ -27,20 +26,19 @@
 }
 
 .progressText {
-  position: absolute; /* 親要素(.progressContainer)を基準に絶対配置 */
+  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   display: flex;
-  justify-content: center; /* 水平中央揃え */
-  align-items: center;   /* 垂直中央揃え */
+  justify-content: center;
+  align-items: center;
   color: white;
   font-weight: bold;
   font-size: 0.8rem;
   text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
 }
-/* --- ここまでが修正箇所です --- */
 
 .testForm {
   display: flex;

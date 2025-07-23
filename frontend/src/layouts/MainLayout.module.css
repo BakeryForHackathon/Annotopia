@@ -49,27 +49,43 @@
 .menuList {
   list-style: none;
   padding: 0;
+  margin: 0;
+  position: relative;
+}
+
+.activeIndicator {
+  position: absolute;
+  left: 0;
+  right: 0;
+  background-color: #eacfb5;
+  border-radius: 8px;
+  z-index: 1;
+  transition: top 0.2s ease-in-out, height 0.2s ease-in-out;
 }
 
 .menuLink {
   text-decoration: none;
   color: #666;
   font-weight: normal;
-  padding: 10px;
+  padding: 12px 15px;
   display: block;
+  border-radius: 8px;
+  position: relative;
+  z-index: 2;
+  transition: color 0.3s ease-in-out;
+}
+
+.menuLink:hover {
+  color: #000;
 }
 
 .activeMenuLink {
-  color: #000;
-  font-weight: bold;
-  background-color: #f0f0f0;
-  border-left: 4px solid #007bff;
-}
-
-.menuItem {
-  margin-bottom: 20px;
-  font-weight: bold;
+  text-decoration: none;
+  padding: 12px 15px;
+  display: block;
+  border-radius: 8px;
+  position: relative;
+  z-index: 2;
   color: #000000;
-  font-size: 1.1rem;
-  cursor: pointer;
+  font-weight: bold;
 }

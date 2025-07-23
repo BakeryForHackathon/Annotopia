@@ -30,7 +30,7 @@ const TestPage = () => {
   const submitTestToServer = async (finalAnswers) => {
     try {
       const response = await axios.post('http://127.0.0.1:5001/api/submit_test', {
-        user_id: 3, // 本来はログイン情報から取得
+        user_id: 3,
         task_id: taskId,
         answers: finalAnswers,
       });
@@ -40,7 +40,6 @@ const TestPage = () => {
     }
   };
 
-  // --- ✨ ここが修正の中心です ---
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!selectedAnswer) {
@@ -48,20 +47,14 @@ const TestPage = () => {
       return;
     }
 
-    // 現在の回答を保存
     const newAnswers = [...answers, { questionId: currentQuestionIndex, answer: selectedAnswer }];
     setAnswers(newAnswers);
-
-    // 最後の問題かどうかを判定
     const isLastQuestion = currentQuestionIndex === testData.test_info.questions.length - 1;
 
     if (isLastQuestion) {
-      // 最後の問題なら、全回答をサーバーに送信
       submitTestToServer(newAnswers);
     } else {
-      // ✨ 次の問題に進むためにインデックスを更新
       setCurrentQuestionIndex(currentQuestionIndex + 1);
-      // ラジオボタンの選択をリセット
       setSelectedAnswer(null);
     }
   };
@@ -69,8 +62,7 @@ const TestPage = () => {
   if (loading) return <main className={styles.main}>テストを準備中...</main>;
   if (error) return <main className={`${styles.main} ${styles.error}`}>{error}</main>;
   if (!testData) return <main className={styles.main}>テストが見つかりません。</main>;
-  
-  // プログレスバーの計算（currentQuestionIndexに依存）
+
   const progress = ((currentQuestionIndex + 1) / testData.test_info.total_questions) * 100;
   const questionInfo = testData.task_detail.questions[0];
   const currentTestQuestion = testData.test_info.questions[currentQuestionIndex];
@@ -92,7 +84,7 @@ const TestPage = () => {
             <h2 className={styles.cardTitle}>機械翻訳 (日本語)</h2>
             <p>{currentTestQuestion.translated_text}</p>
         </div>
-        
+
         <div className={styles.card}>
           <h2 className={styles.cardTitle}>{questionInfo.question}</h2>
           <div className={styles.radioGroup}>

@@ -1,45 +1,77 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // 画面遷移のためにインポート
-import axios from 'axios'; // axiosをインポート
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import styles from './LoginPage.module.css';
+
+// 本番環境と開発環境でAPIエンドポイントを切り替える
+const API_URL = process.env.NODE_ENV === 'production'
+  ? 'https://your-production.api.com/api/login' // 本番用のHTTPSエンドポイント
+  : 'http://127.0.0.1:5001/api/login';
 
 const logoUrl = '/public/logo.png';
 
 const LoginPage = () => {
-  // 入力値を管理するためのState
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const navigate = useNavigate(); // useNavigateフックを使用
+  const [error, setError] = useState(''); // エラーメッセージ表示用のState
+  const navigate = useNavigate();
 
-  // ログインボタンが押されたときの処理
-  const handleLogin = async () => {
-    // ユーザー名かパスワードが空の場合は何もしない
+  // 入力値のバリデーションを行う関数
+  const validateInput = () => {
+    // 簡易的な空文字チェック
     if (!username || !password) {
-      alert('ユーザー名とパスワードを入力してください。');
-      return;
+      return 'ユーザー名とパスワードを入力してください。';
     }
 
+    // 文字数制限 (例: ユーザー名は4文字以上、パスワードは8文字以上)
+    if (username.length < 4) {
+      return 'ユーザー名は4文字以上で入力してください。';
+    }
+    if (password.length < 8) {
+      return 'パスワードは8文字以上で入力してください。';
+    }
+
+    // 簡易的なXSS/SQLインジェクション対策 (サーバーサイドでの対策が本命)
+    const invalidChars = /['"<>;`]/;
+    if (invalidChars.test(username) || invalidChars.test(password)) {
+      return '入力に使用できない文字が含まれています。';
+    }
+    return null; // 問題なければnullを返す
+  };
+
+  const handleLogin = async () => {
+    // 1. クライアントサイドでのバリデーションを実行
+    const validationError = validateInput();
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
+    setError(''); // バリデーションが通ったらエラーメッセージをクリア
+
     try {
-      // バックエンドの/api/loginエンドポイントにPOSTリクエストを送信
-      const response = await axios.post('http://127.0.0.1:5001/api/login', {
+      // 2. Cookieベースのセッション管理のため `withCredentials: true` を設定
+      const response = await axios.post(API_URL, {
         username: username,
         password: password,
+      }, {
+        withCredentials: true, // セッションCookieの送受信に必要
       });
 
-      // レスポンスのJSONから成功したか確認
       if (response.data.success) {
-        // ログイン成功
         alert('ログインに成功しました！');
-        // 次の画面（例: /dashboard）に遷移。stateでユーザー情報を渡す
+        // 3. セッション管理はCookieに任せ、ページ遷移のみ行う
+        // 遷移先のページで必要な一時的な情報はstateで渡す
         navigate('/order', { state: { user: response.data.user } });
       } else {
-        // ログイン失敗
-        alert('ユーザー名またはパスワードが違います。');
+        // サーバーが認証失敗を返した場合
+        setError('ユーザー名またはパスワードが違います。');
       }
-    } catch (error) {
-      // ネットワークエラーなど
-      console.error('ログインリクエストに失敗しました:', error);
-      alert('ログイン処理中にエラーが発生しました。');
+    } catch (err) {
+      // 4. ネットワークエラーやサーバーエラー
+      // 開発者向けにコンソールにエラー詳細を出力
+      console.error('ログインリクエスト失敗:', err);
+      // ユーザーには汎用的なメッセージを表示
+      setError('ログイン処理中にエラーが発生しました。しばらくしてから再度お試しください。');
     }
   };
 
@@ -47,6 +79,8 @@ const LoginPage = () => {
     <div className={styles.background}>
       <div className={styles.centerBox}>
         <img src={logoUrl} alt="Annotopia Logo" className={styles.logo} />
+        {/* エラーメッセージがある場合に表示 */}
+        {error && <p className={styles.errorMessage}>{error}</p>}
         <div className={styles.form}>
           <input
             type="text"
@@ -62,7 +96,6 @@ const LoginPage = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          {/* ボタンクリックでhandleLoginを呼び出す */}
           <button className={styles.loginButton} onClick={handleLogin}>
             Log in
           </button>

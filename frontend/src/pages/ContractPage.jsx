@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom'; // Linkをインポート
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import styles from './ContractPage.module.css';
 
@@ -48,7 +48,6 @@ const ContractPage = () => {
                   <td>{task.created_at}</td>
                   <td>{task.due_date}</td>
                   <td>
-                    {/* Linkコンポーネントで詳細ページへ遷移 */}
                     <Link to={`/task/${task.task_id}`} className={styles.actionButton}>
                       詳細を見る
                     </Link>

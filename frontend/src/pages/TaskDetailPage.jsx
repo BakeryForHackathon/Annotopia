@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom'; // useNavigateをインポート
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import styles from './TaskDetailPage.module.css';
 
 const TaskDetailPage = () => {
   const { taskId } = useParams();
-  const navigate = useNavigate(); // useNavigateフックを使用
+  const navigate = useNavigate();
   const [taskDetail, setTaskDetail] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -14,7 +14,7 @@ const TaskDetailPage = () => {
     const fetchTaskDetail = async () => {
       try {
         const response = await axios.post('http://127.0.0.1:5001/api/task_detail', {
-          user_id: 3, // 本来はログイン情報から取得
+          user_id: 3,
           task_id: taskId,
         });
         setTaskDetail(response.data);
@@ -29,7 +29,6 @@ const TaskDetailPage = () => {
     fetchTaskDetail();
   }, [taskId]);
 
-  // テストページへ遷移するハンドラ
   const handleStartTest = () => {
     navigate(`/task/${taskId}/test`);
   };
@@ -54,25 +53,24 @@ const TaskDetailPage = () => {
         <div key={index} className={styles.card}>
           <h2 className={styles.questionTitle}>評価項目{index + 1}:{q.question}</h2>
           <ul className={styles.scaleList}>
-            {q.scale_discription.slice().reverse().map((desc, i) => ( // 3, 2, 1の順で表示
+            {q.scale_discription.slice().reverse().map((desc, i) => (
               <li key={i}>{desc}</li>
             ))}
           </ul>
         </div>
       ))}
 
-      {/* --- ボタン部分を修正 --- */}
       <div className={styles.actions}>
-        <button 
+        <button
           className={styles.actionButton}
-          disabled={taskDetail.test_ended} // テスト完了後は非活性
-          onClick={handleStartTest} // onClickイベントを追加
+          disabled={taskDetail.test_ended}
+          onClick={handleStartTest}
         >
           テストを行う
         </button>
-        <button 
+        <button
           className={styles.actionButton}
-          disabled={!taskDetail.test_ended} // テスト完了後に活性
+          disabled={!taskDetail.test_ended}
         >
           annotateを行う
         </button>

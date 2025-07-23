@@ -1,5 +1,5 @@
-import commonStyles from './OrderPage.module.css'; // mainの基本スタイルを共通で利用
-import formStyles from './NewRequestPage.module.css';   // このページ固有のフォームスタイル
+import commonStyles from './OrderPage.module.css';
+import formStyles from './NewRequestPage.module.css';
 
 const NewRequestPage = () => {
   return (
@@ -50,7 +50,7 @@ const NewRequestPage = () => {
             </div>
           </div>
         </fieldset>
-        
+
         {/* === 設定項目 === */}
         <div className={formStyles.formGroup}>
           <label>プライベートモード</label>
@@ -82,7 +82,7 @@ const NewRequestPage = () => {
           <label>評価データのアップロード</label>
           <button type="button" className={formStyles.uploadButton}>ファイルを選択</button>
         </div>
-        
+
         {/* === 送信ボタン === */}
         <div className={formStyles.submitContainer}>
           <button type="submit" className={formStyles.submitButton}>送信</button>
