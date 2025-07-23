@@ -1,23 +1,6 @@
-"""get_requests
-引数　ユーザーid
-ユーザーidを基に
-taskテーブルから必要な情報を入手し
-json形式で返す
-
-json
-{
-  "user_id": 123,
-  "tasks": [
-    {
-      "task_id": 1,
-      "title": "画像アノテーション作業",
-      "status": "進行中",
-or　完了
-      "created_at": "2025-08-01",
-      "due_date": "2025-08-07”,
-    }
-  ]
-}"""
+"""
+発注済み依頼リストを返す関数
+"""
 
 from utils.connect_db import get_db_connection
 from psycopg2.extras import RealDictCursor
@@ -44,7 +27,8 @@ def get_requests(user_id):
                     SELECT 
                         id AS task_id,
                         title, 
-                        status,
+                        total_data_count, 
+                        annotated_data_count,
                         start_day AS created_at,
                         end_day AS due_date
                     FROM tasks 
@@ -57,8 +41,14 @@ def get_requests(user_id):
             # created_at (TIMESTAMPTZ) を 'YYYY-MM-DD' 形式の文字列に変換
             task['created_at'] = task['created_at'].strftime('%Y-%m-%d')
             # due_date (DATE) を 'YYYY-MM-DD' 形式の文字列に変換
-            if task['due_date']:
-                task['due_date'] = task['due_date'].strftime('%Y-%m-%d')
+            if task['total_data_count'] > 0:
+                progress = task['annotated_data_count'] / task['total_data_count']
+            else:
+                progress = 0.0
+            
+            # 進捗率を status に代入（例：'65%'）
+            task['status'] = f"{round(progress * 100)}%"
+
             formatted_tasks.append(task)
 
         # 最終的なJSON構造を作成

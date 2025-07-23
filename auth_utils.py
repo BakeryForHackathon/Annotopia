@@ -1,3 +1,7 @@
+"""
+ユーザー認証を行う関数
+"""
+
 from utils.connect_db import get_db_connection
     
 def authenticate_user(username, password):

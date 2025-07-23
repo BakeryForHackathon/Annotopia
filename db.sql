@@ -1,25 +1,81 @@
+DROP TABLE IF EXISTS
+  test_details,
+  annotation_details,
+  test_data,
+  annotation_data,
+  question_details,
+  questions,
+  tasks,
+  users
+CASCADE;
+-- ユーザーテーブル
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
-    username VARCHAR(80) UNIQUE NOT NULL,
-    password VARCHAR(255) NOT NULL
+    name VARCHAR NOT NULL,
+    password VARCHAR NOT NULL
 );
 
-INSERT INTO users (username, password) VALUES ('user1', 'password1');
-INSERT INTO users (username, password) VALUES ('user2', 'password2');
+INSERT INTO users (name, password) VALUES ('user1', 'password1');
+INSERT INTO users (name, password) VALUES ('user2', 'password2');
 
+-- タスクテーブル
 CREATE TABLE tasks (
     id SERIAL PRIMARY KEY,
-    client_id INTEGER, 
-    title VARCHAR(255) NOT NULL,
+    client_id INTEGER NOT NULL REFERENCES users(id),
+    title VARCHAR NOT NULL,
     description TEXT,
-    status VARCHAR(50) DEFAULT 'pending',
+    private BOOLEAN NOT NULL,
     start_day DATE,
     end_day DATE,
     total_data_count INTEGER DEFAULT 0,
     annotated_data_count INTEGER DEFAULT 0,
+    total_test_data_count INTEGER DEFAULT 0,
     max_annotations_per_user INTEGER,
+    test BOOLEAN NOT NULL,
     threshold DECIMAL(5, 4)
 );
 
-INSERT INTO tasks (client_id, title, description, status, start_day, end_day, total_data_count, annotated_data_count, max_annotations_per_user, threshold) 
-VALUES (1, '機械翻訳の評価', '英日翻訳の正確さを3段階で評価してください', '進行中', '2025-08-01', '2025-08-07', 100, 0, 20, 0.5);
+-- 質問テーブル
+CREATE TABLE questions (
+    id SERIAL PRIMARY KEY,
+    task_id INTEGER NOT NULL REFERENCES tasks(id),
+    title VARCHAR NOT NULL
+);
+
+-- 質問詳細テーブル
+CREATE TABLE question_details (
+    id SERIAL PRIMARY KEY,
+    question_id INTEGER NOT NULL REFERENCES questions(id),
+    description TEXT NOT NULL,
+    scale VARCHAR
+);
+
+-- テストデータテーブル
+CREATE TABLE test_data (
+    id SERIAL PRIMARY KEY,
+    task_id INTEGER NOT NULL REFERENCES tasks(id),
+    data TEXT NOT NULL
+);
+
+-- テスト詳細テーブル
+CREATE TABLE test_details (
+    id SERIAL PRIMARY KEY,
+    test_id INTEGER NOT NULL REFERENCES test_data(id),
+    question_detail_id INTEGER REFERENCES question_details(id),
+    user_id INTEGER NOT NULL REFERENCES users(id)
+);
+
+-- アノテーションデータテーブル
+CREATE TABLE annotation_data (
+    id SERIAL PRIMARY KEY,
+    task_id INTEGER NOT NULL REFERENCES tasks(id),
+    data TEXT NOT NULL
+);
+
+-- アノテーション詳細テーブル
+CREATE TABLE annotation_details (
+    id SERIAL PRIMARY KEY,
+    annotation_id INTEGER NOT NULL REFERENCES annotation_data(id),
+    question_detail_id INTEGER REFERENCES question_details(id),
+    user_id INTEGER REFERENCES users(id)
+);
