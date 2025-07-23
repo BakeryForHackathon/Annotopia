@@ -4,7 +4,7 @@ services:
     name: myapp-backend
     plan: free
     env: docker
-    repo: https://github.com/j329nish/Annotopia
+    repo: https://github.com/BakeryForHackathon/Annotopia
     dockerContext: ./backend
     dockerfilePath: ./backend/Dockerfile
     healthCheckPath: /api/health
@@ -14,6 +14,6 @@ services:
     name: myapp-frontend
     plan: free
     env: docker
-    repo: https://github.com/j329nish/Annotopia
+    repo: https://github.com/BakeryForHackathon/Annotopia
     dockerContext: ./frontend
     dockerfilePath: ./frontend/Dockerfile
