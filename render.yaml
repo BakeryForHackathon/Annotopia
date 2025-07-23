@@ -1,0 +1,19 @@
+services:
+  # --- バックエンドサービス (Flask/Gunicorn) ---
+  - type: web
+    name: myapp-backend
+    plan: free
+    env: docker
+    repo: https://github.com/j329nish/Annotopia
+    dockerContext: ./backend
+    dockerfilePath: ./backend/Dockerfile
+    healthCheckPath: /api/health
+
+  # --- フロントエンドサービス (React/Nginx) ---
+  - type: web
+    name: myapp-frontend
+    plan: free
+    env: docker
+    repo: https://github.com/j329nish/Annotopia
+    dockerContext: ./frontend
+    dockerfilePath: ./frontend/Dockerfile
