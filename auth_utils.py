@@ -1,9 +1,9 @@
 """
 ユーザー認証を行う関数
 """
-from utils.connect_db import get_db_connection
+from utils.connect_db import get_db_connection 
     
-def authenticate_user(username, password):
+def authenticate_user(name, password):
     """
     提供されたユーザー名とパスワードでユーザーを認証します。
     PostgreSQLデータベースの'users'テーブルを参照します。
@@ -19,21 +19,18 @@ def authenticate_user(username, password):
         cur = conn.cursor()
         
         # ユーザー名でユーザー情報を検索
-        # 実際には、パスワードはハッシュ化された状態でDBに保存し、
-        # check_password_hash(stored_hash, input_password) のように比較します。
-        cur.execute("SELECT id, username, password FROM users WHERE username = %s", (username,))
+        cur.execute("SELECT id, name, password FROM users WHERE name = %s", (name,))
         user_record = cur.fetchone()
 
         if user_record:
-            user_id, db_username, db_password = user_record
+            user_id, db_name, db_password = user_record
             
-            # ここでパスワードを比較します。
-            # 本番環境では、check_password_hash(db_password, password) を使用してください。
-            if password == db_password: # 平文パスワードの比較 (非推奨)
-            # if check_password_hash(db_password, password): # ハッシュ化パスワードの比較 (推奨)
+            # パスワードの比較
+            if password == db_password:  # 平文パスワードの比較 (非推奨)
+            # if check_password_hash(db_password, password):  # ハッシュ化パスワードの比較 (推奨)
                 return {
                     "id": user_id,
-                    "username": db_username,
+                    "name": db_name,
                 }
         return None
     except Exception as e:
