@@ -1,4 +1,3 @@
-from flask import Flask
 from flask import Flask, request, make_response, jsonify
 from flask_cors import CORS
 from auth_utils import authenticate_user 
@@ -17,90 +16,23 @@ from utils.is_ended import is_test_ended  # Import the function to check if the 
 app = Flask(__name__, static_folder="./build/static", template_folder="./build")
 CORS(app) #Cross Origin Resource Sharing
 
-@app.route("/", methods=['GET', 'HEAD']) # GETとHEADメソッドを許可
+@app.route("/", methods=['GET', 'HEAD'])
 def home():
     if request.method == 'HEAD':
-        return make_response("", 200)
+        return make_response("", 200)  # ← return が必要
+    return "Hello, world!", 200
 
 
-    # test_df = pd.read_csv("test.csv",header=None)
-    # data_df = pd.read_csv("annotate.csv",header=None)
+    # success_list = []
+    # success = make_test_data(1,2,[2,5])
+    # success_list.append({"success": success, "message": "add test_2 is 2 and 5"})
 
-    # task_dict = {
-    #     "user_id": 1,
-    #     "title": "機械翻訳の評価",
-    #     "description": "英日翻訳の正確さを3段階で評価してください",
-    #     "question_count": 2,
-    #     "questions": [
-    #         {
-    #             "question": "正確さ",
-    #             "scale_discription": [
-    #                 "原文の意味をほとんどまたは全く伝えていない。",
-    #                 "原文の意味の半分以上は伝えているが、重要な情報の抜けや軽微な誤訳がある。",
-    #                 "原文の意味を完全に伝えており、情報の欠落や誤訳がまったくない。"
-    #             ]
-    #         },
-    #         {
-    #             "question": "流暢性",
-    #             "scale_discription": [
-    #                 "いい感じ",
-    #                 "全然ダメ"
-    #             ]
-    #         }
-    #     ],
-    #     "private": True,
-    #     "start_day": "2025-08-01",
-    #     "end_day": "2025-08-07",
-    #     "max_annotations_per_user": 100,
-    #     "test": True,
-    #     "threshold": 0.5,
-    #     "test_data": test_df,   # pandas.DataFrame
-    #     "data": data_df         # pandas.DataFrame
-    # }
-    # success = get_questions_by_task (1)
-    # print(success)
-    # success = select_random_unanswered_test(1, 1)
-    # print(success)
-    # data = fetch_all_from_table("test_data")
-    # if data is not None:
-    #     for row in data:
-    #         print(row)
-    # else:
-    #     print("取得失敗")
-
-    # success = get_test_data(1,1)
-    success_list = []
-    success = make_test_data(1,2,[2,5])
-    success_list.append({"success": success, "message": "add test_2 is 2 and 5"})
-
-    success = is_test_ended(1, 1)
-    success_list.append({"success": success, "message": "is_ended test_2"})
-
-    success = make_test_data(1,3,[3,4])
-    success_list.append({"success": success, "message": "add test_3 is 3 and 4"})
-
-    success = is_test_ended(1, 1)
-    success_list.append({"success": success, "message": "is_ended test_3"})
-
-    success = make_test_data(1,4,[2,5])
-    success_list.append({"success": success, "message": "add test_4 is 2 and 5"})
-
-    success = is_test_ended(1, 1)
-    success_list.append({"success": success, "message": "is_ended test_4"})
-
-    success = make_test_data(1,5,[2,5])
-    success_list.append({"success": success, "message": "add test_5 is 2 and 5"})
-
-    success = is_test_ended(1, 1)
-    success_list.append({"success": success, "message": "is_ended test_5"})
-
-
-    if success:
-        response_data = {
-            "success": success,
-            "message": "タスクの保存に成功しました。"
-        }
-        return make_response(jsonify(response_data), 200)
+    # if success:
+    #     response_data = {
+    #         "success": success,
+    #         "message": "タスクの保存に成功しました。"
+    #     }
+    #     return make_response(jsonify(response_data), 200)
 
 
     # username_to_test = "user1"
@@ -131,10 +63,7 @@ def home():
 @app.route('/api/login', methods=['POST'])
 def login_user():
     data = request.get_json()
-    
-    # Debug
-    print("Received login request:", data)
-    
+
     if not data:
         return make_response(jsonify({"success": False, "message": "リクエストボディが空です"}), 400)
 
@@ -143,7 +72,6 @@ def login_user():
 
     if not username or not password:
         return make_response(jsonify({"success": False, "message": "ユーザー名とパスワードが必要です"}), 400)
-
 
     authenticated_user = authenticate_user(username, password)
 
