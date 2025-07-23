@@ -1,0 +1,171 @@
+.background {
+  background-color: #fee3d0;
+  height: 100vh;
+  width: 100vw;
+  position: relative;
+  font-family: sans-serif;
+}
+
+.pageContainer {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f4f7f6;
+  font-family: 'Helvetica Neue', 'Arial', sans-serif;
+}
+
+.header {
+  padding: 0 30px;
+  background-color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+  z-index: 10;
+  flex-shrink: 0;
+}
+
+.logoContainer {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  height: 32px;
+  margin-right: 12px;
+}
+
+.logoText {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.userMenu {
+  display: flex;
+  align-items: center;
+}
+
+.username {
+  margin-right: 20px;
+  color: #555;
+  font-weight: 500;
+}
+
+.logoutButton {
+  padding: 8px 16px;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.logoutButton:hover {
+  background-color: #c0392b;
+}
+
+.main {
+  flex: 1;
+  padding: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.headingContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.heading {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.dashboardButton {
+  padding: 10px 20px;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s;
+  font-size: 0.9rem;
+}
+
+.dashboardButton:hover {
+    background-color: #2980b9;
+}
+
+.requestList {
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  overflow: hidden; /* To keep border-radius on children */
+}
+
+.requestItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 25px;
+  border-bottom: 1px solid #ecf0f1;
+  transition: background-color 0.2s;
+}
+
+.requestItem:last-child {
+  border-bottom: none;
+}
+
+.requestItem:hover {
+  background-color: #f9f9f9;
+}
+
+.requestDetails {
+    flex: 1;
+}
+
+.requestTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0 0 5px 0;
+}
+
+.requestDate {
+  font-size: 0.9rem;
+  color: #7f8c8d;
+}
+
+.requestStatus {
+  padding: 6px 12px;
+  border-radius: 15px;
+  font-weight: bold;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  min-width: 100px;
+  text-align: center;
+}
+
+.statusInProgress {
+  background-color: #e9f5ff;
+  color: #3498db;
+}
+
+.statusCompleted {
+  background-color: #eafaf1;
+  color: #2ecc71;
+}
+
+.statusPending {
+  background-color: #fef5e7;
+  color: #f39c12;
+}
