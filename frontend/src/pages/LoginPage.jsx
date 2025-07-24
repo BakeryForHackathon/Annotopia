@@ -4,7 +4,7 @@ import axios from 'axios';
 import styles from './LoginPage.module.css';
 
 // 本番環境と開発環境でAPIエンドポイントを切り替える
-const API_URL = '/api/login';
+const API_URL = 'https://annotopia-1jhd.onrender.com';
 
 const logoUrl = '/logo.png';
 
@@ -48,7 +48,7 @@ const LoginPage = () => {
 
     try {
       // 2. Cookieベースのセッション管理のため `withCredentials: true` を設定
-      const response = await axios.post(API_URL, {
+      const response = await axios.post(`${API_URL}/api/login`, {
         username: username,
         password: password,
       }, {
