@@ -3,8 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import styles from './LoginPage.module.css';
 
-// 本番環境と開発環境でAPIエンドポイントを切り替える
-const API_URL = 'https://annotopia-1jhd.onrender.com';
+const API_URL = 'https://myapp-backend-oyx2.onrender.com';
 
 const logoUrl = '/logo.png';
 
