@@ -1,7 +1,7 @@
 from flask import Flask
 from flask import Flask, request, make_response, jsonify
 from flask_cors import CORS
-from auth_utils import authenticate_user 
+# from auth_utils import authenticate_user 
 from make_request_table import get_requests  
 from create_task import create_task  # Import the create_task function
 import pandas as pd
@@ -13,6 +13,9 @@ from utils.get_randam_test_id import select_random_unanswered_test  # Import the
 from get_test_data import get_test_data  # Import the function to get test data   
 from make_test import make_test_data  # Import the function to make test data
 from utils.is_ended import is_test_ended  # Import the function to check if the test is ended
+from get_all_requests import get_all_requests  # Import the function to get all requests
+from get_task_detail import get_task_detail  # Import the function to get task detail
+from test_copy import test_copy  # Import the function to copy test data
 
 app = Flask(__name__, static_folder="./build/static", template_folder="./build")
 CORS(app) #Cross Origin Resource Sharing
@@ -69,31 +72,34 @@ def home():
     #     print("取得失敗")
 
     # success = get_test_data(1,1)
-    success_list = []
-    success = make_test_data(1,2,[2,5])
-    success_list.append({"success": success, "message": "add test_2 is 2 and 5"})
+    # success_list = []
+    # success = make_test_data(1,2,[2,5])
+    # success_list.append({"success": success, "message": "add test_2 is 2 and 5"})
 
-    success = is_test_ended(1, 1)
-    success_list.append({"success": success, "message": "is_ended test_2"})
+    # success = is_test_ended(1, 1)
+    # success_list.append({"success": success, "message": "is_ended test_2"})
 
-    success = make_test_data(1,3,[3,4])
-    success_list.append({"success": success, "message": "add test_3 is 3 and 4"})
+    # success = make_test_data(1,3,[3,4])
+    # success_list.append({"success": success, "message": "add test_3 is 3 and 4"})
 
-    success = is_test_ended(1, 1)
-    success_list.append({"success": success, "message": "is_ended test_3"})
+    # success = is_test_ended(1, 1)
+    # success_list.append({"success": success, "message": "is_ended test_3"})
 
-    success = make_test_data(1,4,[2,5])
-    success_list.append({"success": success, "message": "add test_4 is 2 and 5"})
+    # success = make_test_data(1,4,[2,5])
+    # success_list.append({"success": success, "message": "add test_4 is 2 and 5"})
 
-    success = is_test_ended(1, 1)
-    success_list.append({"success": success, "message": "is_ended test_4"})
+    # success = is_test_ended(1, 1)
+    # success_list.append({"success": success, "message": "is_ended test_4"})
 
-    success = make_test_data(1,5,[2,5])
-    success_list.append({"success": success, "message": "add test_5 is 2 and 5"})
+    # success = make_test_data(1,5,[2,5])
+    # success_list.append({"success": success, "message": "add test_5 is 2 and 5"})
 
-    success = is_test_ended(1, 1)
-    success_list.append({"success": success, "message": "is_ended test_5"})
+    # success = is_test_ended(1, 1)
+    # success_list.append({"success": success, "message": "is_ended test_5"})
 
+    success = []
+    success.append(test_copy(1,2)) 
+    success.append(test_copy(1,2)) 
 
     if success:
         response_data = {
