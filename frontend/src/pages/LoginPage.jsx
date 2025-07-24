@@ -4,11 +4,9 @@ import axios from 'axios';
 import styles from './LoginPage.module.css';
 
 // 本番環境と開発環境でAPIエンドポイントを切り替える
-const API_URL = process.env.NODE_ENV === 'production'
-  ? 'https://your-production.api.com/api/login' // 本番用のHTTPSエンドポイント
-  : 'http://127.0.0.1:5001/api/login';
+const API_URL = '/api/login';
 
-const logoUrl = '/public/logo.png';
+const logoUrl = '/logo.png';
 
 const LoginPage = () => {
   const [username, setUsername] = useState('');

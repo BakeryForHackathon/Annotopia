@@ -16,7 +16,7 @@ const TestPage = () => {
   useEffect(() => {
     const fetchTest = async () => {
       try {
-        const response = await axios.post('http://127.0.0.1:5001/api/get_test', { task_id: taskId });
+        const response = await axios.post('/api/get_test', { task_id: taskId });
         setTestData(response.data);
       } catch (err) {
         setError('テストの読み込みに失敗しました。');
@@ -29,7 +29,7 @@ const TestPage = () => {
 
   const submitTestToServer = async (finalAnswers) => {
     try {
-      const response = await axios.post('http://127.0.0.1:5001/api/submit_test', {
+      const response = await axios.post('/api/submit_test', {
         user_id: 3,
         task_id: taskId,
         answers: finalAnswers,
