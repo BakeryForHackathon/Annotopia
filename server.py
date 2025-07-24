@@ -12,10 +12,11 @@ from utils.get_requests import get_questions_by_task  # Import the function to g
 from utils.get_randam_test_id import select_random_unanswered_test  # Import the function to select random unanswered test
 from get_test_data import get_test_data  # Import the function to get test data   
 from make_test import make_test_data  # Import the function to make test data
-from utils.is_ended import is_test_ended  # Import the function to check if the test is ended
+from is_ended import is_test_ended  # Import the function to check if the test is ended
 from get_all_requests import get_all_requests  # Import the function to get all requests
 from get_task_detail import get_task_detail  # Import the function to get task detail
 from test_copy import test_copy  # Import the function to copy test data
+from get_qwk import get_qwk  # Import the function to get QWK data
 
 app = Flask(__name__, static_folder="./build/static", template_folder="./build")
 CORS(app) #Cross Origin Resource Sharing
@@ -98,8 +99,22 @@ def home():
     # success_list.append({"success": success, "message": "is_ended test_5"})
 
     success = []
-    success.append(test_copy(1,2)) 
-    success.append(test_copy(1,2)) 
+    success.append(test_copy(1,3))
+    success.append(make_test_data(2,1,[1,4]))
+    success.append(make_test_data(2,2,[2,5]))
+    success.append(make_test_data(2,3,[3,5]))
+    success.append(make_test_data(2,4,[1,5]))
+    success.append(make_test_data(2,5,[2,5]))
+    success.append(make_test_data(3,1,[1,4]))
+    success.append(make_test_data(3,2,[2,5]))
+    success.append(make_test_data(3,3,[3,4]))
+    success.append(make_test_data(3,4,[2,5]))
+    success.append(make_test_data(3,5,[2,5]))
+    success.append(get_qwk(1, 1))
+    success.append(get_qwk(2, 1))
+    success.append(get_qwk(3, 1))
+    
+
 
     if success:
         response_data = {

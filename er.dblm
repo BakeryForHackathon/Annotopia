@@ -62,3 +62,12 @@ Table annotation_details {
   question_detail_id integer [ref: > question_details.id]
   user_id integer [ref: > users.id]
 }
+
+Table reservations {
+    id integer [pk, increment]
+    task_id integer [ref: > tasks.id]
+    test_id integer [ref: > test_data.id, unique]
+    user_id integer [ref: > users.id]
+    start_time timestamp
+    expires_at timestamp
+}

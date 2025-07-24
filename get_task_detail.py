@@ -1,6 +1,6 @@
 from utils.connect_db import get_db_connection
 from utils.get_requests import get_questions_by_task
-from utils.is_ended import is_test_ended
+from is_ended import is_test_ended
 def get_task_detail(user_id, task_id):
     """
     指定された user_id と task_id に対するタスクの詳細情報を取得して返す。
