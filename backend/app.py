@@ -48,12 +48,28 @@ def health_check():
 
 @app.route('/api/login', methods=['POST'])
 def login_user():
-    app.logger.info("--- /api/login endpoint hit ---")
     data = request.get_json()
-    user_data = DUMMY_USERS.get(data.get('username'))
-    if user_data and user_data["password_plain"] == data.get('password'):
-        return jsonify({"success": True, "token": "dummy-token", "user": {"id": user_data["id"], "name": data.get('username')}}), 200
-    return jsonify({"success": False}), 401
+    if not data:
+        return make_response(jsonify({"success": False, "message": "リクエストボディが空です"}), 400)
+    username = data.get('username')
+    password = data.get('password')
+    if not username or not password:
+        return make_response(jsonify({"success": False, "message": "ユーザー名とパスワードが必要です"}), 400)
+    authenticated_user = authenticate_user(username, password)
+    if authenticated_user:
+        token = "eyJhbGciOiJIUzI1NiIs..." 
+        response_data = {
+            "success": True,
+            "token": token,
+            "user": {
+                "id": authenticated_user["id"]
+            }
+        }
+        return make_response(jsonify(response_data), 200)
+    else:
+        return make_response(jsonify({"success": False, "message": "無効なユーザー名またはパスワードです"}), 401)
+
+
 
 @app.route('/api/all_requests', methods=['POST'])
 def get_all_requests():
