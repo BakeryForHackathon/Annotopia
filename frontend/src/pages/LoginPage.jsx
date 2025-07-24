@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import styles from './LoginPage.module.css';
 
-const API_URL = 'https://myapp-backend-oyx2.onrender.com';
+// 本番環境と開発環境でAPIエンドポイントを切り替える
+const API_URL = 'https://myapp-backend-oyx2.onrender.com/api/login';
 
 const logoUrl = '/logo.png';
 
@@ -47,7 +48,7 @@ const LoginPage = () => {
 
     try {
       // 2. Cookieベースのセッション管理のため `withCredentials: true` を設定
-      const response = await axios.post(`${API_URL}/api/login`, {
+      const response = await axios.post(API_URL, {
         username: username,
         password: password,
       }, {

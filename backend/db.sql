@@ -79,3 +79,13 @@ CREATE TABLE annotation_details (
     question_detail_id INTEGER REFERENCES question_details(id),
     user_id INTEGER REFERENCES users(id)
 );
+
+CREATE TABLE reservations (
+    id SERIAL PRIMARY KEY,
+    task_id INTEGER NOT NULL REFERENCES tasks(id),
+    test_id INTEGER NOT NULL REFERENCES test_data(id),
+    user_id INTEGER NOT NULL REFERENCES users(id),
+    start_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    expires_at TIMESTAMP,
+    UNIQUE (test_id)
+);
