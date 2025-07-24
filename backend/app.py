@@ -1,5 +1,17 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, make_response, jsonify
 from flask_cors import CORS
+from auth_utils import authenticate_user 
+from make_request_table import get_requests  
+from create_task import create_task  # Import the create_task function
+import pandas as pd
+from debag import fetch_all_from_table  # Import the function to fetch data from tables
+from utils.get_ids import get_ids_by_task_id  # Import the function to count questions
+from utils.set_test_data import set_test_data  # Import the function to set test data
+from utils.get_requests import get_questions_by_task  # Import the function to get questions by task ID
+from utils.get_randam_test_id import select_random_unanswered_test  # Import the function to select random unanswered test
+from get_test_data import get_test_data  # Import the function to get test data   
+from make_test import make_test_data  # Import the function to make test data
+from utils.is_ended import is_test_ended  # Import the function to check if the test is ended
 import logging
 
 app = Flask(__name__)
