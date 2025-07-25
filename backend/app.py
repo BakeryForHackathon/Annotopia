@@ -79,18 +79,18 @@ def login_user():
     
     return make_response(jsonify({"debug":authenticate_user}), 200)
 
-    if authenticated_user:
-        token = "eyJhbGciOiJIUzI1NiIs..." 
-        response_data = {
-            "success": True,
-            "token": token,
-            "user": {
-                "id": authenticated_user["id"]
-            }
-        }
-        return make_response(jsonify(response_data), 200)
-    else:
-        return make_response(jsonify({"success": False, "message": "無効なユーザー名またはパスワードです","debug":authenticated_user}), 401)
+    # if authenticated_user:
+    #     token = "eyJhbGciOiJIUzI1NiIs..." 
+    #     response_data = {
+    #         "success": True,
+    #         "token": token,
+    #         "user": {
+    #             "id": authenticated_user["id"]
+    #         }
+    #     }
+    #     return make_response(jsonify(response_data), 200)
+    # else:
+    #     return make_response(jsonify({"success": False, "message": "無効なユーザー名またはパスワードです","debug":authenticated_user}), 401)
 
 
 # @app.route('/api/all_requests', methods=['POST'])
