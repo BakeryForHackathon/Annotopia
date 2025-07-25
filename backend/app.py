@@ -1,7 +1,7 @@
 import logging
 from flask import Flask, request, make_response, jsonify
 from flask_cors import CORS
-# from auth_utils import authenticate_user 
+from auth_utils import authenticate_user 
 from make_request_table import get_requests  
 from create_task import create_task  # Import the create_task function
 import pandas as pd
