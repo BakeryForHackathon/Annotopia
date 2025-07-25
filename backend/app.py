@@ -18,6 +18,7 @@ from clean_reservations import clean_reservations
 # get_annotation
 from get_annotation_data import get_annotation_data
 # is_annotation
+from is_annotation_ended import is_annotation_ended
 # make_annotaion
 
 app = Flask(__name__)
@@ -138,7 +139,6 @@ def get_qwk_():
 #     clean_reservations(user_id)
 
 
-# debug queue
 @app.route('/api/get_annotation_data', methods=['POST'])
 def get_annotation_data_():
     data = request.get_json()
@@ -147,6 +147,14 @@ def get_annotation_data_():
     answers = get_annotation_data(user_id, task_id)
     return make_response(jsonify(answers), 200)
 
+# debug queue
+@app.route('/api/is_annotation_ended', methods=['POST'])
+def is_annotation_ended_():
+    data = request.get_json()
+    user_id = str(data.get('user_id'))
+    task_id = str(data.get('task_id'))
+    answers_flg = is_annotation_ended(user_id, task_id)
+    return make_response(jsonify({"user_id": user_id, "task_id": task_id, "end": answers_flg}), 200)
 
 
 # @app.route('/api/submit_test', methods=['POST'])
