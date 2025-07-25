@@ -72,7 +72,16 @@ def login_user():
     password = data.get('password')
     if not username or not password:
         return make_response(jsonify({"success": False, "message": "ユーザー名とパスワードが必要です"}), 400)
-    authenticated_user = authenticate_user(username, password)
+    
+    user_info = DUMMY_USERS.get(username)
+    authenticated_user = None
+    if user_info and user_info["password_plain"] == password:
+        authenticated_user = {
+            "id": user_info["id"],
+            "name": username
+        }
+    
+    # authenticated_user = authenticate_user(username, password)
     if authenticated_user:
         token = "eyJhbGciOiJIUzI1NiIs..." 
         response_data = {

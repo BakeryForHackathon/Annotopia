@@ -24,7 +24,7 @@ def authenticate_user(name, password):
 
         if user_record:
             user_id, db_name, db_password = user_record
-            
+
             # パスワードの比較
             if password == db_password:  # 平文パスワードの比較 (非推奨)
             # if check_password_hash(db_password, password):  # ハッシュ化パスワードの比較 (推奨)
