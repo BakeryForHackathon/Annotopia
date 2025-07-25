@@ -7,6 +7,9 @@ import ContractPage from './pages/ContractPage';
 import TaskDetailPage from './pages/TaskDetailPage';
 import TestPage from './pages/TestPage';
 import TestResultPage from './pages/TestResultPage';
+import CreateTestPage from './pages/CreateTestPage';
+import CreateMasterTestPage from './pages/CreateMasterTestPage';
+import AnnotationPage from './pages/AnnotationPage';
 // import ProfilePage from './pages/ProfilePage';     // プロフィールページ
 
 function App() {
@@ -19,10 +22,13 @@ function App() {
         <Route element={<MainLayout />}>
           <Route path="order" element={<OrderPage />} />
           <Route path="new-request" element={<NewRequestPage />} />
+          <Route path="new-request/create-test" element={<CreateTestPage />} />
           <Route path="contract" element={<ContractPage />} />
           <Route path="task/:taskId" element={<TaskDetailPage />} />
           <Route path="task/:taskId/test" element={<TestPage />} />
           <Route path="task/:taskId/result" element={<TestResultPage />} />
+          <Route path="task/:taskId/create-master-test" element={<CreateMasterTestPage />} />
+          <Route path="task/:taskId/annotate" element={<AnnotationPage />} />
         </Route>
       </Routes>
     </Router>

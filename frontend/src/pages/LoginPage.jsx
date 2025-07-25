@@ -4,7 +4,7 @@ import axios from 'axios';
 import styles from './LoginPage.module.css';
 
 // 本番環境と開発環境でAPIエンドポイントを切り替える
-const API_URL = '/api/login';
+const API_URL = 'http://127.0.0.1:5001/api/login';
 
 const logoUrl = '/logo.png';
 
@@ -56,7 +56,6 @@ const LoginPage = () => {
       });
 
       if (response.data.success) {
-        alert('ログインに成功しました！');
         // 3. セッション管理はCookieに任せ、ページ遷移のみ行う
         // 遷移先のページで必要な一時的な情報はstateで渡す
         navigate('/order', { state: { user: response.data.user } });

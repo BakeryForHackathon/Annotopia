@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import styles from './TestPage.module.css';
+import styles from './TestPage.module.css'; // スタイルは受注者用と共通でOK
 
-const TestPage = () => {
+const CreateMasterTestPage = () => {
   const { taskId } = useParams();
   const navigate = useNavigate();
   const [testData, setTestData] = useState(null);
@@ -27,16 +27,16 @@ const TestPage = () => {
     fetchTest();
   }, [taskId]);
 
-  const submitTestToServer = async (finalAnswers) => {
+  const submitMasterAnswersToServer = async (finalAnswers) => {
     try {
-      const response = await axios.post('http://127.0.0.1:5001/api/submit_test', {
-        user_id: 3,
+      await axios.post('http://127.0.0.1:5001/api/submit_master_answers', {
         task_id: taskId,
         answers: finalAnswers,
       });
-      navigate(`/task/${taskId}/result`, { state: { result: response.data } });
+    //   alert("テストの正解データを保存しました。");
+      navigate('/order'); // 保存後は依頼一覧ページなどに戻る
     } catch (err) {
-      setError('テスト結果の送信に失敗しました。');
+      setError('正解データの送信に失敗しました。');
     }
   };
 
@@ -49,10 +49,11 @@ const TestPage = () => {
 
     const newAnswers = [...answers, { questionId: currentQuestionIndex, answer: selectedAnswer }];
     setAnswers(newAnswers);
+
     const isLastQuestion = currentQuestionIndex === testData.test_info.questions.length - 1;
 
     if (isLastQuestion) {
-      submitTestToServer(newAnswers);
+      submitMasterAnswersToServer(newAnswers);
     } else {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
       setSelectedAnswer(null);
@@ -61,45 +62,42 @@ const TestPage = () => {
 
   if (loading) return <main className={styles.main}>テストを準備中...</main>;
   if (error) return <main className={`${styles.main} ${styles.error}`}>{error}</main>;
-  if (!testData) return <main className={styles.main}>テストが見つかりません。</main>;
-
+  if (!testData || !testData.test_info) return <main className={styles.main}>テストデータが見つかりません。</main>;
+  
   const progress = ((currentQuestionIndex + 1) / testData.test_info.total_questions) * 100;
   const questionInfo = testData.task_detail.questions[0];
   const currentTestQuestion = testData.test_info.questions[currentQuestionIndex];
 
   return (
     <main className={styles.main}>
+       <h1 className={styles.pageTitle}>テスト正解データ作成</h1>
       <div className={styles.progressContainer}>
         <div className={styles.progressBar} style={{ width: `${progress}%` }}></div>
         <span className={styles.progressText}>{Math.round(progress)}%</span>
       </div>
 
       <form onSubmit={handleSubmit} className={styles.testForm}>
-        <h1 className={styles.questionNumber}>問{currentQuestionIndex + 1}</h1>
+        <h2 className={styles.questionNumber}>問{currentQuestionIndex + 1}</h2>
         <div className={styles.card}>
-            <h2 className={styles.cardTitle}>原文 (英語)</h2>
+            <h3 className={styles.cardTitle}>原文 (英語)</h3>
             <p>{currentTestQuestion.source_text}</p>
         </div>
         <div className={styles.card}>
-            <h2 className={styles.cardTitle}>機械翻訳 (日本語)</h2>
+            <h3 className={styles.cardTitle}>機械翻訳 (日本語)</h3>
             <p>{currentTestQuestion.translated_text}</p>
         </div>
-
+        
         <div className={styles.card}>
-          <h2 className={styles.cardTitle}>{questionInfo.question}</h2>
+          <h3 className={styles.cardTitle}>{questionInfo.question}</h3>
           <div className={styles.radioGroup}>
             {questionInfo.scale_discription.slice().reverse().map((desc, index) => {
               const value = 3 - index;
               return (
                 <label key={value} className={styles.radioLabel}>
-                  <input
-                    type="radio"
-                    name="evaluation"
-                    value={value}
+                  <input type="radio" name="evaluation" value={value}
                     checked={selectedAnswer === String(value)}
                     onChange={(e) => setSelectedAnswer(e.target.value)}
-                    required
-                  />
+                    required />
                   {desc}
                 </label>
               );
@@ -112,4 +110,4 @@ const TestPage = () => {
   );
 };
 
-export default TestPage;
+export default CreateMasterTestPage;

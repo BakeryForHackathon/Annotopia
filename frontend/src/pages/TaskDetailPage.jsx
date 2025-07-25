@@ -13,7 +13,7 @@ const TaskDetailPage = () => {
   useEffect(() => {
     const fetchTaskDetail = async () => {
       try {
-        const response = await axios.post('/api/task_detail', {
+        const response = await axios.post('http://127.0.0.1:5001/api/task_detail', {
           user_id: 3,
           task_id: taskId,
         });
