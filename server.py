@@ -18,7 +18,7 @@ from test_copy import test_copy  # Import the function to copy test data
 # from get_qwk import get_qwk  # Import the function to get QWK data
 
 app = Flask(__name__, static_folder="./build/static", template_folder="./build")
-CORS(app) #Cross Origin Resource Sharing
+CORS(app, origins="http://localhost:5174") #Cross Origin Resource Sharing
 
 @app.route("/", methods=['GET', 'HEAD'])
 def home():
