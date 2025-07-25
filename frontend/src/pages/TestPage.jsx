@@ -55,11 +55,13 @@ const TestPage = () => {
 
       if (response.data.end) {
         // api get_qwk
-        const qwk = await axios.post('/api/get_qwk', {
+        const qwk_data = await axios.post('/api/get_qwk', {
           user_id: 3, // ユーザーの入力が入るように修正
           task_id: taskId,
         });
 
+        // qwk = [{"question": question_map[group_id], "qwk": qwk, "clear": flag}, ...]
+        const qwk = qwk_data.data.qwk_data
         navigate(`/task/${taskId}/result`, { state: { qwk: qwk } });
       } else {
         fetchNextQuestion();

@@ -109,6 +109,15 @@ def make_test_data_():
     end = is_test_ended(user_id, task_id)
     return make_response(jsonify({"user_id": user_id, "task_id": task_id, "end": end}), 200)
 
+@app.route('/api/test_copy', methods=['POST'])
+def test_copy_():
+    data = request.get_json()
+    task_id = str(data.get('task_id'))
+    user_id = str(data.get('user_id'))
+    _, _, success, _ = test_copy(task_id, user_id)
+    return make_response(jsonify({"success": success, "user_id": user_id, "task_id": task_id}), 200)
+
+# debug queue
 @app.route('/api/get_qwk', methods=['POST'])
 def get_qwk_():
     data = request.get_json()
@@ -118,14 +127,6 @@ def get_qwk_():
     return make_response(jsonify(qwk_dict["qwk_data"]), 200)
 
 
-# debug
-@app.route('/api/test_copy', methods=['POST'])
-def test_copy_():
-    data = request.get_json()
-    task_id = str(data.get('task_id'))
-    user_id = str(data.get('user_id'))
-    _, _, success, _ = test_copy(task_id, user_id)
-    return make_response(jsonify({"success": success, "user_id": user_id, "task_id": task_id}), 200)
 
 # @app.route('/api/submit_test', methods=['POST'])
 # def submit_test():
