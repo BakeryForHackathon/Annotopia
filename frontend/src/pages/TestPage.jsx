@@ -51,6 +51,7 @@ const TestPage = () => {
       return;
     }
 
+    // 
     try {
       // 送信するデータ形式とAPIエンドポイントを統一
       const response = await axios.post('http://127.0.0.1:5001/api/get_make_data', {
@@ -61,8 +62,15 @@ const TestPage = () => {
       });
 
       if (response.data.end) {
-        // alert("タスクが完了しました。");
-        navigate('/order'); // 完了時は依頼一覧画面へ遷移
+        // api get_qwk
+        const qwk_data = await axios.post('/api/get_qwk', {
+          user_id: 3, // ユーザーの入力が入るように修正
+          task_id: taskId,
+        });
+
+        // qwk = [{"question": question_map[group_id], "qwk": qwk, "clear": flag}, ...]
+        const qwk = qwk_data.data.qwk_data
+        navigate(`/task/${taskId}/result`, { state: { qwk: qwk } });
       } else {
         // 次のデータを取得
         fetchNextAnnotationData();

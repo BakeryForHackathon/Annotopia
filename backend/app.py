@@ -9,15 +9,12 @@ from get_test_data import get_test_data  # Import the function to get test data
 from is_ended import is_test_ended  # Import the function to check if the test is ended
 from get_all_requests import get_all_requests  # Import the function to get all requests
 from get_task_detail import get_task_detail  # Import the function to get task detail
-from utils.get_requests import get_questions_by_task  # Import the function to get questions by task ID
 from make_test import make_test_data  # Import the function to make test data
-
-# from debag import fetch_all_from_table  # Import the function to fetch data from tables
-# from utils.get_ids import get_ids_by_task_id  # Import the function to count questions
-# from utils.set_test_data import set_test_data  # Import the function to set test data
-# from utils.get_randam_test_id import select_random_unanswered_test  # Import the function to select random unanswered test
-# from test_copy import test_copy  # Import the function to copy test data
-# from get_qwk import get_qwk  # Import the function to get QWK data
+from test_copy import test_copy  # Import the function to copy test data
+from get_QWK import get_qwk  # Import the function to get QWK data
+from get_annotation_data import get_annotation_data
+from is_annotation_ended import is_annotation_ended
+from make_annotation_data import make_annotation_data
 
 
 app = Flask(__name__)
@@ -81,37 +78,13 @@ def get_task_detail_():
     task_detail['test_ended'] = is_test_ended(user_id, task_id)
     return make_response(jsonify(task_detail), 200)
 
-
-# --- 受注者・発注者用テスト API (変更なし) ---
-@app.route('/api/get_test_question', methods=['POST'])
-def get_test_question():
+@app.route('/api/get_test_data', methods=['POST'])
+def get_test_data_():
     data = request.get_json()
-    user_id, task_id = str(data.get('user_id')), str(data.get('task_id'))
-    answers = USER_TEST_ANSWERS.get((user_id, task_id), [])
-    question_index = len(answers)
-    test_info = DUMMY_TEST_DATA.get(task_id)
-    if not test_info or question_index >= test_info["total_questions"]: return jsonify({"success": True, "end": True})
-    status = f"{round((question_index / test_info['total_questions']) * 100)}%"
-    current_question = test_info["questions"][question_index]
-    task_details = DUMMY_TASK_DETAILS.get(task_id)
-    return jsonify({"success": True, "end": False, "question": current_question, "question_index": question_index, "total_questions": test_info["total_questions"], "status": status, "task_details": task_details})
-
-@app.route('/api/submit_test_answer', methods=['POST'])
-def submit_test_answer():
-    data = request.get_json()
-    user_id, task_id = str(data.get('user_id')), str(data.get('task_id'))
-    answer = data.get('answer')
-    key = (user_id, task_id)
-    if key not in USER_TEST_ANSWERS: USER_TEST_ANSWERS[key] = []
-    USER_TEST_ANSWERS[key].append(answer)
-    total_questions = DUMMY_TEST_DATA.get(task_id, {}).get("total_questions", 0)
-    if len(USER_TEST_ANSWERS[key]) >= total_questions:
-        score = 60
-        passed = score >= 50
-        if passed: TEST_COMPLETION_STATUS[key] = True
-        del USER_TEST_ANSWERS[key]
-        return jsonify({"success": True, "end": True, "result": {"score": score, "passed": passed}})
-    return jsonify({"success": True, "end": False})
+    user_id = str(data.get('user_id'))
+    task_id = str(data.get('task_id'))
+    answers = get_test_data(user_id, task_id)
+    return make_response(jsonify(answers), 200)
 
 @app.route('/api/get_master_test_question', methods=['POST'])
 def get_master_test_question():
@@ -124,24 +97,66 @@ def get_master_test_question():
     return make_response(jsonify(test_data), 200)
     # return jsonify({"test_info": test_data, "task_detail": task_detail}), 200
 
-@app.route('/api/make_test_data', methods=['POST'])
+## フロントと形式を相談
+@app.route('/api/get_make_data', methods=['POST'])
 def make_test_data_():
     data = request.get_json()
     user_id = str(data.get('user_id'))
     task_id = str(data.get('task_id'))
+    answers = data.get('answers')
     test_data_id = str(data.get('test_data_id'))
-    success = make_test_data(user_id, task_id, test_data_id)
-    return make_response(jsonify({"user_id": user_id, "task_id": task_id, "end": success}), 200)
+    answer_flg = make_test_data(user_id, test_data_id, answers)
+    # if not answer_flg:
+    # ここで false になった時のエラー処理はフロント側と相談する
+    end = is_test_ended(user_id, task_id)
+    return make_response(jsonify({"user_id": user_id, "task_id": task_id, "end": end}), 200)
 
+@app.route('/api/test_copy', methods=['POST'])
+def test_copy_():
+    data = request.get_json()
+    task_id = str(data.get('task_id'))
+    user_id = str(data.get('user_id'))
+    _, _, success, _ = test_copy(task_id, user_id)
+    return make_response(jsonify({"success": success, "user_id": user_id, "task_id": task_id}), 200)
 
-
-@app.route('/api/get_requests', methods=['POST'])
-def get_requests_():
+@app.route('/api/get_qwk', methods=['POST'])
+def get_qwk_():
     data = request.get_json()
     user_id = str(data.get('user_id'))
-    task_data = get_questions_by_task(user_id)
-    return make_response(jsonify(task_data), 200)
+    task_id = str(data.get('task_id'))
+    qwk_dict = get_qwk(user_id, task_id)
+    return make_response(jsonify(qwk_dict["qwk_data"]), 200)
 
+@app.route('/api/get_annotation_data', methods=['POST'])
+def get_annotation_data_():
+    data = request.get_json()
+    user_id = str(data.get('user_id'))
+    task_id = str(data.get('task_id'))
+    answers = get_annotation_data(user_id, task_id)
+    return make_response(jsonify(answers), 200)
+
+@app.route('/api/is_annotation_ended', methods=['POST'])
+def is_annotation_ended_():
+    data = request.get_json()
+    user_id = str(data.get('user_id'))
+    task_id = str(data.get('task_id'))
+    answers_flg = is_annotation_ended(user_id, task_id)
+    return make_response(jsonify({"user_id": user_id, "task_id": task_id, "end": answers_flg}), 200)
+
+# debug queue
+@app.route('/api/make_annotation_data', methods=['POST'])
+def make_annotation_data_():
+    data = request.get_json()
+    user_id = str(data.get('user_id'))
+    task_id = str(data.get('task_id'))
+    annotation_data_id = str(data.get('annotation_data_id'))
+    answers = data.get('answers')
+
+    answer_flg = make_annotation_data(user_id, annotation_data_id, answers)
+    # if not answer_flg:
+    # ここで false になった時のエラー処理はフロント側と相談する
+    end = is_annotation_ended(user_id, task_id)
+    return make_response(jsonify({"user_id": user_id, "task_id": task_id, "end": end}), 200)
 
 
 # @app.route('/api/submit_test', methods=['POST'])
@@ -164,44 +179,3 @@ def get_requests_():
 
 if __name__ == '__main__':
     app.run(debug=True, port=5001)
-
-
-# table にでバック用のデータを入れるため
-# @app.route('/api/make_test', methods=['POST'])
-# def make_test_():
-#     test_df = pd.read_csv("test.csv",header=None)
-#     data_df = pd.read_csv("annotate.csv",header=None)
-
-#     task_dict = {
-#         "user_id": 1,
-#         "title": "機械翻訳の評価",
-#         "description": "英日翻訳の正確さを3段階で評価してください",
-#         "question_count": 2,
-#         "questions": [
-#             {
-#                 "question": "正確さ",
-#                 "scale_discription": [
-#                     "原文の意味をほとんどまたは全く伝えていない。",
-#                     "原文の意味の半分以上は伝えているが、重要な情報の抜けや軽微な誤訳がある。",
-#                     "原文の意味を完全に伝えており、情報の欠落や誤訳がまったくない。"
-#                 ]
-#             },
-#             {
-#                 "question": "流暢性",
-#                 "scale_discription": [
-#                     "いい感じ",
-#                     "全然ダメ"
-#                 ]
-#             }
-#         ],
-#         "private": True,
-#         "start_day": "2025-08-01",
-#         "end_day": "2025-08-07",
-#         "max_annotations_per_user": 100,
-#         "test": True,
-#         "threshold": 0.5,
-#         "test_data": test_df,   # pandas.DataFrame
-#         "data": data_df         # pandas.DataFrame
-#     }
-#     create_task(task_dict)
-#     return jsonify({"success":"good luck!"}), 200

@@ -1,3 +1,4 @@
 *.png
 *.dbml
 .env
+tmp/
