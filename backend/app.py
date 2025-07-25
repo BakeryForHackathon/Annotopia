@@ -113,7 +113,7 @@ def login_user():
 #     task_detail = DUMMY_TASK_DETAILS.get(task_id)
 #     return jsonify({"test_info": test_data, "task_detail": task_detail}), 200
 
-@app.route('/api/submit_test', methods=['POST'])
+# @app.route('/api/submit_test', methods=['POST'])
 # def submit_test():
 #     data = request.get_json()
 #     user_id = str(data.get('user_id'))
