@@ -89,12 +89,13 @@ def get_test_data_():
     answers = get_test_data(user_id, task_id)
     return make_response(jsonify(answers), 200)
 
+# miss
 @app.route('/api/get_make_data', methods=['POST'])
 def make_test_data_():
     data = request.get_json()
     user_id = str(data.get('user_id'))
     task_id = str(data.get('task_id'))
-    answers = str(data.get('answers'))
+    answers = data.get('answers')
     answer_flg = make_test_data(user_id, task_id, answers)
     return make_response(jsonify({"user_id":user_id, "task_id":task_id, "answers":answer_flg}), 200)
     
