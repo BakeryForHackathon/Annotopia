@@ -1,6 +1,6 @@
 from flask import Flask, request, make_response, jsonify
 from flask_cors import CORS
-from auth_utils import authenticate_user 
+# from auth_utils import authenticate_user 
 from make_request_table import get_requests  
 from create_task import create_task  # Import the create_task function
 import pandas as pd
@@ -11,7 +11,11 @@ from utils.get_requests import get_questions_by_task  # Import the function to g
 from utils.get_randam_test_id import select_random_unanswered_test  # Import the function to select random unanswered test
 from get_test_data import get_test_data  # Import the function to get test data   
 from make_test import make_test_data  # Import the function to make test data
-from utils.is_ended import is_test_ended  # Import the function to check if the test is ended
+from is_ended import is_test_ended  # Import the function to check if the test is ended
+from get_all_requests import get_all_requests  # Import the function to get all requests
+from get_task_detail import get_task_detail  # Import the function to get task detail
+from test_copy import test_copy  # Import the function to copy test data
+from get_qwk import get_qwk  # Import the function to get QWK data
 
 app = Flask(__name__, static_folder="./build/static", template_folder="./build")
 CORS(app) #Cross Origin Resource Sharing

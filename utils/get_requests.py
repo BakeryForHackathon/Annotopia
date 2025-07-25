@@ -11,12 +11,42 @@ def get_questions_by_task(task_id):
 
     [
         {
-            "question": 質問タイトル,
-            "scale": [スケール1, スケール2, ...],
-            "scale_description": [説明1, 説明2, ...]
+          "details": [
+            {
+              "question_details_id": 3,
+              "scale": 3,
+              "scale_description": "原文の意味を完全に伝えており、情報の欠落や誤訳がまったくない。"
+            },
+            {
+              "question_details_id": 2,
+              "scale": 2,
+              "scale_description": "原文の意味の半分以上は伝えているが、重要な情報の抜けや軽微な誤訳がある。"
+            },
+            {
+              "question_details_id": 1,
+              "scale": 1,
+              "scale_description": "原文の意味をほとんどまたは全く伝えていない。"
+            }
+          ],
+          "question": "正確さ"
         },
-        ...
-    ]
+        {
+          "details": [
+            {
+              "question_details_id": 5,
+              "scale": 2,
+              "scale_description": "全然ダメ"
+            },
+            {
+              "question_details_id": 4,
+              "scale": 1,
+              "scale_description": "いい感じ"
+            }
+          ],
+          "question": "流暢性"
+        }
+      ],
+
     """
     conn = None
     cur = None
