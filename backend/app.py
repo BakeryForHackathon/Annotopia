@@ -23,33 +23,7 @@ app = Flask(__name__)
 CORS(app, origins="https://myapp-frontend-n1ni.onrender.com", supports_credentials=True)
 app.logger.setLevel(logging.DEBUG)
 
-# --- ダミーデータ ---
-DUMMY_USERS = {
-    "Taro": {"id": 3, "password_plain": "password123"}
-}
-DUMMY_TASKS = {
-    "3": [
-        {"task_id": 1, "title": "機械翻訳の評価", "status": "50%", "created_at": "2025-08-01", "due_date": "2025-08-07"},
-        {"task_id": 2, "title": "画像アノテーション作業", "status": "完了", "created_at": "2025-07-15", "due_date": "2025-07-25"},
-        {"task_id": 3, "title": "テキストデータの分類", "status": "依頼準備中", "created_at": "2025-08-05", "due_date": "2025-08-20"},
-    ]
-}
-DUMMY_TASK_DETAILS = {
-    "1": {
-        "title": "機械翻訳の評価", "description": "英日翻訳の正確さを3段階で評価してください", "question_count": 1,
-        "questions": [{"question": "正確さ", "scale_discription": ["1:原文の意味をほとんどまたは全く伝えていない。意味が通らないか、全く異なる内容になっている。", "2:原文の意味の半分以上は伝えているが、重要な情報の抜けや軽微な誤訳がある。", "3:原文の意味を完全に伝えており、情報の欠落や誤訳がまったくない。"]}],
-        "start_day": "2025/08/01", "end_day": "2025/08/07", "max_annotations_per_user": 100
-    }
-}
-DUMMY_TEST_DATA = {
-    "1": {
-        "total_questions": 2,
-        "questions": [
-            {"id": 1, "source_text": "The quick brown fox jumps over the lazy dog.", "translated_text": "速い茶色のキツネは怠惰な犬を飛び越えます。"},
-            {"id": 2, "source_text": "Never underestimate the power of a good book.", "translated_text": "良い本の力を過小評価しないでください。"}
-        ]
-    }
-}
+
 TEST_COMPLETION_STATUS = {
     ("3", "2"): False,
 }
@@ -64,7 +38,7 @@ def health_check():
     return jsonify({"status": "ok"}), 200
 
 @app.route("/api/login", methods=['POST'])
-def login_user():
+def login_user_():
     data = request.get_json()
     if not data:
         return make_response(jsonify({"success": False, "message": "リクエストボディが空です"}), 400)
@@ -110,67 +84,72 @@ def get_task_detail_():
 @app.route('/api/get_test', methods=['POST'])
 def get_test():
     data = request.get_json()
+    user_id = str(data.get('user_id'))
     task_id = str(data.get('task_id'))
-    test_data = get_test_data(task_id)
+    test_data = get_test_data(user_id, task_id)
     if not test_data: return jsonify({"success": False, "message": "Test data not found"}), 404
-    task_detail = get_test_data(task_id)
-    return jsonify({"test_info": test_data, "task_detail": task_detail}), 200
+    # task_detail = get_test_data(user_id, task_id)
+    return jsonify(test_data), 200
+    # return jsonify({"test_info": test_data, "task_detail": task_detail}), 200
 
-@app.route('/api/make_test', methods=['POST'])
-def make_test_():
-    test_df = pd.read_csv("test.csv",header=None)
-    data_df = pd.read_csv("annotate.csv",header=None)
+@app.route('/api/submit_test', methods=['POST'])
+def submit_test():
+    data = request.get_json()
+    user_id = str(data.get('user_id'))
+    task_id = str(data.get('task_id'))
+    answers = data.get('answers')
 
-    task_dict = {
-        "user_id": 1,
-        "title": "機械翻訳の評価",
-        "description": "英日翻訳の正確さを3段階で評価してください",
-        "question_count": 2,
-        "questions": [
-            {
-                "question": "正確さ",
-                "scale_discription": [
-                    "原文の意味をほとんどまたは全く伝えていない。",
-                    "原文の意味の半分以上は伝えているが、重要な情報の抜けや軽微な誤訳がある。",
-                    "原文の意味を完全に伝えており、情報の欠落や誤訳がまったくない。"
-                ]
-            },
-            {
-                "question": "流暢性",
-                "scale_discription": [
-                    "いい感じ",
-                    "全然ダメ"
-                ]
-            }
-        ],
-        "private": True,
-        "start_day": "2025-08-01",
-        "end_day": "2025-08-07",
-        "max_annotations_per_user": 100,
-        "test": True,
-        "threshold": 0.5,
-        "test_data": test_df,   # pandas.DataFrame
-        "data": data_df         # pandas.DataFrame
-    }
-    create_task(task_dict)
-    return jsonify({"success":"good luck!"}), 200
+    score = 60 
+    passed = score >= 50
+
+    if passed:
+        TEST_COMPLETION_STATUS[(user_id, task_id)] = True
+
+    return jsonify({"success": True, "score": score, "passed": passed})
 
 
-# @app.route('/api/submit_test', methods=['POST'])
-# def submit_test():
-#     data = request.get_json()
-#     user_id = str(data.get('user_id'))
-#     task_id = str(data.get('task_id'))
-#     answers = data.get('answers')
 
-#     score = 60 
-#     passed = score >= 50
-
-#     if passed:
-#         TEST_COMPLETION_STATUS[(user_id, task_id)] = True
-
-#     return jsonify({"success": True, "score": score, "passed": passed})
-# --- ここまで追記 ---
 
 if __name__ == '__main__':
     app.run(debug=True, port=5001)
+
+
+# table にでバック用のデータを入れるため
+# @app.route('/api/make_test', methods=['POST'])
+# def make_test_():
+#     test_df = pd.read_csv("test.csv",header=None)
+#     data_df = pd.read_csv("annotate.csv",header=None)
+
+#     task_dict = {
+#         "user_id": 1,
+#         "title": "機械翻訳の評価",
+#         "description": "英日翻訳の正確さを3段階で評価してください",
+#         "question_count": 2,
+#         "questions": [
+#             {
+#                 "question": "正確さ",
+#                 "scale_discription": [
+#                     "原文の意味をほとんどまたは全く伝えていない。",
+#                     "原文の意味の半分以上は伝えているが、重要な情報の抜けや軽微な誤訳がある。",
+#                     "原文の意味を完全に伝えており、情報の欠落や誤訳がまったくない。"
+#                 ]
+#             },
+#             {
+#                 "question": "流暢性",
+#                 "scale_discription": [
+#                     "いい感じ",
+#                     "全然ダメ"
+#                 ]
+#             }
+#         ],
+#         "private": True,
+#         "start_day": "2025-08-01",
+#         "end_day": "2025-08-07",
+#         "max_annotations_per_user": 100,
+#         "test": True,
+#         "threshold": 0.5,
+#         "test_data": test_df,   # pandas.DataFrame
+#         "data": data_df         # pandas.DataFrame
+#     }
+#     create_task(task_dict)
+#     return jsonify({"success":"good luck!"}), 200
