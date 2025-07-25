@@ -15,11 +15,11 @@ from get_QWK import get_qwk  # Import the function to get QWK data
 
 # clean_rese
 from clean_reservations import clean_reservations
-# get_annotation
 from get_annotation_data import get_annotation_data
-# is_annotation
 from is_annotation_ended import is_annotation_ended
 # make_annotaion
+from make_annotation_data import make_annotation_data
+
 
 app = Flask(__name__)
 CORS(app, origins="https://myapp-frontend-n1ni.onrender.com", supports_credentials=True)
@@ -147,7 +147,6 @@ def get_annotation_data_():
     answers = get_annotation_data(user_id, task_id)
     return make_response(jsonify(answers), 200)
 
-# debug queue
 @app.route('/api/is_annotation_ended', methods=['POST'])
 def is_annotation_ended_():
     data = request.get_json()
@@ -155,6 +154,21 @@ def is_annotation_ended_():
     task_id = str(data.get('task_id'))
     answers_flg = is_annotation_ended(user_id, task_id)
     return make_response(jsonify({"user_id": user_id, "task_id": task_id, "end": answers_flg}), 200)
+
+# debug queue
+@app.route('/api/make_annotation_data', methods=['POST'])
+def make_annotation_data_():
+    data = request.get_json()
+    user_id = str(data.get('user_id'))
+    task_id = str(data.get('task_id'))
+    annotation_data_id = str(data.get('annotation_data_id'))
+    answers = data.get('answers')
+
+    answer_flg = make_annotation_data(user_id, annotation_data_id, answers)
+    # if not answer_flg:
+    # ここで false になった時のエラー処理はフロント側と相談する
+    end = is_annotation_ended(user_id, task_id)
+    return make_response(jsonify({"user_id": user_id, "task_id": task_id, "end": end}), 200)
 
 
 # @app.route('/api/submit_test', methods=['POST'])
