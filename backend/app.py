@@ -77,7 +77,7 @@ def login_user():
     
     print(authenticated_user)
     
-    return make_response(jsonify({"debug":authenticate_user}), 200)
+    return make_response(jsonify({"debug":authenticated_user}), 200)
 
     # if authenticated_user:
     #     token = "eyJhbGciOiJIUzI1NiIs..." 
