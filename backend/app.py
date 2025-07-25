@@ -89,24 +89,15 @@ def get_test_data_():
     answers = get_test_data(user_id, task_id)
     return make_response(jsonify(answers), 200)
 
-##### 
-# @app.route('/api/submit_test_answer', methods=['POST'])
-# def submit_test_answer():
-#     data = request.get_json()
-#     user_id, task_id = str(data.get('user_id')), str(data.get('task_id'))
-#     answer = data.get('answer')
-#     key = (user_id, task_id)
-#     if key not in USER_TEST_ANSWERS: USER_TEST_ANSWERS[key] = []
-#     USER_TEST_ANSWERS[key].append(answer)
-#     total_questions = DUMMY_TEST_DATA.get(task_id, {}).get("total_questions", 0)
-#     if len(USER_TEST_ANSWERS[key]) >= total_questions:
-#         score = 60
-#         passed = score >= 50
-#         if passed: TEST_COMPLETION_STATUS[key] = True
-#         del USER_TEST_ANSWERS[key]
-#         return jsonify({"success": True, "end": True, "result": {"score": score, "passed": passed}})
-#     return jsonify({"success": True, "end": False})
-
+@app.route('/api/get_make_data', methods=['POST'])
+def make_test_data_():
+    data = request.get_json()
+    user_id = str(data.get('user_id'))
+    task_id = str(data.get('task_id'))
+    answers = str(data.get('answers'))
+    answer_flg = make_test_data(user_id, task_id, answers)
+    return make_response(jsonify({"user_id":user_id, "task_id":task_id, "answers":answer_flg}), 200)
+    
 @app.route('/api/get_master_test_question', methods=['POST'])
 def get_master_test_question():
     data = request.get_json()
@@ -118,6 +109,7 @@ def get_master_test_question():
     return make_response(jsonify(test_data), 200)
     # return jsonify({"test_info": test_data, "task_detail": task_detail}), 200
 
+## 修正あり
 @app.route('/api/make_test_data', methods=['POST'])
 def make_test_data_():
     data = request.get_json()
@@ -125,9 +117,11 @@ def make_test_data_():
     task_id = str(data.get('task_id'))
     test_data_id = str(data.get('test_data_id'))
     success = make_test_data(user_id, task_id, test_data_id)
-    return make_response(jsonify({"user_id": user_id, "task_id": task_id, "end": success}), 200)
-
-
+    # if not success:
+    # ここで false になった時のエラー処理はフロント側と相談する
+    dct = {"user_id": user_id, "task_id": task_id}
+    dct["end"] = is_test_ended(user_id, task_id)
+    return make_response(jsonify(dct), 200)
 
 @app.route('/api/get_requests', methods=['POST'])
 def get_requests_():
@@ -154,49 +148,7 @@ def get_requests_():
 #     return jsonify({"success": True, "score": score, "passed": passed})
 
 
-@app.route('/api/make_test', methods=['POST'])
-def make_test_():
-    test_df = pd.read_csv("test.csv",header=None)
-    data_df = pd.read_csv("annotate.csv",header=None)
-
-    task_dict = {
-        "user_id": 1,
-        "title": "機械翻訳の評価",
-        "description": "英日翻訳の正確さを3段階で評価してください",
-        "question_count": 2,
-        "questions": [
-            {
-                "question": "正確さ",
-                "scale_discription": [
-                    "原文の意味をほとんどまたは全く伝えていない。",
-                    "原文の意味の半分以上は伝えているが、重要な情報の抜けや軽微な誤訳がある。",
-                    "原文の意味を完全に伝えており、情報の欠落や誤訳がまったくない。"
-                ]
-            },
-            {
-                "question": "流暢性",
-                "scale_discription": [
-                    "いい感じ",
-                    "全然ダメ"
-                ]
-            }
-        ],
-        "private": True,
-        "start_day": "2025-08-01",
-        "end_day": "2025-08-07",
-        "max_annotations_per_user": 100,
-        "test": True,
-        "threshold": 0.5,
-        "test_data": test_df,   # pandas.DataFrame
-        "data": data_df         # pandas.DataFrame
-    }
-    create_task(task_dict)
-    return jsonify({"success":"good luck!"}), 200
-
 
 
 if __name__ == '__main__':
     app.run(debug=True, port=5001)
-
-
-# table にでバック用のデータを入れるため
