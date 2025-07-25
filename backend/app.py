@@ -50,8 +50,10 @@ def is_test_ended(user_id, task_id):
     """ユーザーが特定のタスクのテストを完了したかどうかを判定します"""
     return TEST_COMPLETION_STATUS.get((str(user_id), str(task_id)), False)
 
-
-# --- API Endpoints (Existing) ---
+@app.route('/api/health', methods=['GET'])
+def health_check():
+    """Renderのヘルスチェックに応答するためのエンドポイント"""
+    return jsonify({"status": "ok"}), 200
 
 @app.route('/api/login', methods=['POST'])
 def login_user():
