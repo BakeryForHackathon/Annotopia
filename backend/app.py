@@ -93,7 +93,7 @@ def get_test():
     return jsonify(test_data), 200
     # return jsonify({"test_info": test_data, "task_detail": task_detail}), 200
 
-@app.route('api/get_requests', methods=['POST'])
+@app.route('/api/get_requests', methods=['POST'])
 def get_requests_():
     data = request.get_json()
     user_id = str(data.get('user_id'))
