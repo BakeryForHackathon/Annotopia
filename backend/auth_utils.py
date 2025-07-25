@@ -13,8 +13,10 @@ def authenticate_user(name, password):
     cur = None
     try:
         conn = get_db_connection()
-        if not conn:
+        if conn == 0:
             return 1
+        else if not conn:
+            return 0
             # return None
 
         cur = conn.cursor()
