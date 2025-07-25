@@ -15,11 +15,9 @@ const TestPage = () => {
   const [annotationData, setAnnotationData] = useState(null);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
 
-  // 関数名をfetchNextAnnotationDataに変更し、ロジックを統一
   const fetchNextAnnotationData = useCallback(async () => {
     setLoading(true);
     try {
-      // CreateMasterTestPage.jsxと全く同じAPIを呼び出す
       const response = await axios.post('http://127.0.0.1:5001/api/get_test_data', {
         user_id: userId,
         task_id: taskId,
@@ -27,10 +25,10 @@ const TestPage = () => {
 
       if (response.data.end) {
         // alert("このタスクは既に完了しているか、実施できるものがありません。");
-        navigate('/order'); // 完了時は依頼一覧画面へ遷移
+        navigate('/order');
       } else {
         setAnnotationData(response.data);
-        setSelectedAnswer(null); // 次のデータのために選択をリセット
+        setSelectedAnswer(null);
       }
     } catch (err) {
       console.error(err);
@@ -51,20 +49,17 @@ const TestPage = () => {
       return;
     }
 
-    // 
     try {
-      // 送信するデータ形式とAPIエンドポイントを統一
       const response = await axios.post('http://127.0.0.1:5001/api/get_make_data', {
         user_id: userId,
         task_id: taskId,
         test_data_id: annotationData.test_data_id,
-        answers: [selectedAnswer], // 配列形式で送信
+        answers: [selectedAnswer],
       });
 
       if (response.data.end) {
-        // api get_qwk
-        const qwk_data = await axios.post('/api/get_qwk', {
-          user_id: 3, // ユーザーの入力が入るように修正
+        const qwk_data = await axios.post('http://127.0.0.1:5001/api/get_qwk', {
+          user_id: userId,
           task_id: taskId,
         });
 
@@ -72,7 +67,6 @@ const TestPage = () => {
         const qwk = qwk_data.data.qwk_data
         navigate(`/task/${taskId}/result`, { state: { qwk: qwk } });
       } else {
-        // 次のデータを取得
         fetchNextAnnotationData();
       }
     } catch (err) {
@@ -85,13 +79,11 @@ const TestPage = () => {
   if (error) return <main className={`${styles.main} ${styles.error}`}>{error}</main>;
   if (!annotationData) return <main className={styles.main}>データが見つかりません。</main>;
 
-  // state名をannotationDataに統一し、受け取るデータ構造を反映
   const { data, data_count, status, questions } = annotationData;
-  const questionInfo = questions[0]; // 質問は1つと仮定
+  const questionInfo = questions[0];
 
   return (
     <main className={styles.main}>
-        {/* ページの目的に合わせてタイトルを修正 */}
         <h1 className={styles.pageTitle}>適正テスト</h1>
       <div className={styles.progressContainer}>
         <div className={styles.progressBar} style={{ width: status }}></div>
@@ -99,12 +91,10 @@ const TestPage = () => {
       </div>
 
       <form onSubmit={handleSubmit} className={styles.testForm}>
-        {/* data_countを基に問題番号を表示 */}
         <h2 className={styles.questionNumber}>問{data_count + 1}</h2>
         <div className={styles.card}>
             <h3 className={styles.cardTitle}>評価対象テキスト</h3>
             <p className={styles.dataText}>
-                {/* テキストの表示ロジックを統一 */}
                 {data.split('\n').map((line, index) => (
                     <span key={index}>{line}<br /></span>
                 ))}
@@ -114,13 +104,12 @@ const TestPage = () => {
         <div className={styles.card}>
           <h3 className={styles.cardTitle}>{questionInfo.question}</h3>
           <div className={styles.radioGroup}>
-             {/* 選択肢の表示ロジックを統一 */}
             {[...questionInfo.details].sort((a,b) => b.scale - a.scale).map((level) => (
                 <label key={level.question_details_id} className={styles.radioLabel}>
                     <input
                         type="radio"
                         name="evaluation"
-                        value={level.question_details_id} // 送信するのはquestion_details_id
+                        value={level.question_details_id}
                         checked={selectedAnswer === String(level.question_details_id)}
                         onChange={(e) => setSelectedAnswer(e.target.value)}
                         required
