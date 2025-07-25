@@ -15,7 +15,7 @@ def authenticate_user(name, password):
         conn = get_db_connection()
         if conn == 0:
             return 1
-        else if not conn:
+        elif not conn:
             return 0
             # return None
 
