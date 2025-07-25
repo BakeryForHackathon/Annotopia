@@ -11,8 +11,8 @@ from get_all_requests import get_all_requests  # Import the function to get all 
 from get_task_detail import get_task_detail  # Import the function to get task detail
 from utils.get_requests import get_questions_by_task  # Import the function to get questions by task ID
 from make_test import make_test_data  # Import the function to make test data
+from test_copy import test_copy  # Import the function to copy test data
 
-# from test_copy import test_copy  # Import the function to copy test data
 # from get_qwk import get_qwk  # Import the function to get QWK data
 
 
@@ -96,7 +96,7 @@ def get_master_test_question():
     return make_response(jsonify(test_data), 200)
     # return jsonify({"test_info": test_data, "task_detail": task_detail}), 200
 
-## 修正あり
+## フロントと形式を相談
 @app.route('/api/get_make_data', methods=['POST'])
 def make_test_data_():
     data = request.get_json()
@@ -109,6 +109,14 @@ def make_test_data_():
     # ここで false になった時のエラー処理はフロント側と相談する
     end = is_test_ended(user_id, task_id)
     return make_response(jsonify({"user_id": user_id, "task_id": task_id, "end": end}), 200)
+
+@app.route('/api/test_copy', methods=['POST'])
+def test_copy_():
+    data = request.get_json()
+    task_id = str(data.get('task_id'))
+    user_id = str(data.get('user_id'))
+    _, _, success, _ = test_copy(task_id, user_id)
+    return make_response(jsonify({"success": success, "user_id": user_id, "task_id": task_id}), 200)
 
 # yet
 @app.route('/api/get_requests', methods=['POST'])
