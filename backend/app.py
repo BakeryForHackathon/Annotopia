@@ -12,7 +12,7 @@ import pandas as pd
 # from utils.get_randam_test_id import select_random_unanswered_test  # Import the function to select random unanswered test
 # from get_test_data import get_test_data  # Import the function to get test data   
 # from make_test import make_test_data  # Import the function to make test data
-# from is_ended import is_test_ended  # Import the function to check if the test is ended
+from is_ended import is_test_ended  # Import the function to check if the test is ended
 from get_all_requests import get_all_requests  # Import the function to get all requests
 from get_task_detail import get_task_detail  # Import the function to get task detail
 # from test_copy import test_copy  # Import the function to copy test data
