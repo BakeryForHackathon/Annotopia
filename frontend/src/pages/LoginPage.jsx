@@ -4,7 +4,7 @@ import axios from 'axios';
 import styles from './LoginPage.module.css';
 
 // 本番環境と開発環境でAPIエンドポイントを切り替える
-const API_URL = 'https://myapp-backend-oyx2.onrender.com/api/login';
+const API_URL = 'https://myapp-backend-oyx2.onrender.com';
 
 const logoUrl = '/logo.png';
 
@@ -16,19 +16,15 @@ const LoginPage = () => {
 
   // 入力値のバリデーションを行う関数
   const validateInput = () => {
-    // 簡易的な空文字チェック
     if (!username || !password) {
       return 'ユーザー名とパスワードを入力してください。';
     }
-
-    // 文字数制限 (例: ユーザー名は4文字以上、パスワードは8文字以上)
     if (username.length < 4) {
       return 'ユーザー名は4文字以上で入力してください。';
     }
     if (password.length < 8) {
       return 'パスワードは8文字以上で入力してください。';
     }
-
     // 簡易的なXSS/SQLインジェクション対策 (サーバーサイドでの対策が本命)
     const invalidChars = /['"<>;`]/;
     if (invalidChars.test(username) || invalidChars.test(password)) {
@@ -48,7 +44,7 @@ const LoginPage = () => {
 
     try {
       // 2. Cookieベースのセッション管理のため `withCredentials: true` を設定
-      const response = await axios.post(API_URL, {
+      const response = await axios.post(`${API_URL}/api/login`, {
         username: username,
         password: password,
       }, {
@@ -65,10 +61,8 @@ const LoginPage = () => {
         setError('ユーザー名またはパスワードが違います。');
       }
     } catch (err) {
-      // 4. ネットワークエラーやサーバーエラー
-      // 開発者向けにコンソールにエラー詳細を出力
+      // ネットワークエラーやサーバーエラー
       console.error('ログインリクエスト失敗:', err);
-      // ユーザーには汎用的なメッセージを表示
       setError('ログイン処理中にエラーが発生しました。しばらくしてから再度お試しください。');
     }
   };
