@@ -81,21 +81,15 @@ def get_task_detail_():
     task_detail['test_ended'] = is_test_ended(user_id, task_id)
     return make_response(jsonify(task_detail), 200)
 
-
-# --- 受注者・発注者用テスト API (変更なし) ---
-@app.route('/api/get_test_question', methods=['POST'])
-def get_test_question():
+@app.route('/api/get_test_data', methods=['POST'])
+def get_test_data_():
     data = request.get_json()
-    user_id, task_id = str(data.get('user_id')), str(data.get('task_id'))
-    answers = USER_TEST_ANSWERS.get((user_id, task_id), [])
-    question_index = len(answers)
-    test_info = DUMMY_TEST_DATA.get(task_id)
-    if not test_info or question_index >= test_info["total_questions"]: return jsonify({"success": True, "end": True})
-    status = f"{round((question_index / test_info['total_questions']) * 100)}%"
-    current_question = test_info["questions"][question_index]
-    task_details = DUMMY_TASK_DETAILS.get(task_id)
-    return jsonify({"success": True, "end": False, "question": current_question, "question_index": question_index, "total_questions": test_info["total_questions"], "status": status, "task_details": task_details})
+    user_id = str(data.get('user_id'))
+    task_id = str(data.get('task_id'))
+    answers = get_test_data(user_id, task_id)
+    return make_response(jsonify(answers), 200)
 
+##### 
 @app.route('/api/submit_test_answer', methods=['POST'])
 def submit_test_answer():
     data = request.get_json()
