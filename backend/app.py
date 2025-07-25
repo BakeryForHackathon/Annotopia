@@ -12,10 +12,6 @@ from get_task_detail import get_task_detail  # Import the function to get task d
 from utils.get_requests import get_questions_by_task  # Import the function to get questions by task ID
 from make_test import make_test_data  # Import the function to make test data
 
-# from debag import fetch_all_from_table  # Import the function to fetch data from tables
-# from utils.get_ids import get_ids_by_task_id  # Import the function to count questions
-# from utils.set_test_data import set_test_data  # Import the function to set test data
-# from utils.get_randam_test_id import select_random_unanswered_test  # Import the function to select random unanswered test
 # from test_copy import test_copy  # Import the function to copy test data
 # from get_qwk import get_qwk  # Import the function to get QWK data
 
@@ -89,16 +85,6 @@ def get_test_data_():
     answers = get_test_data(user_id, task_id)
     return make_response(jsonify(answers), 200)
 
-# miss
-@app.route('/api/get_make_data', methods=['POST'])
-def make_test_data_():
-    data = request.get_json()
-    user_id = str(data.get('user_id'))
-    task_id = str(data.get('task_id'))
-    answers = data.get('answers')
-    answer_flg = make_test_data(user_id, task_id, answers)
-    return make_response(jsonify({"user_id":user_id, "task_id":task_id, "answers":answer_flg}), 200)
-    
 @app.route('/api/get_master_test_question', methods=['POST'])
 def get_master_test_question():
     data = request.get_json()
@@ -111,19 +97,20 @@ def get_master_test_question():
     # return jsonify({"test_info": test_data, "task_detail": task_detail}), 200
 
 ## 修正あり
-@app.route('/api/make_test_data', methods=['POST'])
+@app.route('/api/get_make_data', methods=['POST'])
 def make_test_data_():
     data = request.get_json()
     user_id = str(data.get('user_id'))
     task_id = str(data.get('task_id'))
+    answers = data.get('answers')
     test_data_id = str(data.get('test_data_id'))
-    success = make_test_data(user_id, task_id, test_data_id)
-    # if not success:
+    answer_flg = make_test_data(user_id, test_data_id, answers)
+    # if not answer_flg:
     # ここで false になった時のエラー処理はフロント側と相談する
-    dct = {"user_id": user_id, "task_id": task_id}
-    dct["end"] = is_test_ended(user_id, task_id)
-    return make_response(jsonify(dct), 200)
+    end = is_test_ended(user_id, task_id)
+    return make_response(jsonify({"user_id": user_id, "task_id": task_id, "end": end}), 200)
 
+# yet
 @app.route('/api/get_requests', methods=['POST'])
 def get_requests_():
     data = request.get_json()
