@@ -1,0 +1,73 @@
+Project "Annotation System" {
+  database_type: "PostgreSQL"
+}
+
+Table users {
+  id integer [pk, increment]
+  name varchar
+  password varchar
+}
+
+Table tasks {
+  id integer [pk, increment]
+  client_id integer [ref: > users.id]
+  title varchar
+  description text
+  private boolean
+  start_day date
+  end_day date
+  total_data_count integer
+  annotated_data_count integer
+  total_test_data_count integer
+  max_annotations_per_user integer
+  test boolean
+  threshold float
+}
+
+Table questions {
+  id integer [pk, increment]
+  task_id integer [ref: > tasks.id]
+  title varchar
+}
+
+Table question_details {
+  id integer [pk, increment]
+  question_id integer [ref: > questions.id]
+  description text
+  scale varchar
+}
+
+Table test_data {
+  id integer [pk, increment]
+  task_id integer [ref: > tasks.id]
+  data text
+}
+
+Table test_details {
+  id integer [pk, increment]
+  test_id integer [ref: > test_data.id]
+  question_detail_id integer [ref: > question_details.id]
+  user_id integer [ref: > users.id]
+}
+
+Table annotation_data {
+  id integer [pk, increment]
+  task_id integer [ref: > tasks.id]
+  data text
+}
+
+Table annotation_details {
+  id integer [pk, increment]
+  annotation_id integer [ref: > annotation_data.id]
+  question_detail_id integer [ref: > question_details.id]
+  user_id integer [ref: > users.id]
+}
+
+Table reservations {
+    id integer [pk, increment]
+    task_id integer [ref: > tasks.id]
+    annotation_id integer [ref: > annotation_data.id, unique]
+    user_id integer [ref: > users.id]
+    start_time timestamp
+    expires_at timestamp
+}
