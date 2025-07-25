@@ -3,4 +3,4 @@ Flask-Cors==4.0.1
 psycopg2
 gunicorn
 pandas>=1.5.0
-sklearn
+scikit-learn

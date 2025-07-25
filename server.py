@@ -16,7 +16,13 @@ from is_ended import is_test_ended  # Import the function to check if the test i
 from get_all_requests import get_all_requests  # Import the function to get all requests
 from get_task_detail import get_task_detail  # Import the function to get task detail
 from test_copy import test_copy  # Import the function to copy test data
-from get_qwk import get_qwk  # Import the function to get QWK data
+from get_QWK import get_qwk  # Import the function to get QWK data
+from utils.reserve import reserve_annotation  # Import the authentication function
+from clean_reservations import clean_reservations  # Import the function to clean reservations
+from utils.get_randam_annotation_id import get_unanswered_annotation_ids, get_reversed_annotation_ids,get_available_unanswered_annotation_ids # Import the function to get unanswered test IDs
+from make_annotation_data import make_annotation_data
+from utils.get_user_annotation_count import get_user_annotation_count  # Import the function to get user annotation count     
+from get_annotation_data import get_annotation_data  # Import the function to get annotation data
 
 app = Flask(__name__, static_folder="./build/static", template_folder="./build")
 CORS(app) #Cross Origin Resource Sharing
@@ -27,40 +33,41 @@ def home():
         return make_response("", 200)
 
 
-    # test_df = pd.read_csv("test.csv",header=None)
-    # data_df = pd.read_csv("annotate.csv",header=None)
+    test_df = pd.read_csv("test.csv",header=None)
+    data_df = pd.read_csv("annotate.csv",header=None)
 
-    # task_dict = {
-    #     "user_id": 1,
-    #     "title": "機械翻訳の評価",
-    #     "description": "英日翻訳の正確さを3段階で評価してください",
-    #     "question_count": 2,
-    #     "questions": [
-    #         {
-    #             "question": "正確さ",
-    #             "scale_discription": [
-    #                 "原文の意味をほとんどまたは全く伝えていない。",
-    #                 "原文の意味の半分以上は伝えているが、重要な情報の抜けや軽微な誤訳がある。",
-    #                 "原文の意味を完全に伝えており、情報の欠落や誤訳がまったくない。"
-    #             ]
-    #         },
-    #         {
-    #             "question": "流暢性",
-    #             "scale_discription": [
-    #                 "いい感じ",
-    #                 "全然ダメ"
-    #             ]
-    #         }
-    #     ],
-    #     "private": True,
-    #     "start_day": "2025-08-01",
-    #     "end_day": "2025-08-07",
-    #     "max_annotations_per_user": 100,
-    #     "test": True,
-    #     "threshold": 0.5,
-    #     "test_data": test_df,   # pandas.DataFrame
-    #     "data": data_df         # pandas.DataFrame
-    # }
+    task_dict = {
+        "user_id": 1,
+        "title": "機械翻訳の評価",
+        "description": "英日翻訳の正確さを3段階で評価してください",
+        "question_count": 2,
+        "questions": [
+            {
+                "question": "正確さ",
+                "scale_discription": [
+                    "原文の意味をほとんどまたは全く伝えていない。",
+                    "原文の意味の半分以上は伝えているが、重要な情報の抜けや軽微な誤訳がある。",
+                    "原文の意味を完全に伝えており、情報の欠落や誤訳がまったくない。"
+                ]
+            },
+            {
+                "question": "流暢性",
+                "scale_discription": [
+                    "いい感じ",
+                    "全然ダメ"
+                ]
+            }
+        ],
+        "private": True,
+        "start_day": "2025-08-01",
+        "end_day": "2025-08-07",
+        "max_annotations_per_user": 100,
+        "test": True,
+        "threshold": 0.5,
+        "test_data": test_df,   # pandas.DataFrame
+        "data": data_df         # pandas.DataFrame
+    }
+    
     # success = get_questions_by_task (1)
     # print(success)
     # success = select_random_unanswered_test(1, 1)
@@ -73,48 +80,39 @@ def home():
     #     print("取得失敗")
 
     # success = get_test_data(1,1)
-    # success_list = []
-    # success = make_test_data(1,2,[2,5])
-    # success_list.append({"success": success, "message": "add test_2 is 2 and 5"})
 
-    # success = is_test_ended(1, 1)
-    # success_list.append({"success": success, "message": "is_ended test_2"})
-
-    # success = make_test_data(1,3,[3,4])
-    # success_list.append({"success": success, "message": "add test_3 is 3 and 4"})
-
-    # success = is_test_ended(1, 1)
-    # success_list.append({"success": success, "message": "is_ended test_3"})
-
-    # success = make_test_data(1,4,[2,5])
-    # success_list.append({"success": success, "message": "add test_4 is 2 and 5"})
-
-    # success = is_test_ended(1, 1)
-    # success_list.append({"success": success, "message": "is_ended test_4"})
-
-    # success = make_test_data(1,5,[2,5])
-    # success_list.append({"success": success, "message": "add test_5 is 2 and 5"})
-
-    # success = is_test_ended(1, 1)
-    # success_list.append({"success": success, "message": "is_ended test_5"})
+    # success = []
+    # success.append(test_copy(1,3))
+    # success.append(make_test_data(2,1,[1,4]))
+    # success.append(make_test_data(2,2,[2,5]))
+    # success.append(make_test_data(2,3,[3,5]))
+    # success.append(make_test_data(2,4,[1,5]))
+    # success.append(make_test_data(2,5,[2,5]))
+    # success.append(make_test_data(3,1,[1,4]))
+    # success.append(make_test_data(3,2,[2,5]))
+    # success.append(make_test_data(3,3,[3,4]))
+    # success.append(make_test_data(3,4,[2,5]))
+    # success.append(make_test_data(3,5,[2,5]))
+    # success.append(get_qwk(1, 1))
+    # success.append(get_qwk(2, 1))
+    # success.append(get_qwk(3, 1))
 
     success = []
-    success.append(test_copy(1,3))
-    success.append(make_test_data(2,1,[1,4]))
-    success.append(make_test_data(2,2,[2,5]))
-    success.append(make_test_data(2,3,[3,5]))
-    success.append(make_test_data(2,4,[1,5]))
-    success.append(make_test_data(2,5,[2,5]))
-    success.append(make_test_data(3,1,[1,4]))
-    success.append(make_test_data(3,2,[2,5]))
-    success.append(make_test_data(3,3,[3,4]))
-    success.append(make_test_data(3,4,[2,5]))
-    success.append(make_test_data(3,5,[2,5]))
-    success.append(get_qwk(1, 1))
-    success.append(get_qwk(2, 1))
-    success.append(get_qwk(3, 1))
-    
+    # success.append(create_task(task_dict))  # Call the create_task function with task_dict
+    # success.append(get_available_unanswered_annotation_ids(1))  # Get requests for task_id 1
+    # success.append(make_annotation_data(1,1,[1,4]))  # Get question IDs for task_id 1
+    # success.append(get_available_unanswered_annotation_ids(1)) 
+    # success.append(make_annotation_data(1,2,[2,4]))  # Get question IDs for task_id 1
+    # success.append(make_annotation_data(1,3,[3,5]))  # Get question IDs for task_id 1
+    # success.append(get_available_unanswered_annotation_ids(1)) 
+    # success.append(get_reversed_annotation_ids(1))  # Get unanswered test IDs for task_id 1
+    # success.append(reserve_annotation(1, 1, 2))
+    # success.append(clean_reservations(1))  # Clean reservations for user_id 1
+    # success.append(reserve_annotation(1, 1, 1))  # Try to reserve again after cleaning
 
+    # success.append(get_user_annotation_count(1,1))  # Get question IDs for task_id 1
+    # success.append(get_user_annotation_count(2,1))
+    success.append(get_annotation_data (1, 1))  # Get annotation data for user_id 1 and task_id 1
 
     if success:
         response_data = {
