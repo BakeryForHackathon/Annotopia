@@ -61,9 +61,15 @@ const LoginPage = () => {
         setError('ユーザー名またはパスワードが違います。');
       }
     } catch (err) {
-      // ネットワークエラーやサーバーエラー
       console.error('ログインリクエスト失敗:', err);
-      setError('ログイン処理中にエラーが発生しました。しばらくしてから再度お試しください。');
+      // サーバーからエラーレスポンスが返ってきた場合 (例: 401, 400エラー)
+      if (err.response && err.response.data && err.response.data.message) {
+        // バックエンドが返したエラーメッセージ (例: "無効なユーザー名またはパスワードです") を表示
+        setError(err.response.data.message);
+      } else {
+        // サーバーに到達できないネットワークエラーなどの場合
+        setError('ログイン処理中にエラーが発生しました。しばらくしてから再度お試しください。');
+      }
     }
   };
 
