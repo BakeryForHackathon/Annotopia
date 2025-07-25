@@ -1,9 +1,6 @@
-<<<<<<< HEAD
-=======
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
->>>>>>> dev/render-app
 import commonStyles from './OrderPage.module.css';
 import formStyles from './NewRequestPage.module.css';
 
