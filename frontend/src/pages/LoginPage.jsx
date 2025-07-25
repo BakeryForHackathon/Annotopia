@@ -4,7 +4,7 @@ import axios from 'axios';
 import styles from './LoginPage.module.css';
 
 // 本番環境と開発環境でAPIエンドポイントを切り替える
-const API_URL = 'http://127.0.0.1:5001/api/login';
+const API_URL = '/api/login';
 
 const logoUrl = '/logo.png';
 

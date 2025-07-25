@@ -16,7 +16,7 @@ const CreateMasterTestPage = () => {
   useEffect(() => {
     const fetchTest = async () => {
       try {
-        const response = await axios.post('http://127.0.0.1:5001/api/get_test', { task_id: taskId });
+        const response = await axios.post('/api/get_test', { task_id: taskId });
         setTestData(response.data);
       } catch (err) {
         setError('テストの読み込みに失敗しました。');
@@ -29,7 +29,7 @@ const CreateMasterTestPage = () => {
 
   const submitMasterAnswersToServer = async (finalAnswers) => {
     try {
-      await axios.post('http://127.0.0.1:5001/api/submit_master_answers', {
+      await axios.post('/api/submit_master_answers', {
         task_id: taskId,
         answers: finalAnswers,
       });

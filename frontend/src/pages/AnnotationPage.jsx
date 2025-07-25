@@ -15,7 +15,7 @@ const AnnotationPage = () => {
     const handleGetAnnotationData = useCallback(async () => {
         setLoading(true);
         try {
-            const response = await axios.post('http://127.0.0.1:5001/api/get_annotation_data', {
+            const response = await axios.post('/api/get_annotation_data', {
                 user_id: 3,
                 task_id: taskId
             });
@@ -44,7 +44,7 @@ const AnnotationPage = () => {
             return;
         }
         try {
-            const response = await axios.post('http://127.0.0.1:5001/api/make_annotation', {
+            const response = await axios.post('/api/make_annotation', {
                 user_id: 3,
                 task_id: taskId,
                 annotation_id: annotationData.annotation_id,
