@@ -15,7 +15,7 @@ from is_ended import is_test_ended  # Import the function to check if the test i
 from get_all_requests import get_all_requests  # Import the function to get all requests
 from get_task_detail import get_task_detail  # Import the function to get task detail
 from test_copy import test_copy  # Import the function to copy test data
-from get_qwk import get_qwk  # Import the function to get QWK data
+# from get_qwk import get_qwk  # Import the function to get QWK data
 
 app = Flask(__name__, static_folder="./build/static", template_folder="./build")
 CORS(app) #Cross Origin Resource Sharing
