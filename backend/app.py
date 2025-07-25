@@ -76,6 +76,7 @@ def login_user():
     # authenticated_user = authenticate_user(username, password)
     
     import psycopg2
+    import os
     try:
         # PostgreSQL 接続テスト
         conn = psycopg2.connect(
