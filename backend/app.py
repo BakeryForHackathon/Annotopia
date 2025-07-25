@@ -154,13 +154,6 @@ def get_requests_():
 #     return jsonify({"success": True, "score": score, "passed": passed})
 
 
-
-
-if __name__ == '__main__':
-    app.run(debug=True, port=5001)
-
-
-# table にでバック用のデータを入れるため
 @app.route('/api/make_test', methods=['POST'])
 def make_test_():
     test_df = pd.read_csv("test.csv",header=None)
@@ -199,3 +192,11 @@ def make_test_():
     }
     create_task(task_dict)
     return jsonify({"success":"good luck!"}), 200
+
+
+
+if __name__ == '__main__':
+    app.run(debug=True, port=5001)
+
+
+# table にでバック用のデータを入れるため
