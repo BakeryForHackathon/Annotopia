@@ -9,11 +9,10 @@ from get_test_data import get_test_data  # Import the function to get test data
 from is_ended import is_test_ended  # Import the function to check if the test is ended
 from get_all_requests import get_all_requests  # Import the function to get all requests
 from get_task_detail import get_task_detail  # Import the function to get task detail
-from utils.get_requests import get_questions_by_task  # Import the function to get questions by task ID
 from make_test import make_test_data  # Import the function to make test data
 from test_copy import test_copy  # Import the function to copy test data
 
-# from get_qwk import get_qwk  # Import the function to get QWK data
+from get_QWK import get_qwk  # Import the function to get QWK data
 
 
 app = Flask(__name__)
@@ -110,6 +109,16 @@ def make_test_data_():
     end = is_test_ended(user_id, task_id)
     return make_response(jsonify({"user_id": user_id, "task_id": task_id, "end": end}), 200)
 
+@app.route('/api/get_qwk', methods=['POST'])
+def get_qwk_():
+    data = request.get_json()
+    user_id = str(data.get('user_id'))
+    task_id = str(data.get('task_id'))
+    qwk_dict = get_qwk(user_id, task_id)
+    return make_response(jsonify(qwk_dict["qwk_data"]), 200)
+
+
+# debug
 @app.route('/api/test_copy', methods=['POST'])
 def test_copy_():
     data = request.get_json()
@@ -117,16 +126,6 @@ def test_copy_():
     user_id = str(data.get('user_id'))
     _, _, success, _ = test_copy(task_id, user_id)
     return make_response(jsonify({"success": success, "user_id": user_id, "task_id": task_id}), 200)
-
-# yet
-@app.route('/api/get_requests', methods=['POST'])
-def get_requests_():
-    data = request.get_json()
-    user_id = str(data.get('user_id'))
-    task_data = get_questions_by_task(user_id)
-    return make_response(jsonify(task_data), 200)
-
-
 
 # @app.route('/api/submit_test', methods=['POST'])
 # def submit_test():

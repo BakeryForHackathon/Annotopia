@@ -45,15 +45,22 @@ const TestPage = () => {
       return;
     }
 
+    // 
     try {
       const response = await axios.post('/api/submit_test_answer', {
-        user_id: 3,
+        user_id: 3, // ユーザーの入力が入るように修正
         task_id: taskId,
         answer: { questionId: testQuestion.question_index, answer: selectedAnswer },
       });
 
       if (response.data.end) {
-        navigate(`/task/${taskId}/result`, { state: { result: response.data.result } });
+        // api get_qwk
+        const qwk = await axios.post('/api/get_qwk', {
+          user_id: 3, // ユーザーの入力が入るように修正
+          task_id: taskId,
+        });
+
+        navigate(`/task/${taskId}/result`, { state: { qwk: qwk } });
       } else {
         fetchNextQuestion();
       }
