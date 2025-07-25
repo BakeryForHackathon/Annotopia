@@ -14,7 +14,8 @@ def authenticate_user(name, password):
     try:
         conn = get_db_connection()
         if not conn:
-            return None
+            return 1
+            # return None
 
         cur = conn.cursor()
         
@@ -32,10 +33,12 @@ def authenticate_user(name, password):
                     "id": user_id,
                     "name": db_name,
                 }
-        return None
+        return 2
+        # return None
     except Exception as e:
         print(f"認証処理中にエラーが発生しました: {e}")
-        return None
+        return 3
+        # return None
     finally:
         if cur:
             cur.close()

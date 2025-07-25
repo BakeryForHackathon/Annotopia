@@ -72,6 +72,7 @@ def login_user():
     password = data.get('password')
     if not username or not password:
         return make_response(jsonify({"success": False, "message": "ユーザー名とパスワードが必要です"}), 400)
+    
     authenticated_user = authenticate_user(username, password)
     
     print(authenticated_user)
