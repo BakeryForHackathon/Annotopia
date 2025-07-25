@@ -87,7 +87,7 @@ def login_user():
         }
         return make_response(jsonify(response_data), 200)
     else:
-        return make_response(jsonify({"success": False, "message": "無効なユーザー名またはパスワードです"}), 401)
+        return make_response(jsonify({"success": False, "message": "無効なユーザー名またはパスワードです","debug":authenticated_user}), 401)
 
 
 # @app.route('/api/all_requests', methods=['POST'])
