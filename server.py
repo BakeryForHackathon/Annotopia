@@ -1,6 +1,6 @@
 from flask import Flask, request, make_response, jsonify
 from flask_cors import CORS
-# from auth_utils import authenticate_user 
+from auth_utils import authenticate_user 
 from make_request_table import get_requests  
 from create_task import create_task  # Import the create_task function
 import pandas as pd
@@ -25,43 +25,6 @@ def home():
     if request.method == 'HEAD':
         return make_response("", 200)  # ← return が必要
     return "Hello, world!", 200
-
-
-    # success_list = []
-    # success = make_test_data(1,2,[2,5])
-    # success_list.append({"success": success, "message": "add test_2 is 2 and 5"})
-
-    # if success:
-    #     response_data = {
-    #         "success": success,
-    #         "message": "タスクの保存に成功しました。"
-    #     }
-    #     return make_response(jsonify(response_data), 200)
-
-
-    # username_to_test = "user1"
-    # password_to_test = "password1" # auth_utils.pyのMOCK_USERSまたはDBのパスワードに合わせる
-
-    # authenticated_user = authenticate_user(username_to_test, password_to_test)
-    # if authenticated_user:
-    #     token = "eyJhbGciOiJIUzI1NiIs..." 
-    #     response_data = {
-    #         "success": True,
-    #         "message": f"ユーザー '{username_to_test}' の認証に成功しました。",
-    #         "token": token,
-    #         "user": {
-    #             "id": authenticated_user["id"]
-    #         }
-    #     }
-    #     return make_response(jsonify(response_data), 200)
-    # else:
-    #     response_data = {
-    #         "success": False,
-    #         "message": f"ユーザー '{username_to_test}' の認証に失敗しました。無効なユーザー名またはパスワードです。",
-    #         "token": None,
-    #         "user": None
-    #     }
-    #     return make_response(jsonify(response_data), 401) # 401 Unauthorized
 
 
 @app.route('/api/login', methods=['POST'])
