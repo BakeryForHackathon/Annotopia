@@ -13,7 +13,7 @@ import pandas as pd
 # from get_test_data import get_test_data  # Import the function to get test data   
 # from make_test import make_test_data  # Import the function to make test data
 # from is_ended import is_test_ended  # Import the function to check if the test is ended
-# from get_all_requests import get_all_requests  # Import the function to get all requests
+from get_all_requests import get_all_requests  # Import the function to get all requests
 # from get_task_detail import get_task_detail  # Import the function to get task detail
 # from test_copy import test_copy  # Import the function to copy test data
 # from get_qwk import get_qwk  # Import the function to get QWK data
@@ -90,12 +90,12 @@ def login_user():
         return make_response(jsonify({"success": False, "message": "無効なユーザー名またはパスワードです","debug":authenticated_user}), 401)
 
 
-# @app.route('/api/all_requests', methods=['POST'])
-# def get_all_requests():
-#     data = request.get_json()
-#     user_id = str(data.get('user_id'))
-#     user_tasks = DUMMY_TASKS.get(user_id, [])
-#     return jsonify({"user_id": user_id, "tasks": user_tasks}), 200
+@app.route('/api/all_requests', methods=['POST'])
+def get_all_requests_():
+    data = request.get_json()
+    user_id = str(data.get('user_id'))
+    user_tasks = get_all_requests(user_id)
+    return jsonify(user_tasks), 200
 
 # @app.route('/api/task_detail', methods=['POST'])
 # def get_task_detail():
