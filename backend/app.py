@@ -68,23 +68,35 @@ def login_user():
     data = request.get_json()
     if not data:
         return make_response(jsonify({"success": False, "message": "リクエストボディが空です"}), 400)
+    
     username = data.get('username')
     password = data.get('password')
     if not username or not password:
         return make_response(jsonify({"success": False, "message": "ユーザー名とパスワードが必要です"}), 400)
-    authenticated_user = authenticate_user(username, password)
-    if authenticated_user:
-        token = "eyJhbGciOiJIUzI1NiIs..." 
+
+    try:
+        # 認証処理を呼び出す
+        authenticated_user = authenticate_user(username, password)
+
+        # 成功時のレスポンス
+        token = "eyJhbGciOiJIUzI1NiIs..."
         response_data = {
             "success": True,
             "token": token,
-            "user": {
-                "id": authenticated_user["id"]
-            }
+            "user": {"id": authenticated_user["id"]}
         }
         return make_response(jsonify(response_data), 200)
-    else:
-        return make_response(jsonify({"success": False, "message": "無効なユーザー名またはパスワードです"}), 401)
+
+    except AuthError as e:
+        # 認証失敗時のレスポンス
+        # AuthErrorから送られてきた具体的なエラーメッセージを "debug_info" として返す
+        error_response = {
+            "success": False,
+            "message": "無効なユーザー名またはパスワードです",
+            "debug_info": str(e)  # ここに具体的なエラー内容が入る
+        }
+        return make_response(jsonify(error_response), 401)
+
 
 
 # @app.route('/api/all_requests', methods=['POST'])
