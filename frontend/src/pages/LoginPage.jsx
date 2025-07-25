@@ -52,7 +52,6 @@ const LoginPage = () => {
       });
 
       if (response.data.success) {
-        alert('ログインに成功しました！');
         // 3. セッション管理はCookieに任せ、ページ遷移のみ行う
         // 遷移先のページで必要な一時的な情報はstateで渡す
         navigate('/order', { state: { user: response.data.user } });

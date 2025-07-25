@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import styles from './TestPage.module.css';
 
-const TestPage = () => {
+const CreateMasterTestPage = () => {
   const { taskId } = useParams();
   const navigate = useNavigate();
 
@@ -12,17 +12,15 @@ const TestPage = () => {
   const [testQuestion, setTestQuestion] = useState(null);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
 
-  const fetchNextQuestion = useCallback(async () => {
+  const fetchNextMasterQuestion = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await axios.post('/api/get_test_question', {
-        user_id: 3,
+      const response = await axios.post('/api/get_master_test_question', {
         task_id: taskId,
       });
       if (response.data.end) {
-        // This case should ideally be handled after submitting the last answer
-        // alert("テストが既に完了しているか、問題がありません。");
-        navigate(`/task/${taskId}`);
+        // alert("正解データの作成が既に完了しています。");
+        navigate('/order');
       } else {
         setTestQuestion(response.data);
         setSelectedAnswer(null);
@@ -35,8 +33,8 @@ const TestPage = () => {
   }, [taskId, navigate]);
 
   useEffect(() => {
-    fetchNextQuestion();
-  }, [fetchNextQuestion]);
+    fetchNextMasterQuestion();
+  }, [fetchNextMasterQuestion]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -46,19 +44,19 @@ const TestPage = () => {
     }
 
     try {
-      const response = await axios.post('/api/submit_test_answer', {
-        user_id: 3,
+      const response = await axios.post('/api/submit_master_answer', {
         task_id: taskId,
         answer: { questionId: testQuestion.question_index, answer: selectedAnswer },
       });
 
       if (response.data.end) {
-        navigate(`/task/${taskId}/result`, { state: { result: response.data.result } });
+        // alert("テストの正解データを保存しました。");
+        navigate('/order');
       } else {
-        fetchNextQuestion();
+        fetchNextMasterQuestion();
       }
     } catch (err) {
-      setError('テスト回答の送信に失敗しました。');
+      setError('正解データの送信に失敗しました。');
     }
   };
 
@@ -71,7 +69,7 @@ const TestPage = () => {
 
   return (
     <main className={styles.main}>
-        <h1 className={styles.pageTitle}>適性テスト</h1>
+        <h1 className={styles.pageTitle}>テスト正解データ作成</h1>
       <div className={styles.progressContainer}>
         {/* バックエンドから受け取ったstatusをそのまま表示 */}
         <div className={styles.progressBar} style={{ width: status }}></div>
@@ -88,6 +86,7 @@ const TestPage = () => {
                 ))}
             </p>
         </div>
+
         <div className={styles.card}>
           <h3 className={styles.cardTitle}>{questionInfo.question}</h3>
           <div className={styles.radioGroup}>
@@ -110,4 +109,4 @@ const TestPage = () => {
   );
 };
 
-export default TestPage;
+export default CreateMasterTestPage;

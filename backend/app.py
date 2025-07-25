@@ -81,8 +81,40 @@ def get_task_detail_():
     task_detail['test_ended'] = is_test_ended(user_id, task_id)
     return make_response(jsonify(task_detail), 200)
 
-@app.route('/api/get_test', methods=['POST'])
-def get_test():
+
+# --- 受注者・発注者用テスト API (変更なし) ---
+@app.route('/api/get_test_question', methods=['POST'])
+def get_test_question():
+    data = request.get_json()
+    user_id, task_id = str(data.get('user_id')), str(data.get('task_id'))
+    answers = USER_TEST_ANSWERS.get((user_id, task_id), [])
+    question_index = len(answers)
+    test_info = DUMMY_TEST_DATA.get(task_id)
+    if not test_info or question_index >= test_info["total_questions"]: return jsonify({"success": True, "end": True})
+    status = f"{round((question_index / test_info['total_questions']) * 100)}%"
+    current_question = test_info["questions"][question_index]
+    task_details = DUMMY_TASK_DETAILS.get(task_id)
+    return jsonify({"success": True, "end": False, "question": current_question, "question_index": question_index, "total_questions": test_info["total_questions"], "status": status, "task_details": task_details})
+
+@app.route('/api/submit_test_answer', methods=['POST'])
+def submit_test_answer():
+    data = request.get_json()
+    user_id, task_id = str(data.get('user_id')), str(data.get('task_id'))
+    answer = data.get('answer')
+    key = (user_id, task_id)
+    if key not in USER_TEST_ANSWERS: USER_TEST_ANSWERS[key] = []
+    USER_TEST_ANSWERS[key].append(answer)
+    total_questions = DUMMY_TEST_DATA.get(task_id, {}).get("total_questions", 0)
+    if len(USER_TEST_ANSWERS[key]) >= total_questions:
+        score = 60
+        passed = score >= 50
+        if passed: TEST_COMPLETION_STATUS[key] = True
+        del USER_TEST_ANSWERS[key]
+        return jsonify({"success": True, "end": True, "result": {"score": score, "passed": passed}})
+    return jsonify({"success": True, "end": False})
+
+@app.route('/api/get_master_test_question', methods=['POST'])
+def get_master_test_question():
     data = request.get_json()
     user_id = str(data.get('user_id'))
     task_id = str(data.get('task_id'))
