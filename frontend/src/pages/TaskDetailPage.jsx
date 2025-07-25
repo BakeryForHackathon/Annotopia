@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom'; // useNavigateをLinkに変更
 import axios from 'axios';
 import styles from './TaskDetailPage.module.css';
 
 const TaskDetailPage = () => {
   const { taskId } = useParams();
-  const navigate = useNavigate();
+  // const navigate = useNavigate(); // Linkコンポーネントを使うため不要に
   const [taskDetail, setTaskDetail] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -29,9 +29,10 @@ const TaskDetailPage = () => {
     fetchTaskDetail();
   }, [taskId]);
 
-  const handleStartTest = () => {
-    navigate(`/task/${taskId}/test`);
-  };
+  // handleStartTestはLinkコンポーネントに置き換えたため不要に
+  // const handleStartTest = () => {
+  //   navigate(`/task/${taskId}/test`);
+  // };
 
   if (loading) return <main className={styles.main}>読み込み中...</main>;
   if (error) return <main className={`${styles.main} ${styles.error}`}>{error}</main>;
@@ -51,29 +52,27 @@ const TaskDetailPage = () => {
 
       {taskDetail.questions.map((q, index) => (
         <div key={index} className={styles.card}>
-          <h2 className={styles.questionTitle}>評価項目{index + 1}:{q.question}</h2>
+          <h2 className={styles.questionTitle}>評価項目{index + 1}: {q.question}</h2>
           <ul className={styles.scaleList}>
-            {q.scale_discription.slice().reverse().map((desc, i) => (
-              <li key={i}>{desc}</li>
+            {/* この部分は文字列の配列を正しく表示できます */}
+            {q.scale_discription.slice().map((desc, i) => (
+              <li key={i}>{desc.description}</li>
             ))}
           </ul>
         </div>
       ))}
 
       <div className={styles.actions}>
-        <button
-          className={styles.actionButton}
-          disabled={taskDetail.test_ended}
-          onClick={handleStartTest}
-        >
-          テストを行う
-        </button>
-        <button
-          className={styles.actionButton}
-          disabled={!taskDetail.test_ended}
-        >
-          annotateを行う
-        </button>
+        {/* ボタンをLinkコンポーネントに変更し、出し分けを明確に */}
+        {!taskDetail.test_ended ? (
+          <Link to={`/task/${taskId}/test`} className={styles.actionButton}>
+            テストを行う
+          </Link>
+        ) : (
+          <Link to={`/task/${taskId}/annotate`} className={styles.actionButton}>
+            annotateを行う
+          </Link>
+        )}
       </div>
     </main>
   );

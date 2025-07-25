@@ -1,7 +1,9 @@
+// AnnotationPage.jsx
+
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import styles from './AnnotationPage.module.css';
+import styles from './TestPage.module.css'; // スタイルは共通
 
 const AnnotationPage = () => {
     const { taskId } = useParams();
@@ -10,24 +12,30 @@ const AnnotationPage = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [annotationData, setAnnotationData] = useState(null);
-    const [selectedAnswers, setSelectedAnswers] = useState({});
+    const [selectedAnswerId, setSelectedAnswerId] = useState(null);
 
+    // --- フロント: handleGetAnnotationData ---
     const handleGetAnnotationData = useCallback(async () => {
         setLoading(true);
         try {
             const response = await axios.post('http://127.0.0.1:5001/api/get_annotation_data', {
-                user_id: 3,
+                user_id: 3, // 本来はログイン情報から
                 task_id: taskId
             });
-            if (response.data.all_done) {
-                alert("このタスクの全てのアノテーションが完了しました！");
-                navigate('/order');
+            
+            if (response.data.success) {
+                if (response.data.end) {
+                    // alert("このタスクの全てのアノテーションが完了しました！");
+                    navigate('/order'); // 適切な完了後ページへ
+                } else {
+                    setAnnotationData(response.data);
+                    setSelectedAnswerId(null); // 次の問題のためにリセット
+                }
             } else {
-                setAnnotationData(response.data);
-                setSelectedAnswers({});
+                setError(response.data.message || 'アノテーションデータの取得に失敗しました。');
             }
         } catch (err) {
-            setError('アノテーションデータの取得に失敗しました。');
+            setError('アノテーションデータの取得中にエラーが発生しました。');
         } finally {
             setLoading(false);
         }
@@ -37,79 +45,81 @@ const AnnotationPage = () => {
         handleGetAnnotationData();
     }, [handleGetAnnotationData]);
 
-    const handleMakeAnnotation = async (e) => {
+    // --- フロント: handleMakeAnnotationData ---
+    const handleMakeAnnotationData = async (e) => {
         e.preventDefault();
-        if (Object.keys(selectedAnswers).length === 0) {
-            alert('評価を選択してください。');
+        if (!selectedAnswerId) {
+            // alert('評価を選択してください。');
             return;
         }
         try {
-            const response = await axios.post('http://127.0.0.1:5001/api/make_annotation', {
-                user_id: 3,
+            const response = await axios.post('http://127.0.0.1:5001/api/make_annotation_data', {
+                user_id: 3, // 本来はログイン情報から
                 task_id: taskId,
-                annotation_id: annotationData.annotation_id,
-                answers: selectedAnswers
+                annotation_data_id: annotationData.annotation_data_id,
+                answers: [selectedAnswerId] // 配列形式で送信
             });
-            if (response.data.end) {
-                alert("このタスクの全てのアノテーションが完了しました！");
-                navigate('/order');
+
+            if (response.data.success) {
+                if (response.data.end) {
+                    // alert("アノテーションのノルマが完了しました！");
+                    navigate('/order'); // 適切な完了後ページへ
+                } else {
+                    // 次のデータを取得
+                    handleGetAnnotationData();
+                }
             } else {
-                handleGetAnnotationData();
+                 setError(response.data.message || 'アノテーション結果の送信に失敗しました。');
             }
         } catch (err) {
-            setError('アノテーション結果の送信に失敗しました。');
+            setError('アノテーション結果の送信中にエラーが発生しました。');
         }
     };
     
-    const handleAnswerChange = (question, score) => {
-        setSelectedAnswers(prev => ({
-            ...prev,
-            [question]: score
-        }));
-    };
-
     if (loading) return <main className={styles.main}>次のデータを準備中...</main>;
     if (error) return <main className={`${styles.main} ${styles.error}`}>{error}</main>;
     if (!annotationData) return <main className={styles.main}>アノテーションデータが見つかりません。</main>;
     
-    const progress = parseFloat(annotationData.status);
+    const questionInfo = annotationData.questions[0];
 
     return (
         <main className={styles.main}>
+            <h1 className={styles.pageTitle}>アノテーション作業</h1>
             <div className={styles.progressContainer}>
-                <div className={styles.progressBar} style={{ width: `${progress}%` }}></div>
+                <div className={styles.progressBar} style={{ width: annotationData.status }}></div>
                 <span className={styles.progressText}>{annotationData.status}</span>
             </div>
-            <form onSubmit={handleMakeAnnotation} className={styles.annotationForm}>
-                <h1 className={styles.questionNumber}>問{annotationData.data_count + 1}</h1>
+            <form onSubmit={handleMakeAnnotationData} className={styles.testForm}>
+                <h2 className={styles.questionNumber}>問{annotationData.data_count + 1}</h2>
+                
                 <div className={styles.card}>
-                    <h2 className={styles.cardTitle}>評価対象データ</h2>
+                    <h3 className={styles.cardTitle}>評価対象データ</h3>
                     <p className={styles.dataText}>
                         {annotationData.data.split('\n').map((line, index) => (
                             <span key={index}>{line}<br /></span>
                         ))}
                     </p>
                 </div>
-                {annotationData.questions.map((q, qIndex) => (
-                    <div key={qIndex} className={styles.card}>
-                        <h2 className={styles.cardTitle}>{q.question}</h2>
-                        <div className={styles.radioGroup}>
-                            {[...q.scale_discription].sort((a,b) => b.score - a.score).map((level) => (
-                                <label key={level.score} className={styles.radioLabel}>
-                                    <input
-                                        type="radio"
-                                        name={`question-${qIndex}`}
-                                        value={level.score}
-                                        onChange={() => handleAnswerChange(q.question, level.score)}
-                                        checked={selectedAnswers[q.question] === level.score}
-                                        required
-                                    />
-                                    {level.description}
-                                </label>
-                            ))}
-                        </div>
+
+                <div className={styles.card}>
+                    <h3 className={styles.cardTitle}>{questionInfo.question}</h3>
+                    <div className={styles.radioGroup}>
+                        {questionInfo.details.sort((a,b) => b.scale - a.scale).map((detail) => (
+                            <label key={detail.question_details_id} className={styles.radioLabel}>
+                                <input
+                                    type="radio"
+                                    name="annotation"
+                                    value={detail.question_details_id}
+                                    onChange={(e) => setSelectedAnswerId(Number(e.target.value))}
+                                    checked={selectedAnswerId === detail.question_details_id}
+                                    required
+                                />
+                                {detail.scale_description}
+                            </label>
+                        ))}
                     </div>
-                ))}
+                </div>
+                
                 <button type="submit" className={styles.submitButton}>送信</button>
             </form>
         </main>

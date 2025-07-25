@@ -83,11 +83,11 @@ const NewRequestPage = () => {
       if (response.data.success) {
         navigate('/new-request/create-test', { state: { taskId: response.data.task_id } });
       } else {
-        alert('タスクの作成に失敗しました。');
+        // alert('タスクの作成に失敗しました。');
       }
     } catch (error) {
       console.error('Error submitting form:', error);
-      alert('エラーが発生しました。');
+      // alert('エラーが発生しました。');
     }
   };
 
