@@ -5,16 +5,17 @@ from auth_utils import authenticate_user
 from make_request_table import get_requests  
 from create_task import create_task  # Import the create_task function
 import pandas as pd
-# from debag import fetch_all_from_table  # Import the function to fetch data from tables
-# from utils.get_ids import get_ids_by_task_id  # Import the function to count questions
-# from utils.set_test_data import set_test_data  # Import the function to set test data
-# from utils.get_requests import get_questions_by_task  # Import the function to get questions by task ID
-# from utils.get_randam_test_id import select_random_unanswered_test  # Import the function to select random unanswered test
 from get_test_data import get_test_data  # Import the function to get test data   
-# from make_test import make_test_data  # Import the function to make test data
 from is_ended import is_test_ended  # Import the function to check if the test is ended
 from get_all_requests import get_all_requests  # Import the function to get all requests
 from get_task_detail import get_task_detail  # Import the function to get task detail
+from utils.get_requests import get_questions_by_task  # Import the function to get questions by task ID
+
+# from debag import fetch_all_from_table  # Import the function to fetch data from tables
+# from utils.get_ids import get_ids_by_task_id  # Import the function to count questions
+# from utils.set_test_data import set_test_data  # Import the function to set test data
+# from utils.get_randam_test_id import select_random_unanswered_test  # Import the function to select random unanswered test
+# from make_test import make_test_data  # Import the function to make test data
 # from test_copy import test_copy  # Import the function to copy test data
 # from get_qwk import get_qwk  # Import the function to get QWK data
 
@@ -92,20 +93,29 @@ def get_test():
     return jsonify(test_data), 200
     # return jsonify({"test_info": test_data, "task_detail": task_detail}), 200
 
-@app.route('/api/submit_test', methods=['POST'])
-def submit_test():
+@app.route('api/get_requests', methods=['POST'])
+def get_requests_():
     data = request.get_json()
     user_id = str(data.get('user_id'))
-    task_id = str(data.get('task_id'))
-    answers = data.get('answers')
+    task_data = get_questions_by_task(user_id)
+    return jsonify(task_data), 200
 
-    score = 60 
-    passed = score >= 50
 
-    if passed:
-        TEST_COMPLETION_STATUS[(user_id, task_id)] = True
 
-    return jsonify({"success": True, "score": score, "passed": passed})
+# @app.route('/api/submit_test', methods=['POST'])
+# def submit_test():
+#     data = request.get_json()
+#     user_id = str(data.get('user_id'))
+#     task_id = str(data.get('task_id'))
+#     answers = data.get('answers')
+
+#     score = 60 
+#     passed = score >= 50
+
+#     if passed:
+#         TEST_COMPLETION_STATUS[(user_id, task_id)] = True
+
+#     return jsonify({"success": True, "score": score, "passed": passed})
 
 
 
