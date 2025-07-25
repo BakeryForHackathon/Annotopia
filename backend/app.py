@@ -20,7 +20,7 @@ import pandas as pd
 
 
 app = Flask(__name__)
-CORS(app, supports_credentials=True)
+CORS(app, "https://your-frontend-app.onrender.com", supports_credentials=True)
 app.logger.setLevel(logging.DEBUG)
 
 # --- ダミーデータ ---
