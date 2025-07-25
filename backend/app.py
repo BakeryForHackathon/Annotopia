@@ -11,9 +11,14 @@ from get_all_requests import get_all_requests  # Import the function to get all 
 from get_task_detail import get_task_detail  # Import the function to get task detail
 from make_test import make_test_data  # Import the function to make test data
 from test_copy import test_copy  # Import the function to copy test data
-
 from get_QWK import get_qwk  # Import the function to get QWK data
 
+# clean_rese
+from clean_reservations import clean_reservations
+# get_annotation
+from get_annotation_data import get_annotation_data
+# is_annotation
+# make_annotaion
 
 app = Flask(__name__)
 CORS(app, origins="https://myapp-frontend-n1ni.onrender.com", supports_credentials=True)
@@ -117,7 +122,6 @@ def test_copy_():
     _, _, success, _ = test_copy(task_id, user_id)
     return make_response(jsonify({"success": success, "user_id": user_id, "task_id": task_id}), 200)
 
-# debug queue
 @app.route('/api/get_qwk', methods=['POST'])
 def get_qwk_():
     data = request.get_json()
@@ -125,6 +129,23 @@ def get_qwk_():
     task_id = str(data.get('task_id'))
     qwk_dict = get_qwk(user_id, task_id)
     return make_response(jsonify(qwk_dict["qwk_data"]), 200)
+
+# あとまわし
+# @app.route('/api/ aaa ', methods=['POST'])
+# def clean_reservations_():
+#     data = request.get_json()
+#     user_id = str(data.get('user_id'))
+#     clean_reservations(user_id)
+
+
+# debug queue
+@app.route('/api/get_annotation_data', methods=['POST'])
+def get_annotation_data_():
+    data = request.get_json()
+    user_id = str(data.get('user_id'))
+    task_id = str(data.get('task_id'))
+    answers = get_annotation_data(user_id, task_id)
+    return make_response(jsonify(answers), 200)
 
 
 
