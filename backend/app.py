@@ -73,11 +73,29 @@ def login_user():
     if not username or not password:
         return make_response(jsonify({"success": False, "message": "ユーザー名とパスワードが必要です"}), 400)
     
-    authenticated_user = authenticate_user(username, password)
+    # authenticated_user = authenticate_user(username, password)
     
-    print(authenticated_user)
+    import psycopg2
+    try:
+        # PostgreSQL 接続テスト
+        conn = psycopg2.connect(
+            host=os.environ.get('DB_HOST', 'localhost'),
+            database=os.environ.get('DB_NAME', 'your_database_name'),
+            user=os.environ.get('DB_USER', 'your_username'),
+            password=os.environ.get('DB_PASSWORD', 'your_password'),
+            port=os.environ.get('DB_PORT', '5432')
+        )
+        conn.close()
+        txt = ":チェックマーク_緑: psycopg2 is available and DB connected"
+    except ImportError:
+        txt = ":x: psycopg2 is NOT available (ImportError)"
+    except Exception as e:
+        txt = f":x: psycopg2 import OK but connection failed: {str(e)}"
+    return make_response(jsonify({"debug": txt}), 200)
+
+    # print(authenticated_user)
     
-    return make_response(jsonify({"debug":authenticated_user}), 200)
+    # return make_response(jsonify({"debug":authenticated_user}), 200)
 
     # if authenticated_user:
     #     token = "eyJhbGciOiJIUzI1NiIs..." 
