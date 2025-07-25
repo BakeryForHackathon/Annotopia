@@ -10,7 +10,7 @@ import pandas as pd
 # from utils.set_test_data import set_test_data  # Import the function to set test data
 # from utils.get_requests import get_questions_by_task  # Import the function to get questions by task ID
 # from utils.get_randam_test_id import select_random_unanswered_test  # Import the function to select random unanswered test
-# from get_test_data import get_test_data  # Import the function to get test data   
+from get_test_data import get_test_data  # Import the function to get test data   
 # from make_test import make_test_data  # Import the function to make test data
 from is_ended import is_test_ended  # Import the function to check if the test is ended
 from get_all_requests import get_all_requests  # Import the function to get all requests
@@ -107,14 +107,54 @@ def get_task_detail_():
     task_detail['test_ended'] = is_test_ended(user_id, task_id)
     return jsonify(task_detail), 200
 
-# @app.route('/api/get_test', methods=['POST'])
-# def get_test():
-#     data = request.get_json()
-#     task_id = str(data.get('task_id'))
-#     test_data = DUMMY_TEST_DATA.get(task_id)
-#     if not test_data: return jsonify({"success": False, "message": "Test data not found"}), 404
-#     task_detail = DUMMY_TASK_DETAILS.get(task_id)
-#     return jsonify({"test_info": test_data, "task_detail": task_detail}), 200
+@app.route('/api/get_test', methods=['POST'])
+def get_test():
+    data = request.get_json()
+    task_id = str(data.get('task_id'))
+    test_data = get_test_data(task_id)
+    if not test_data: return jsonify({"success": False, "message": "Test data not found"}), 404
+    task_detail = get_test_data(task_id)
+    return jsonify({"test_info": test_data, "task_detail": task_detail}), 200
+
+@app.route('/api/make_test', methods=['POST'])
+def make_test_():
+    test_df = pd.read_csv("test.csv",header=None)
+    data_df = pd.read_csv("annotate.csv",header=None)
+
+    task_dict = {
+        "user_id": 1,
+        "title": "機械翻訳の評価",
+        "description": "英日翻訳の正確さを3段階で評価してください",
+        "question_count": 2,
+        "questions": [
+            {
+                "question": "正確さ",
+                "scale_discription": [
+                    "原文の意味をほとんどまたは全く伝えていない。",
+                    "原文の意味の半分以上は伝えているが、重要な情報の抜けや軽微な誤訳がある。",
+                    "原文の意味を完全に伝えており、情報の欠落や誤訳がまったくない。"
+                ]
+            },
+            {
+                "question": "流暢性",
+                "scale_discription": [
+                    "いい感じ",
+                    "全然ダメ"
+                ]
+            }
+        ],
+        "private": True,
+        "start_day": "2025-08-01",
+        "end_day": "2025-08-07",
+        "max_annotations_per_user": 100,
+        "test": True,
+        "threshold": 0.5,
+        "test_data": test_df,   # pandas.DataFrame
+        "data": data_df         # pandas.DataFrame
+    }
+    create_task(task_dict)
+    return jsonify({"success":"good luck!"}), 200
+
 
 # @app.route('/api/submit_test', methods=['POST'])
 # def submit_test():
