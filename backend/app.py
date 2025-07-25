@@ -72,7 +72,6 @@ USER_ANNOTATIONS = {}       # アノテーション作業の進捗を保存
 ANNOTATION_RESERVATIONS = {}# アノテーション作業の予約を管理
 
 
-<<<<<<< HEAD
 # --- Helper Functions (Existing) ---
 def is_test_ended(user_id, task_id):
     """ユーザーが特定のタスクのテストを完了したかどうかを判定します"""
@@ -83,10 +82,6 @@ def health_check():
     """Renderのヘルスチェックに応答するためのエンドポイント"""
     return jsonify({"status": "ok"}), 200
 
-=======
-# --- 基本API (変更なし) ---
-def is_test_ended(user_id, task_id): return TEST_COMPLETION_STATUS.get((str(user_id), str(task_id)), False)
->>>>>>> dev/nishida
 @app.route('/api/login', methods=['POST'])
 def login_user(): return jsonify({"success": True, "token": "dummy-token", "user": {"id": 3, "name": "Taro"}}), 200
 @app.route('/api/all_requests', methods=['POST'])

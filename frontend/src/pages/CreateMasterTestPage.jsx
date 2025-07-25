@@ -15,7 +15,7 @@ const CreateMasterTestPage = () => {
   const fetchNextMasterQuestion = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await axios.post('http://127.0.0.1:5001/api/get_master_test_question', {
+      const response = await axios.post('/api/get_master_test_question', {
         task_id: taskId,
       });
       if (response.data.end) {
@@ -44,7 +44,7 @@ const CreateMasterTestPage = () => {
     }
 
     try {
-      const response = await axios.post('http://127.0.0.1:5001/api/submit_master_answer', {
+      const response = await axios.post('/api/submit_master_answer', {
         task_id: taskId,
         answer: { questionId: testQuestion.question_index, answer: selectedAnswer },
       });

@@ -15,7 +15,7 @@ const TestPage = () => {
   const fetchNextQuestion = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await axios.post('http://127.0.0.1:5001/api/get_test_question', {
+      const response = await axios.post('/api/get_test_question', {
         user_id: 3,
         task_id: taskId,
       });
@@ -46,7 +46,7 @@ const TestPage = () => {
     }
 
     try {
-      const response = await axios.post('http://127.0.0.1:5001/api/submit_test_answer', {
+      const response = await axios.post('/api/submit_test_answer', {
         user_id: 3,
         task_id: taskId,
         answer: { questionId: testQuestion.question_index, answer: selectedAnswer },
