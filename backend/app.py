@@ -10,12 +10,12 @@ from is_ended import is_test_ended  # Import the function to check if the test i
 from get_all_requests import get_all_requests  # Import the function to get all requests
 from get_task_detail import get_task_detail  # Import the function to get task detail
 from utils.get_requests import get_questions_by_task  # Import the function to get questions by task ID
+from make_test import make_test_data  # Import the function to make test data
 
 # from debag import fetch_all_from_table  # Import the function to fetch data from tables
 # from utils.get_ids import get_ids_by_task_id  # Import the function to count questions
 # from utils.set_test_data import set_test_data  # Import the function to set test data
 # from utils.get_randam_test_id import select_random_unanswered_test  # Import the function to select random unanswered test
-# from make_test import make_test_data  # Import the function to make test data
 # from test_copy import test_copy  # Import the function to copy test data
 # from get_qwk import get_qwk  # Import the function to get QWK data
 
@@ -64,13 +64,12 @@ def login_user_():
     else:
         return make_response(jsonify({"success": False, "message": "無効なユーザー名またはパスワードです","debug":authenticated_user}), 401)
 
-
 @app.route('/api/all_requests', methods=['POST'])
 def get_all_requests_():
     data = request.get_json()
     user_id = str(data.get('user_id'))
     user_tasks = get_all_requests(user_id)
-    return jsonify(user_tasks), 200
+    return make_response(jsonify(user_tasks), 200)
 
 @app.route('/api/task_detail', methods=['POST'])
 def get_task_detail_():
@@ -80,7 +79,7 @@ def get_task_detail_():
     task_detail = get_task_detail(user_id, task_id)
     if not task_detail: return jsonify({"success": False, "message": "Task not found"}), 404
     task_detail['test_ended'] = is_test_ended(user_id, task_id)
-    return jsonify(task_detail), 200
+    return make_response(jsonify(task_detail), 200)
 
 @app.route('/api/get_test', methods=['POST'])
 def get_test():
@@ -90,15 +89,26 @@ def get_test():
     test_data = get_test_data(user_id, task_id)
     if not test_data: return jsonify({"success": False, "message": "Test data not found"}), 404
     # task_detail = get_test_data(user_id, task_id)
-    return jsonify(test_data), 200
+    return make_response(jsonify(test_data), 200)
     # return jsonify({"test_info": test_data, "task_detail": task_detail}), 200
+
+@app.route('/api/make_test_data', methods=['POST'])
+def make_test_data_():
+    data = request.get_json()
+    user_id = str(data.get('user_id'))
+    task_id = str(data.get('task_id'))
+    test_data_id = str(data.get('test_data_id'))
+    success = make_test_data(user_id, task_id, test_data_id)
+    return make_response(jsonify({"user_id": user_id, "task_id": task_id, "end": success}), 200)
+
+
 
 @app.route('/api/get_requests', methods=['POST'])
 def get_requests_():
     data = request.get_json()
     user_id = str(data.get('user_id'))
     task_data = get_questions_by_task(user_id)
-    return jsonify(task_data), 200
+    return make_response(jsonify(task_data), 200)
 
 
 
