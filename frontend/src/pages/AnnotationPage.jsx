@@ -18,11 +18,11 @@ const AnnotationPage = () => {
     const handleGetAnnotationData = useCallback(async () => {
         setLoading(true);
         try {
-            const response = await axios.post('/api/get_annotation_data', {
+            const response = await axios.post('http://127.0.0.1:5001/api/get_annotation_data', {
                 user_id: 3, // 本来はログイン情報から
                 task_id: taskId
             });
-            
+
             if (response.data.success) {
                 if (response.data.end) {
                     // alert("このタスクの全てのアノテーションが完了しました！");
@@ -53,7 +53,7 @@ const AnnotationPage = () => {
             return;
         }
         try {
-            const response = await axios.post('/api/make_annotation_data', {
+            const response = await axios.post('http://127.0.0.1:5001/api/make_annotation_data', {
                 user_id: 3, // 本来はログイン情報から
                 task_id: taskId,
                 annotation_data_id: annotationData.annotation_data_id,

@@ -77,7 +77,7 @@ const NewRequestPage = () => {
     if (dataFile) formData.append('data', dataFile);
 
     try {
-      const response = await axios.post('/api/upload_task', formData, {
+      const response = await axios.post('http://127.0.0.1:5001/api/upload_task', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
       if (response.data.success) {

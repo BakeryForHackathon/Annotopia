@@ -1,20 +1,24 @@
 import { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom'; // useNavigateをLinkに変更
+import { useParams, Link, useNavigate } from 'react-router-dom'; // useNavigate をインポート
 import axios from 'axios';
 import styles from './TaskDetailPage.module.css';
 
 const TaskDetailPage = () => {
   const { taskId } = useParams();
-  // const navigate = useNavigate(); // Linkコンポーネントを使うため不要に
+  const navigate = useNavigate(); // useNavigateフックを使用
   const [taskDetail, setTaskDetail] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  
+  // user_idはログイン情報などから取得することを想定。ここでは固定値'3'を使用
+  const userId = '3';
 
   useEffect(() => {
     const fetchTaskDetail = async () => {
       try {
-        const response = await axios.post('/api/task_detail', {
-          user_id: 3,
+        // ===== 解決1: バックエンドにtask_idとuser_idを送信 =====
+        const response = await axios.post('http://127.0.0.1:5001/api/task_detail', {
+          user_id: userId,
           task_id: taskId,
         });
         setTaskDetail(response.data);
@@ -27,12 +31,28 @@ const TaskDetailPage = () => {
     };
 
     fetchTaskDetail();
-  }, [taskId]);
+  }, [taskId, userId]);
 
-  // handleStartTestはLinkコンポーネントに置き換えたため不要に
-  // const handleStartTest = () => {
-  //   navigate(`/task/${taskId}/test`);
-  // };
+  // ===== 解決4: 「テストを行う」ボタンの処理 =====
+  const handleStartTest = async () => {
+    try {
+      // テスト開始APIを呼び出す
+      const response = await axios.post('http://127.0.0.1:5001/api/test_copy', {
+        user_id: userId,
+        task_id: taskId,
+      });
+
+      if (response.data.success) {
+        // API呼び出しが成功したらテストページに遷移
+        navigate(`/task/${taskId}/test`);
+      } else {
+        setError('テストの開始に失敗しました。');
+      }
+    } catch (err) {
+      setError('テストの開始中にエラーが発生しました。');
+      console.error(err);
+    }
+  };
 
   if (loading) return <main className={styles.main}>読み込み中...</main>;
   if (error) return <main className={`${styles.main} ${styles.error}`}>{error}</main>;
@@ -47,15 +67,15 @@ const TaskDetailPage = () => {
 
       <div className={styles.card}>
         <p className={styles.description}>{taskDetail.description}</p>
-        <p className={styles.annotationCount}>アノテーション数 {taskDetail.max_annotations_per_user}個</p>
+        <p className={styles.annotationCount}>アノテーション数: {taskDetail.max_annotations_per_user}個</p>
       </div>
 
       {taskDetail.questions.map((q, index) => (
         <div key={index} className={styles.card}>
           <h2 className={styles.questionTitle}>評価項目{index + 1}: {q.question}</h2>
           <ul className={styles.scaleList}>
-            {/* この部分は文字列の配列を正しく表示できます */}
-            {q.scale_discription.slice().map((desc, i) => (
+            {/* 評価基準をリスト表示 */}
+            {q.scale_discription.slice().sort((a, b) => b.score - a.score).map((desc, i) => (
               <li key={i}>{desc.description}</li>
             ))}
           </ul>
@@ -63,14 +83,14 @@ const TaskDetailPage = () => {
       ))}
 
       <div className={styles.actions}>
-        {/* ボタンをLinkコンポーネントに変更し、出し分けを明確に */}
-        {!taskDetail.test_ended ? (
-          <Link to={`/task/${taskId}/test`} className={styles.actionButton}>
+        {/* ===== 解決3: `ended`フラグでボタンを出し分け ===== */}
+        {!taskDetail.ended ? (
+          <button onClick={handleStartTest} className={styles.actionButton}>
             テストを行う
-          </Link>
+          </button>
         ) : (
           <Link to={`/task/${taskId}/annotate`} className={styles.actionButton}>
-            annotateを行う
+            アノテーションを行う
           </Link>
         )}
       </div>

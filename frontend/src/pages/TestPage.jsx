@@ -7,36 +7,42 @@ const TestPage = () => {
   const { taskId } = useParams();
   const navigate = useNavigate();
 
+  // user_idはログイン情報から取得することを想定。ここではダミーデータとして'3'をセット
+  const userId = '3';
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [testQuestion, setTestQuestion] = useState(null);
+  const [annotationData, setAnnotationData] = useState(null);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
 
-  const fetchNextQuestion = useCallback(async () => {
+  // 関数名をfetchNextAnnotationDataに変更し、ロジックを統一
+  const fetchNextAnnotationData = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await axios.post('/api/get_test_question', {
-        user_id: 3,
+      // CreateMasterTestPage.jsxと全く同じAPIを呼び出す
+      const response = await axios.post('http://127.0.0.1:5001/api/get_test_data', {
+        user_id: userId,
         task_id: taskId,
       });
+
       if (response.data.end) {
-        // This case should ideally be handled after submitting the last answer
-        // alert("テストが既に完了しているか、問題がありません。");
-        navigate(`/task/${taskId}`);
+        // alert("このタスクは既に完了しているか、実施できるものがありません。");
+        navigate('/order'); // 完了時は依頼一覧画面へ遷移
       } else {
-        setTestQuestion(response.data);
-        setSelectedAnswer(null);
+        setAnnotationData(response.data);
+        setSelectedAnswer(null); // 次のデータのために選択をリセット
       }
     } catch (err) {
-      setError('テスト問題の取得に失敗しました。');
+      console.error(err);
+      setError('データの取得に失敗しました。');
     } finally {
       setLoading(false);
     }
-  }, [taskId, navigate]);
+  }, [taskId, userId, navigate]);
 
   useEffect(() => {
-    fetchNextQuestion();
-  }, [fetchNextQuestion]);
+    fetchNextAnnotationData();
+  }, [fetchNextAnnotationData]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -46,60 +52,72 @@ const TestPage = () => {
     }
 
     try {
-      const response = await axios.post('/api/submit_test_answer', {
-        user_id: 3,
+      // 送信するデータ形式とAPIエンドポイントを統一
+      const response = await axios.post('http://127.0.0.1:5001/api/get_make_data', {
+        user_id: userId,
         task_id: taskId,
-        answer: { questionId: testQuestion.question_index, answer: selectedAnswer },
+        test_data_id: annotationData.test_data_id,
+        answers: [selectedAnswer], // 配列形式で送信
       });
 
       if (response.data.end) {
-        navigate(`/task/${taskId}/result`, { state: { result: response.data.result } });
+        // alert("タスクが完了しました。");
+        navigate('/order'); // 完了時は依頼一覧画面へ遷移
       } else {
-        fetchNextQuestion();
+        // 次のデータを取得
+        fetchNextAnnotationData();
       }
     } catch (err) {
-      setError('テスト回答の送信に失敗しました。');
+      console.error(err);
+      setError('回答の送信に失敗しました。');
     }
   };
 
-  if (loading) return <main className={styles.main}>問題を準備中...</main>;
+  if (loading) return <main className={styles.main}>データを準備中...</main>;
   if (error) return <main className={`${styles.main} ${styles.error}`}>{error}</main>;
-  if (!testQuestion) return <main className={styles.main}>テストデータが見つかりません。</main>;
+  if (!annotationData) return <main className={styles.main}>データが見つかりません。</main>;
 
-  const { question, question_index, status, task_details } = testQuestion;
-  const questionInfo = task_details.questions[0];
+  // state名をannotationDataに統一し、受け取るデータ構造を反映
+  const { data, data_count, status, questions } = annotationData;
+  const questionInfo = questions[0]; // 質問は1つと仮定
 
   return (
     <main className={styles.main}>
-        <h1 className={styles.pageTitle}>適性テスト</h1>
+        {/* ページの目的に合わせてタイトルを修正 */}
+        <h1 className={styles.pageTitle}>適正テスト</h1>
       <div className={styles.progressContainer}>
-        {/* バックエンドから受け取ったstatusをそのまま表示 */}
         <div className={styles.progressBar} style={{ width: status }}></div>
         <span className={styles.progressText}>{status}</span>
       </div>
 
       <form onSubmit={handleSubmit} className={styles.testForm}>
-        <h2 className={styles.questionNumber}>問{question_index + 1}</h2>
+        {/* data_countを基に問題番号を表示 */}
+        <h2 className={styles.questionNumber}>問{data_count + 1}</h2>
         <div className={styles.card}>
             <h3 className={styles.cardTitle}>評価対象テキスト</h3>
             <p className={styles.dataText}>
-                {question.text.split('\n').map((line, index) => (
+                {/* テキストの表示ロジックを統一 */}
+                {data.split('\n').map((line, index) => (
                     <span key={index}>{line}<br /></span>
                 ))}
             </p>
         </div>
+
         <div className={styles.card}>
           <h3 className={styles.cardTitle}>{questionInfo.question}</h3>
           <div className={styles.radioGroup}>
-             {[...questionInfo.scale_discription].sort((a,b) => b.score - a.score).map((level) => (
-                <label key={level.score} className={styles.radioLabel}>
+             {/* 選択肢の表示ロジックを統一 */}
+            {[...questionInfo.details].sort((a,b) => b.scale - a.scale).map((level) => (
+                <label key={level.question_details_id} className={styles.radioLabel}>
                     <input
-                        type="radio" name="evaluation" value={level.score}
-                        checked={selectedAnswer === String(level.score)}
+                        type="radio"
+                        name="evaluation"
+                        value={level.question_details_id} // 送信するのはquestion_details_id
+                        checked={selectedAnswer === String(level.question_details_id)}
                         onChange={(e) => setSelectedAnswer(e.target.value)}
                         required
                     />
-                    {level.description}
+                    {level.scale_description}
                 </label>
             ))}
           </div>
