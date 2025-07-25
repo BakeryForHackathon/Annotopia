@@ -12,12 +12,8 @@ from get_task_detail import get_task_detail  # Import the function to get task d
 from make_test import make_test_data  # Import the function to make test data
 from test_copy import test_copy  # Import the function to copy test data
 from get_QWK import get_qwk  # Import the function to get QWK data
-
-# clean_rese
-from clean_reservations import clean_reservations
 from get_annotation_data import get_annotation_data
 from is_annotation_ended import is_annotation_ended
-# make_annotaion
 from make_annotation_data import make_annotation_data
 
 
@@ -130,14 +126,6 @@ def get_qwk_():
     task_id = str(data.get('task_id'))
     qwk_dict = get_qwk(user_id, task_id)
     return make_response(jsonify(qwk_dict["qwk_data"]), 200)
-
-# あとまわし
-# @app.route('/api/ aaa ', methods=['POST'])
-# def clean_reservations_():
-#     data = request.get_json()
-#     user_id = str(data.get('user_id'))
-#     clean_reservations(user_id)
-
 
 @app.route('/api/get_annotation_data', methods=['POST'])
 def get_annotation_data_():
