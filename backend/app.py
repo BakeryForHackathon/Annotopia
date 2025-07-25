@@ -14,7 +14,7 @@ import pandas as pd
 # from make_test import make_test_data  # Import the function to make test data
 # from is_ended import is_test_ended  # Import the function to check if the test is ended
 from get_all_requests import get_all_requests  # Import the function to get all requests
-# from get_task_detail import get_task_detail  # Import the function to get task detail
+from get_task_detail import get_task_detail  # Import the function to get task detail
 # from test_copy import test_copy  # Import the function to copy test data
 # from get_qwk import get_qwk  # Import the function to get QWK data
 
@@ -97,15 +97,15 @@ def get_all_requests_():
     user_tasks = get_all_requests(user_id)
     return jsonify(user_tasks), 200
 
-# @app.route('/api/task_detail', methods=['POST'])
-# def get_task_detail():
-#     data = request.get_json()
-#     user_id = str(data.get('user_id'))
-#     task_id = str(data.get('task_id'))
-#     task_detail = DUMMY_TASK_DETAILS.get(task_id)
-#     if not task_detail: return jsonify({"success": False, "message": "Task not found"}), 404
-#     task_detail['test_ended'] = is_test_ended(user_id, task_id)
-#     return jsonify(task_detail), 200
+@app.route('/api/task_detail', methods=['POST'])
+def get_task_detail_():
+    data = request.get_json()
+    user_id = str(data.get('user_id'))
+    task_id = str(data.get('task_id'))
+    task_detail = get_task_detail(user_id, task_id)
+    if not task_detail: return jsonify({"success": False, "message": "Task not found"}), 404
+    task_detail['test_ended'] = is_test_ended(user_id, task_id)
+    return jsonify(task_detail), 200
 
 # @app.route('/api/get_test', methods=['POST'])
 # def get_test():
