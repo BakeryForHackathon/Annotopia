@@ -1,4 +1,5 @@
 DROP TABLE IF EXISTS
+  reservations,
   test_details,
   annotation_details,
   test_data,
@@ -17,6 +18,7 @@ CREATE TABLE users (
 
 INSERT INTO users (name, password) VALUES ('user1', 'password1');
 INSERT INTO users (name, password) VALUES ('user2', 'password2');
+INSERT INTO users (name, password) VALUES ('user3', 'password3');
 
 -- タスクテーブル
 CREATE TABLE tasks (
@@ -83,9 +85,11 @@ CREATE TABLE annotation_details (
 CREATE TABLE reservations (
     id SERIAL PRIMARY KEY,
     task_id INTEGER NOT NULL REFERENCES tasks(id),
-    test_id INTEGER NOT NULL REFERENCES test_data(id),
+    annotation_data_id INTEGER NOT NULL REFERENCES annotation_data(id),
     user_id INTEGER NOT NULL REFERENCES users(id),
     start_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     expires_at TIMESTAMP,
-    UNIQUE (test_id)
+    UNIQUE (annotation_data_id),
+    UNIQUE (user_id)
 );
+

@@ -20,11 +20,10 @@ def get_qwk(user_id, task_id):
     questions = get_questions_by_task(task_id)
     question_map = {}
     question_group_dct = {}
-    for idx,question in enumerate(questions):
-        details = []
-        for detail in question["details"]:
-            details.append(detail)
-        question_group_dct[idx] = details
+
+    for idx, question in enumerate(questions):
+        # question["details"] は辞書のリストなので、question_details_id のリストに変換
+        question_group_dct[idx] = [detail['question_details_id'] for detail in question["details"]]
         question_map[idx] = question["question"]
         
     client_test_data = get_grouped_test_details(client_id, test_ids,question_group_dct)
@@ -35,6 +34,9 @@ def get_qwk(user_id, task_id):
 
     threshold = get_threshold_by_task_id(task_id)
     qwk_data = []
+    print("quwstion_group_dct", question_group_dct)
+    print("client_test_data", client_test_data)
+    print("user_test_data", user_test_data)
     for group_id in question_group_dct.keys():
         qwk = calculate_qwk(client_test_data[group_id], user_test_data[group_id])
         if qwk >= threshold:
