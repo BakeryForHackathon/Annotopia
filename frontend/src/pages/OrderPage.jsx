@@ -54,11 +54,6 @@ const OrderPage = () => {
             <td>{task.status}</td>
             <td>{task.created_at}</td>
             <td>{task.due_date}</td>
-            <td>
-              <Link to={`/task/${task.task_id}`} className={styles.detailButton}>
-                詳細を見る
-              </Link>
-            </td>
           </tr>
         ))}
       </tbody>
