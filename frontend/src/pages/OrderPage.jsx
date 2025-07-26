@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import styles from './OrderPage.module.css';
 
@@ -9,7 +9,9 @@ const OrderPage = () => {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  // const userId = '3'; // 本番ではログイン情報から取得
+  const location = useLocation();
+  const user = location.state?.user;
+  const userId = user?.id;
 
   useEffect(() => {
     const fetchTasks = async () => {
