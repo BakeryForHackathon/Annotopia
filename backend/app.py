@@ -18,7 +18,7 @@ from make_annotation_data import make_annotation_data
 
 
 app = Flask(__name__)
-CORS(app, origins="https://myapp-frontend-n1ni.onrender.com", supports_credentials=True)
+CORS(app, origins="https://myapp-frontend-3p4k.onrender.com", supports_credentials=True)
 app.logger.setLevel(logging.DEBUG)
 
 
@@ -158,27 +158,16 @@ def make_annotation_data_():
     end = is_annotation_ended(user_id, task_id)
     return make_response(jsonify({"user_id": user_id, "task_id": task_id, "end": end}), 200)
 
-@app.route('/api/upload_task', methods=['POST'])
-def create_task(): return jsonify({"success": True, "task_id": 4})
+# 要修正
+# @app.route('/api/upload_task', methods=['POST'])
+# def create_task(): return jsonify({"success": True, "task_id": 4})
 
 @app.route('/api/requests', methods=['POST'])
-def get_requests():
-    """発注済みの依頼リストを返す"""
+def get_requests_():
     data = request.get_json()
     user_id = str(data.get('user_id'))
-    
-    # DUMMY_TASKS を使わずに、ここで直接ダミーデータを作成
-    tasks = [
-        {"task_id": 1, "title": "【ダミー】機械翻訳の評価", "status": "50%", "created_at": "2025-08-01", "due_date": "2025-08-07"},
-        {"task_id": 2, "title": "【ダミー】画像アノテーション作業", "status": "100%", "created_at": "2025-07-15", "due_date": "2025-07-25"},
-        {"task_id": 3, "title": "【ダミー】テキストデータの分類", "status": "20%", "created_at": "2025-08-05", "due_date": "2025-08-20"},
-        {"task_id": 4, "title": "【ダミー】音声データの文字起こし", "status": "依頼準備中", "created_at": "2025-07-20", "due_date": "2025-07-30"},
-    ]
-    
-    return jsonify({
-        "user_id": user_id,
-        "tasks": tasks
-    })
+    requests = get_requests(user_id)
+    return make_response(jsonify(requests), 200)
 
 # @app.route('/api/submit_test', methods=['POST'])
 # def submit_test():
