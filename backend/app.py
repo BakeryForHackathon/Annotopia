@@ -160,7 +160,7 @@ def make_annotation_data_():
 # 要修正
 import json
 @app.route('/api/upload_task', methods=['POST'])
-def create_task():
+def create_task_():
     try:
         # フォームデータの取得
         user_id = request.form.get('user_id')
