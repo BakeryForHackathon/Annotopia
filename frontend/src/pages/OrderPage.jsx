@@ -23,9 +23,7 @@ const OrderPage = () => {
           user_id: userId,
         });
 
-        console.log("APIからのレスポンス:", response.data);
 
-        
         setTasks(response.data.tasks);
       } catch (err) {
         setError('依頼リストの取得に失敗しました。');

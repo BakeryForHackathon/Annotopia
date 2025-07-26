@@ -20,15 +20,7 @@ const TaskDetailPage = () => {
           user_id: userId,
           task_id: taskId,
         });
-        console.log('taskDetail APIレスポンス:', response.data);
         
-        // questionsの中身を個別にログ
-        if (response.data.questions) {
-          response.data.questions.forEach((q, i) => {
-            console.log(`questions[${i}]:`, q);
-            console.log(`questions[${i}].scale_discription:`, q.scale_discription);
-          });
-        }
         
         setTaskDetail(response.data);
       } catch (err) {

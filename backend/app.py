@@ -75,7 +75,6 @@ def get_task_detail_():
     task_id = str(data.get('task_id'))
     task_detail = get_task_detail(user_id, task_id)
     if not task_detail: return jsonify({"success": False, "message": "Task not found"}), 404
-    task_detail['test_ended'] = is_test_ended(user_id, task_id)
     return make_response(jsonify(task_detail), 200)
 
 @app.route('/api/get_test_data', methods=['POST'])
