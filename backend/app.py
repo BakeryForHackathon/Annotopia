@@ -176,11 +176,22 @@ def create_task_():
         threshold = float(request.form.get('threshold', 0.5))
 
         # ファイルの取得とDataFrame化
-        test_data_file = request.files.get('test_data')
-        test_df = pd.read_csv(test_data_file) if test_data_file else None
+        try:
+            test_data_file = request.files.get('test_data')
+            if test_data_file is None:
+                raise ValueError("test_data ファイルがアップロードされていません。")
+            test_df = pd.read_csv(test_data_file)
+        except Exception as e:
+            return jsonify({"success": False, "error": f"test_data ファイルの読み込みに失敗しました: {str(e)}"}), 400
 
-        data_file = request.files.get('data')
-        data_df = pd.read_csv(data_file) if data_file else None
+        try:
+            data_file = request.files.get('data')
+            if data_file is None:
+                raise ValueError("data ファイルがアップロードされていません。")
+            data_df = pd.read_csv(data_file)
+        except Exception as e:
+            return jsonify({"success": False, "error": f"data ファイルの読み込みに失敗しました: {str(e)}"}), 400
+
 
         # 結果の辞書を構築
         dct = {
