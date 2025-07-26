@@ -3,8 +3,6 @@ import { Link, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import styles from './OrderPage.module.css';
 
-const API_URL = 'https://myapp-backend-q7z0.onrender.com';
-
 const OrderPage = () => {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -17,7 +15,7 @@ const OrderPage = () => {
     const fetchTasks = async () => {
       setLoading(true);
       try {
-        const response = await axios.post(`${API_URL}/api/all_requests`, {
+        const response = await axios.post('/api/requests', {
           user_id: userId,
         });
         setTasks(response.data.tasks);
