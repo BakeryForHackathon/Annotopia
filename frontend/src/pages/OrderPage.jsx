@@ -7,13 +7,13 @@ const OrderPage = () => {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const userId = '3'; // 本番ではログイン情報から取得
+  // const userId = '3'; // 本番ではログイン情報から取得
 
   useEffect(() => {
     const fetchTasks = async () => {
       setLoading(true);
       try {
-        const response = await axios.post('http://127.0.0.1:5001/api/requests', {
+        const response = await axios.post('/api/requests', {
           user_id: userId,
         });
         setTasks(response.data.tasks);

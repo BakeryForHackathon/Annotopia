@@ -6,7 +6,7 @@ import styles from './TestPage.module.css';
 const AnnotationPage = () => {
     const { taskId } = useParams();
     const navigate = useNavigate();
-    const userId = '3'; // 本番ではログイン情報から動的に取得
+    // const userId = '3'; // 本番ではログイン情報から動的に取得
 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -16,7 +16,7 @@ const AnnotationPage = () => {
     const handleGetAnnotationData = useCallback(async () => {
         setLoading(true);
         try {
-            const statusResponse = await axios.post('http://127.0.0.1:5001/api/is_annotation_ended', {
+            const statusResponse = await axios.post('/api/is_annotation_ended', {
                 user_id: userId,
                 task_id: taskId,
             });
@@ -27,7 +27,7 @@ const AnnotationPage = () => {
                 return; // ここで処理を中断
             }
 
-            const dataResponse = await axios.post('http://127.0.0.1:5001/api/get_annotation_data', {
+            const dataResponse = await axios.post('/api/get_annotation_data', {
                 user_id: userId,
                 task_id: taskId
             });
@@ -58,7 +58,7 @@ const AnnotationPage = () => {
             return;
         }
         try {
-            const response = await axios.post('http://127.0.0.1:5001/api/make_annotation_data', {
+            const response = await axios.post('/api/make_annotation_data', {
                 user_id: userId,
                 task_id: taskId,
                 annotation_data_id: annotationData.annotation_data_id,

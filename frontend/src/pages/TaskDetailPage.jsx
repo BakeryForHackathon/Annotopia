@@ -11,12 +11,12 @@ const TaskDetailPage = () => {
   const [error, setError] = useState(null);
 
   // user_idはログイン情報などから取得することを想定。ここでは固定値'3'を使用
-  const userId = '3';
+  // const userId = '3';
 
   useEffect(() => {
     const fetchTaskDetail = async () => {
       try {
-        const response = await axios.post('http://127.0.0.1:5001/api/task_detail', {
+        const response = await axios.post('/api/task_detail', {
           user_id: userId,
           task_id: taskId,
         });
@@ -34,7 +34,7 @@ const TaskDetailPage = () => {
 
   const handleStartTest = async () => {
     try {
-      const response = await axios.post('http://127.0.0.1:5001/api/test_copy', {
+      const response = await axios.post('/api/test_copy', {
         user_id: userId,
         task_id: taskId,
       });

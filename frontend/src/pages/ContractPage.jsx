@@ -11,7 +11,7 @@ const ContractPage = () => {
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const response = await axios.post('http://127.0.0.1:5001/api/all_requests', { user_id: 3 });
+        const response = await axios.post('/api/all_requests', { user_id: 3 });
         setTasks(response.data.tasks);
       } catch (err) {
         setError('データの取得に失敗しました。');
