@@ -70,6 +70,7 @@ const TaskDetailPage = () => {
         <div key={index} className={styles.card}>
           <h2 className={styles.questionTitle}>評価項目{index + 1}: {q.question}</h2>
           <ul className={styles.scaleList}>
+            console.log("スケールの説明:", q);
             {q.scale_discription.slice().sort((a, b) => b.score - a.score).map((desc, i) => (
               <li key={i}>{desc.description}</li>
             ))}
