@@ -18,7 +18,7 @@ from make_annotation_data import make_annotation_data
 
 
 app = Flask(__name__)
-CORS(app, origins="https://myapp-frontend-3p4k.onrender.com", supports_credentials=True)
+CORS(app, origins="https://myapp-frontend-y8f2.onrender.com", supports_credentials=True)
 app.logger.setLevel(logging.DEBUG)
 
 
