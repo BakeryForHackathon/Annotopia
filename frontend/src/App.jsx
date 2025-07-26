@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { createContext, useState, useContext } from 'react';
+import { createContext, useState, useContext, useEffect } from 'react';
 import LoginPage from './pages/LoginPage';
 import MainLayout from './layouts/MainLayout';
 import OrderPage from './pages/OrderPage';
@@ -22,8 +22,12 @@ const ProtectedRoutes = () => {
 };
 
 function App() {
-  const API_URL = 'http://127.0.0.1:5001';
-  const [userId, setUserId] = useState(null);
+  const API_URL = 'https://myapp-backend-q7z0.onrender.com';
+  const [userId, setUserId] = useState(() => sessionStorage.getItem('userId'));
+  useEffect(() => {
+    if (userId) sessionStorage.setItem('userId', userId);
+    else sessionStorage.removeItem('userId');
+  }, [userId]);
 
   return (
     <ApiContext.Provider value={API_URL}>
