@@ -29,6 +29,8 @@ const CreateMasterTestPage = () => {
       //   setAnnotationData(response.data);
       //   setSelectedAnswer(null);
       // }
+        setAnnotationData(response.data);
+        setSelectedAnswer(null);
     } catch (err) {
       console.error(err);
       setError('アノテーションデータの取得に失敗しました。');
