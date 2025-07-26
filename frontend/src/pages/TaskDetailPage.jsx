@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import styles from './TaskDetailPage.module.css';
+import { ApiContext, UserContext } from '../App';
 
 const TaskDetailPage = () => {
   const { taskId } = useParams();
@@ -9,14 +10,13 @@ const TaskDetailPage = () => {
   const [taskDetail, setTaskDetail] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  // user_idはログイン情報などから取得することを想定。ここでは固定値'3'を使用
-  // const userId = '3';
+  const API_URL = useContext(ApiContext);
+  const { userId } = useContext(UserContext);
 
   useEffect(() => {
     const fetchTaskDetail = async () => {
       try {
-        const response = await axios.post('/api/task_detail', {
+        const response = await axios.post(`${API_URL}/api/task_detail`, {
           user_id: userId,
           task_id: taskId,
         });
@@ -34,7 +34,7 @@ const TaskDetailPage = () => {
 
   const handleStartTest = async () => {
     try {
-      const response = await axios.post('/api/test_copy', {
+      const response = await axios.post(`${API_URL}/api/test_copy`, {
         user_id: userId,
         task_id: taskId,
       });

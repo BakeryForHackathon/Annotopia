@@ -1,19 +1,21 @@
-import { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { useState, useEffect, useContext } from 'react';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import styles from './OrderPage.module.css';
-
-const API_URL = 'https://myapp-backend-q7z0.onrender.com';
+import { ApiContext, UserContext } from '../App';
 
 const OrderPage = () => {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const location = useLocation();
-  const user = location.state?.user;
-  const userId = user?.id;
+  const API_URL = useContext(ApiContext);
+  const { userId } = useContext(UserContext);
 
   useEffect(() => {
+    if (!userId) {
+      setLoading(false);
+      return;
+    }
     const fetchTasks = async () => {
       setLoading(true);
       try {

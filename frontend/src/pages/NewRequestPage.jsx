@@ -1,12 +1,14 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import commonStyles from './OrderPage.module.css';
 import formStyles from './NewRequestPage.module.css';
+import { ApiContext, UserContext } from '../App';
 
 const NewRequestPage = () => {
   const navigate = useNavigate();
-
+  const API_URL = useContext(ApiContext);
+  const { userId } = useContext(UserContext);
   const [title, setTitle] = useState('機械翻訳の評価');
   const [description, setDescription] = useState('英日翻訳の正確さを3段階で評価してください');
   const [evaluationItems, setEvaluationItems] = useState([
@@ -66,7 +68,7 @@ const NewRequestPage = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const formData = new FormData();
-    formData.append('user_id', 3);
+    formData.append('user_id', userId);
     formData.append('title', title);
     formData.append('description', description);
     formData.append('questions', JSON.stringify(evaluationItems));
@@ -77,7 +79,7 @@ const NewRequestPage = () => {
     if (dataFile) formData.append('data', dataFile);
 
     try {
-      const response = await axios.post('/api/upload_task', formData, {
+      const response = await axios.post(`${API_URL}/api/upload_task`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
       if (response.data.success) {

@@ -1,10 +1,8 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import styles from './LoginPage.module.css';
-
-// 本番環境と開発環境でAPIエンドポイントを切り替える
-const API_URL = 'https://myapp-backend-q7z0.onrender.com';
+import { ApiContext, UserContext } from '../App';
 
 const logoUrl = '/logo.png';
 
@@ -13,6 +11,8 @@ const LoginPage = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const API_URL = useContext(ApiContext);
+  const { setUserId } = useContext(UserContext);
 
   const validateInput = () => {
     if (!username || !password) {
@@ -48,7 +48,8 @@ const LoginPage = () => {
       });
 
       if (response.data.success) {
-        navigate('/order', { state: { user: response.data.user } });
+        setUserId(response.data.user.id);
+        navigate('/order');
       } else {
         setError('ユーザー名またはパスワードが違います。');
       }
