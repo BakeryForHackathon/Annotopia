@@ -1,22 +1,21 @@
 import { useState, useEffect } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom'; // useNavigate をインポート
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import styles from './TaskDetailPage.module.css';
 
 const TaskDetailPage = () => {
   const { taskId } = useParams();
-  const navigate = useNavigate(); // useNavigateフックを使用
+  const navigate = useNavigate();
   const [taskDetail, setTaskDetail] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  
+
   // user_idはログイン情報などから取得することを想定。ここでは固定値'3'を使用
   const userId = '3';
 
   useEffect(() => {
     const fetchTaskDetail = async () => {
       try {
-        // ===== 解決1: バックエンドにtask_idとuser_idを送信 =====
         const response = await axios.post('http://127.0.0.1:5001/api/task_detail', {
           user_id: userId,
           task_id: taskId,
@@ -33,17 +32,14 @@ const TaskDetailPage = () => {
     fetchTaskDetail();
   }, [taskId, userId]);
 
-  // ===== 解決4: 「テストを行う」ボタンの処理 =====
   const handleStartTest = async () => {
     try {
-      // テスト開始APIを呼び出す
       const response = await axios.post('http://127.0.0.1:5001/api/test_copy', {
         user_id: userId,
         task_id: taskId,
       });
 
       if (response.data.success) {
-        // API呼び出しが成功したらテストページに遷移
         navigate(`/task/${taskId}/test`);
       } else {
         setError('テストの開始に失敗しました。');
@@ -74,7 +70,6 @@ const TaskDetailPage = () => {
         <div key={index} className={styles.card}>
           <h2 className={styles.questionTitle}>評価項目{index + 1}: {q.question}</h2>
           <ul className={styles.scaleList}>
-            {/* 評価基準をリスト表示 */}
             {q.scale_discription.slice().sort((a, b) => b.score - a.score).map((desc, i) => (
               <li key={i}>{desc.description}</li>
             ))}
@@ -83,7 +78,6 @@ const TaskDetailPage = () => {
       ))}
 
       <div className={styles.actions}>
-        {/* ===== 解決3: `ended`フラグでボタンを出し分け ===== */}
         {!taskDetail.ended ? (
           <button onClick={handleStartTest} className={styles.actionButton}>
             テストを行う

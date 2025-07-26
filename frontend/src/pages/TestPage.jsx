@@ -25,7 +25,7 @@ const TestPage = () => {
 
       if (response.data.end) {
         // alert("このタスクは既に完了しているか、実施できるものがありません。");
-        navigate('/order');
+        navigate('/contract');
       } else {
         setAnnotationData(response.data);
         setSelectedAnswer(null);

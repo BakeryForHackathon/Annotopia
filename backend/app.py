@@ -86,16 +86,16 @@ def get_test_data_():
     answers = get_test_data(user_id, task_id)
     return make_response(jsonify(answers), 200)
 
-@app.route('/api/get_master_test_question', methods=['POST'])
-def get_master_test_question():
-    data = request.get_json()
-    user_id = str(data.get('user_id'))
-    task_id = str(data.get('task_id'))
-    test_data = get_test_data(user_id, task_id)
-    if not test_data: return jsonify({"success": False, "message": "Test data not found"}), 404
-    # task_detail = get_test_data(user_id, task_id)
-    return make_response(jsonify(test_data), 200)
-    # return jsonify({"test_info": test_data, "task_detail": task_detail}), 200
+# @app.route('/api/get_master_test_question', methods=['POST'])
+# def get_master_test_question():
+#     data = request.get_json()
+#     user_id = str(data.get('user_id'))
+#     task_id = str(data.get('task_id'))
+#     test_data = get_test_data(user_id, task_id)
+#     if not test_data: return jsonify({"success": False, "message": "Test data not found"}), 404
+#     # task_detail = get_test_data(user_id, task_id)
+#     return make_response(jsonify(test_data), 200)
+#     # return jsonify({"test_info": test_data, "task_detail": task_detail}), 200
 
 ## フロントと形式を相談
 @app.route('/api/get_make_data', methods=['POST'])
@@ -144,7 +144,7 @@ def is_annotation_ended_():
     return make_response(jsonify({"user_id": user_id, "task_id": task_id, "end": answers_flg}), 200)
 
 # debug queue
-@app.route('/api/make_annotation_data', methods=['POST'])
+@app.route('/api/get_make_annotation_data', methods=['POST'])
 def make_annotation_data_():
     data = request.get_json()
     user_id = str(data.get('user_id'))
@@ -158,6 +158,27 @@ def make_annotation_data_():
     end = is_annotation_ended(user_id, task_id)
     return make_response(jsonify({"user_id": user_id, "task_id": task_id, "end": end}), 200)
 
+@app.route('/api/upload_task', methods=['POST'])
+def create_task(): return jsonify({"success": True, "task_id": 4})
+
+@app.route('/api/requests', methods=['POST'])
+def get_requests():
+    """発注済みの依頼リストを返す"""
+    data = request.get_json()
+    user_id = str(data.get('user_id'))
+    
+    # DUMMY_TASKS を使わずに、ここで直接ダミーデータを作成
+    tasks = [
+        {"task_id": 1, "title": "【ダミー】機械翻訳の評価", "status": "50%", "created_at": "2025-08-01", "due_date": "2025-08-07"},
+        {"task_id": 2, "title": "【ダミー】画像アノテーション作業", "status": "100%", "created_at": "2025-07-15", "due_date": "2025-07-25"},
+        {"task_id": 3, "title": "【ダミー】テキストデータの分類", "status": "20%", "created_at": "2025-08-05", "due_date": "2025-08-20"},
+        {"task_id": 4, "title": "【ダミー】音声データの文字起こし", "status": "依頼準備中", "created_at": "2025-07-20", "due_date": "2025-07-30"},
+    ]
+    
+    return jsonify({
+        "user_id": user_id,
+        "tasks": tasks
+    })
 
 # @app.route('/api/submit_test', methods=['POST'])
 # def submit_test():
