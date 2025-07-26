@@ -160,7 +160,10 @@ def make_annotation_data_():
 
 # 要修正
 # @app.route('/api/upload_task', methods=['POST'])
-# def create_task(): return jsonify({"success": True, "task_id": 4})
+# def create_task():
+#     response_data = {
+#         "success": True, "user_id": 1, "task_id": 1}
+#     return jsonify(response_data)
 
 @app.route('/api/requests', methods=['POST'])
 def get_requests_():
