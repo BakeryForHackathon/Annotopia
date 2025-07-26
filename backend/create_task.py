@@ -96,7 +96,7 @@ def create_task(task_dict):
                 print("annotation_detailsの保存に失敗しました")
                 return False
             
-        return True
+        return task_id
 
     except Exception as e:
         if conn:

@@ -18,7 +18,7 @@ from make_annotation_data import make_annotation_data
 
 
 app = Flask(__name__)
-CORS(app, origins="https://myapp-frontend-3p4k.onrender.com", supports_credentials=True)
+CORS(app, origins="https://myapp-frontend-e29x.onrender.com", supports_credentials=True)
 app.logger.setLevel(logging.DEBUG)
 
 
@@ -158,11 +158,62 @@ def make_annotation_data_():
     return make_response(jsonify({"user_id": user_id, "task_id": task_id, "end": end}), 200)
 
 # 要修正
-# @app.route('/api/upload_task', methods=['POST'])
-# def create_task():
-#     response_data = {
-#         "success": True, "user_id": 1, "task_id": 1}
-#     return jsonify(response_data)
+import json
+@app.route('/api/upload_task', methods=['POST'])
+def create_task_():
+    try:
+        # フォームデータの取得
+        user_id = request.form.get('user_id')
+        title = request.form.get('title')
+        description = request.form.get('description')
+        question_count = int(request.form.get('question_count', 0))
+        questions = json.loads(request.form.get('questions', '[]'))
+        private = request.form.get('private') == 'true'
+        start_day = request.form.get('start_day')
+        end_day = request.form.get('end_day')
+        max_annotations_per_user = int(request.form.get('max_annotations_per_user', 1))
+        test = request.form.get('test') == 'true'
+        threshold = float(request.form.get('threshold', 0.5))
+
+        # ファイルの取得とDataFrame化
+        test_data_file = request.files.get('test_data')
+        test_df = pd.read_csv(test_data_file) if test_data_file else None
+
+        data_file = request.files.get('data')
+        data_df = pd.read_csv(data_file) if data_file else None
+
+        # 結果の辞書を構築
+        dct = {
+            "user_id": int(user_id),
+            "title": title,
+            "description": description,
+            "question_count": question_count,
+            "questions": questions,
+            "private": private,
+            "start_day": start_day,
+            "end_day": end_day,
+            "max_annotations_per_user": max_annotations_per_user,
+            "test": test,
+            "threshold": threshold,
+            "test_data": test_df.to_dict(orient='records') if test_df is not None else None,
+            "data": data_df.to_dict(orient='records') if data_df is not None else None
+        }
+
+        task_id = create_task(dct)  # create_task関数を呼び出してタスクを作成
+        if not task_id:
+            success = False
+        else:
+            success = True
+        # 成功レスポンス
+        return jsonify({
+            "success": success,
+            "user_id": dct["user_id"],
+            "task_id": task_id ,
+            "data": dct  # ← 確認用に全データ返してもよい（不要なら削除）
+        })
+
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 400
 
 @app.route('/api/requests', methods=['POST'])
 def get_requests_():
