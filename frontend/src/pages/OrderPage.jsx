@@ -17,7 +17,7 @@ const OrderPage = () => {
     const fetchTasks = async () => {
       setLoading(true);
       try {
-        const response = await axios.post(`${API_URL}//api/requests`, {
+        const response = await axios.post(`${API_URL}/api/requests`, {
           user_id: userId,
         });
         setTasks(response.data.tasks);
