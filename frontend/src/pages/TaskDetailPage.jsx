@@ -20,6 +20,16 @@ const TaskDetailPage = () => {
           user_id: userId,
           task_id: taskId,
         });
+        console.log('taskDetail APIレスポンス:', response.data);
+        
+        // questionsの中身を個別にログ
+        if (response.data.questions) {
+          response.data.questions.forEach((q, i) => {
+            console.log(`questions[${i}]:`, q);
+            console.log(`questions[${i}].scale_discription:`, q.scale_discription);
+          });
+        }
+        
         setTaskDetail(response.data);
       } catch (err) {
         setError('タスク詳細の取得に失敗しました。');
@@ -31,6 +41,7 @@ const TaskDetailPage = () => {
 
     fetchTaskDetail();
   }, [taskId, userId]);
+
 
   const handleStartTest = async () => {
     try {
@@ -70,7 +81,7 @@ const TaskDetailPage = () => {
         <div key={index} className={styles.card}>
           <h2 className={styles.questionTitle}>評価項目{index + 1}: {q.question}</h2>
           <ul className={styles.scaleList}>
-            console.log("スケールの説明:", q);
+            
             {q.scale_discription.slice().sort((a, b) => b.score - a.score).map((desc, i) => (
               <li key={i}>{desc.description}</li>
             ))}
