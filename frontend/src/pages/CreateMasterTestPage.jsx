@@ -7,34 +7,40 @@ const CreateMasterTestPage = () => {
   const { taskId } = useParams();
   const navigate = useNavigate();
 
+  // user_idはログイン情報から取得することを想定。ここではダミーデータとして'3'をセット
+  // const userId = '3';
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [testQuestion, setTestQuestion] = useState(null);
+  const [annotationData, setAnnotationData] = useState(null);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
 
-  const fetchNextMasterQuestion = useCallback(async () => {
+  const fetchNextAnnotationData = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await axios.post('/api/get_master_test_question', {
+      const response = await axios.post('/api/get_test_data', {
+        user_id: userId,
         task_id: taskId,
       });
+
       if (response.data.end) {
-        // alert("正解データの作成が既に完了しています。");
+        // alert("このタスクのアノテーションは完了しました。");
         navigate('/order');
       } else {
-        setTestQuestion(response.data);
+        setAnnotationData(response.data);
         setSelectedAnswer(null);
       }
     } catch (err) {
-      setError('テスト問題の取得に失敗しました。');
+      console.error(err);
+      setError('アノテーションデータの取得に失敗しました。');
     } finally {
       setLoading(false);
     }
-  }, [taskId, navigate]);
+  }, [taskId, userId, navigate]);
 
   useEffect(() => {
-    fetchNextMasterQuestion();
-  }, [fetchNextMasterQuestion]);
+    fetchNextAnnotationData();
+  }, [fetchNextAnnotationData]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -44,44 +50,46 @@ const CreateMasterTestPage = () => {
     }
 
     try {
-      const response = await axios.post('/api/submit_master_answer', {
+      const response = await axios.post('/api/get_make_data', {
+        user_id: userId,
         task_id: taskId,
-        answer: { questionId: testQuestion.question_index, answer: selectedAnswer },
+        test_data_id: annotationData.test_data_id,
+        answers: [selectedAnswer],
       });
 
       if (response.data.end) {
-        // alert("テストの正解データを保存しました。");
+        // alert("このタスクのアノテーションはすべて完了しました。");
         navigate('/order');
       } else {
-        fetchNextMasterQuestion();
+        fetchNextAnnotationData();
       }
     } catch (err) {
-      setError('正解データの送信に失敗しました。');
+      console.error(err);
+      setError('アノテーション結果の送信に失敗しました。');
     }
   };
 
-  if (loading) return <main className={styles.main}>問題を準備中...</main>;
+  if (loading) return <main className={styles.main}>データを準備中...</main>;
   if (error) return <main className={`${styles.main} ${styles.error}`}>{error}</main>;
-  if (!testQuestion) return <main className={styles.main}>テストデータが見つかりません。</main>;
+  if (!annotationData) return <main className={styles.main}>アノテーションデータが見つかりません。</main>;
 
-  const { question, question_index, status, task_details } = testQuestion;
-  const questionInfo = task_details.questions[0];
+  const { data, data_count, status, questions } = annotationData;
+  const questionInfo = questions[0];
 
   return (
     <main className={styles.main}>
-        <h1 className={styles.pageTitle}>テスト正解データ作成</h1>
+        <h1 className={styles.pageTitle}>アノテーション作業</h1>
       <div className={styles.progressContainer}>
-        {/* バックエンドから受け取ったstatusをそのまま表示 */}
         <div className={styles.progressBar} style={{ width: status }}></div>
         <span className={styles.progressText}>{status}</span>
       </div>
 
       <form onSubmit={handleSubmit} className={styles.testForm}>
-        <h2 className={styles.questionNumber}>問{question_index + 1}</h2>
+        <h2 className={styles.questionNumber}>問{data_count + 1}</h2>
         <div className={styles.card}>
             <h3 className={styles.cardTitle}>評価対象テキスト</h3>
             <p className={styles.dataText}>
-                {question.text.split('\n').map((line, index) => (
+                {data.split('\n').map((line, index) => (
                     <span key={index}>{line}<br /></span>
                 ))}
             </p>
@@ -90,15 +98,17 @@ const CreateMasterTestPage = () => {
         <div className={styles.card}>
           <h3 className={styles.cardTitle}>{questionInfo.question}</h3>
           <div className={styles.radioGroup}>
-             {[...questionInfo.scale_discription].sort((a,b) => b.score - a.score).map((level) => (
-                <label key={level.score} className={styles.radioLabel}>
+            {[...questionInfo.details].sort((a,b) => b.scale - a.scale).map((level) => (
+                <label key={level.question_details_id} className={styles.radioLabel}>
                     <input
-                        type="radio" name="evaluation" value={level.score}
-                        checked={selectedAnswer === String(level.score)}
+                        type="radio"
+                        name="evaluation"
+                        value={level.question_details_id}
+                        checked={selectedAnswer === String(level.question_details_id)}
                         onChange={(e) => setSelectedAnswer(e.target.value)}
                         required
                     />
-                    {level.description}
+                    {level.scale_description}
                 </label>
             ))}
           </div>
