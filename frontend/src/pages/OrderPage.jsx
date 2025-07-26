@@ -47,7 +47,6 @@ const OrderPage = () => {
             <td>{task.created_at}</td>
             <td>{task.due_date}</td>
             <td>
-              {/* テーブル内の詳細ボタン */}
               <Link to={`/task/${task.task_id}`} className={styles.detailButton}>
                 詳細を見る
               </Link>
@@ -60,13 +59,10 @@ const OrderPage = () => {
 
   return (
     <main className={styles.main}>
-      {/* このボタンはそのまま残します */}
       <Link to="/new-request" className={styles.actionButton}>
         新しい依頼
       </Link>
       <div className={styles.listTitle}>発注済み依頼リスト</div>
-      
-      {/* ここからテーブル表示 */}
       <div className={styles.tableContainer}>
         <table className={styles.taskTable}>
           <thead>

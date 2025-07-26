@@ -54,7 +54,7 @@ const AnnotationPage = () => {
     const handleMakeAnnotationData = async (e) => {
         e.preventDefault();
         if (!selectedAnswerId) {
-            alert('評価を選択してください。');
+            // alert('評価を選択してください。');
             return;
         }
         try {
@@ -66,7 +66,7 @@ const AnnotationPage = () => {
             });
 
             if (response.data.end) {
-                alert("アノテーションのノルマが完了しました！");
+                // alert("アノテーションのノルマが完了しました！");
                 navigate('/contract');
             } else {
                 handleGetAnnotationData();
