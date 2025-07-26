@@ -176,11 +176,23 @@ def create_task_():
         threshold = float(request.form.get('threshold', 0.5))
 
         # ファイルの取得とDataFrame化
-        test_data_file = request.files.get('test_data')
-        test_df = pd.read_csv(test_data_file) if test_data_file else None
 
-        data_file = request.files.get('data')
-        data_df = pd.read_csv(data_file) if data_file else None
+        try:
+            test_data_file = request.files.get('test_data')
+            if test_data_file is None:
+                raise ValueError("test_data ファイルがアップロードされていません。")
+            test_df = pd.read_csv(test_data_file,header=None)
+        except Exception as e:
+            return jsonify({"success": False, "error": f"test_data ファイルの読み込みに失敗しました: {str(e)}"}), 400
+
+        try:
+            data_file = request.files.get('data')
+            if data_file is None:
+                raise ValueError("data ファイルがアップロードされていません。")
+            data_df = pd.read_csv(data_file,header=None)
+        except Exception as e:
+            return jsonify({"success": False, "error": f"data ファイルの読み込みに失敗しました: {str(e)}"}), 400
+
 
         # 結果の辞書を構築
         dct = {
@@ -195,8 +207,8 @@ def create_task_():
             "max_annotations_per_user": max_annotations_per_user,
             "test": test,
             "threshold": threshold,
-            "test_data": test_df.to_dict(orient='records') if test_df is not None else None,
-            "data": data_df.to_dict(orient='records') if data_df is not None else None
+            "test_data": test_df,
+            "data": data_df
         }
 
         task_id = create_task(dct)  # create_task関数を呼び出してタスクを作成
@@ -208,8 +220,7 @@ def create_task_():
         return jsonify({
             "success": success,
             "user_id": dct["user_id"],
-            "task_id": task_id ,
-            "data": dct  # ← 確認用に全データ返してもよい（不要なら削除）
+            "task_id": task_id
         })
 
     except Exception as e:

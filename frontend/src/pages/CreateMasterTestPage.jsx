@@ -22,13 +22,15 @@ const CreateMasterTestPage = () => {
         task_id: taskId,
       });
 
-      if (response.data.end) {
-        // alert("このタスクのアノテーションは完了しました。");
-        navigate('/order');
-      } else {
+      // if (response.data.end) {
+      //   // alert("このタスクのアノテーションは完了しました。");
+      //   navigate('/order');
+      // } else {
+      //   setAnnotationData(response.data);
+      //   setSelectedAnswer(null);
+      // }
         setAnnotationData(response.data);
         setSelectedAnswer(null);
-      }
     } catch (err) {
       console.error(err);
       setError('アノテーションデータの取得に失敗しました。');
