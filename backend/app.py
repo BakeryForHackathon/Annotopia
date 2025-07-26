@@ -188,7 +188,43 @@ def get_requests_():
 #     return jsonify({"success": True, "score": score, "passed": passed})
 
 
+@app.route('/api/debag_create_task', methods=['POST'])
+def debag_create_task_():
+    
+    test_df = pd.read_csv("test.csv",header=None)
+    data_df = pd.read_csv("annotate.csv",header=None)
 
+    task_dict = {
+        "user_id": 1,
+        "title": "機械翻訳の評価",
+        "description": "英日翻訳の正確さを3段階で評価してください",
+        "question_count": 2,
+        "questions": [
+            {
+                "question": "正確さ",
+                "scale_discription": [
+                    "原文の意味をほとんどまたは全く伝えていない。",
+                    "原文の意味の半分以上は伝えているが、重要な情報の抜けや軽微な誤訳がある。",
+                    "原文の意味を完全に伝えており、情報の欠落や誤訳がまったくない。"
+                ]
+            },
+            {
+                "question": "流暢性",
+                "scale_discription": [
+                    "いい感じ",
+                    "全然ダメ"
+                ]
+            }
+        ],
+        "private": True,
+        "start_day": "2025-08-01",
+        "end_day": "2025-08-07",
+        "max_annotations_per_user": 100,
+        "test": True,
+        "threshold": 0.5,
+        "test_data": test_df,   # pandas.DataFrame
+        "data": data_df         # pandas.DataFrame
+    }
 
 if __name__ == '__main__':
     app.run(debug=True, port=5001)
