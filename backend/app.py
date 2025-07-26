@@ -207,8 +207,8 @@ def create_task_():
             "max_annotations_per_user": max_annotations_per_user,
             "test": test,
             "threshold": threshold,
-            "test_data": test_df.to_dict(orient='records') if test_df is not None else None,
-            "data": data_df.to_dict(orient='records') if data_df is not None else None
+            "test_data": test_df,
+            "data": data_df
         }
 
         task_id = create_task(dct)  # create_task関数を呼び出してタスクを作成
