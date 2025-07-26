@@ -22,7 +22,7 @@ const ProtectedRoutes = () => {
 };
 
 function App() {
-  const API_URL = 'https://myapp-backend-q7z0.onrender.com';
+  const API_URL = 'https://myapp-backend-e29x.onrender.com';
   const [userId, setUserId] = useState(() => localStorage.getItem('userId'));
   useEffect(() => {
     if (userId) localStorage.setItem('userId', userId);
