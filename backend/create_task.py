@@ -74,6 +74,7 @@ def create_task(task_dict):
             for _, row in task_dict["data"].iterrows():
                 # ここで、適切なカラム名や値の取り出し方に置き換える
                 text = row.iloc[0]  # もしくは row['text']
+                print(text)
                 cur.execute("""
                     INSERT INTO annotation_data (task_id, data)
                     VALUES (%s, %s)
