@@ -1,24 +1,23 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import styles from './TestPage.module.css';
+import { ApiContext, UserContext } from '../App';
 
 const CreateMasterTestPage = () => {
   const { taskId } = useParams();
   const navigate = useNavigate();
-
-  // user_idはログイン情報から取得することを想定。ここではダミーデータとして'3'をセット
-  // const userId = '3';
-
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [annotationData, setAnnotationData] = useState(null);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
+  const API_URL = useContext(ApiContext);
+  const { userId } = useContext(UserContext);
 
   const fetchNextAnnotationData = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await axios.post('/api/get_test_data', {
+      const response = await axios.post(`${API_URL}/api/get_test_data`, {
         user_id: userId,
         task_id: taskId,
       });
@@ -50,7 +49,7 @@ const CreateMasterTestPage = () => {
     }
 
     try {
-      const response = await axios.post('/api/get_make_data', {
+      const response = await axios.post(`${API_URL}/api/get_make_data`, {
         user_id: userId,
         task_id: taskId,
         test_data_id: annotationData.test_data_id,

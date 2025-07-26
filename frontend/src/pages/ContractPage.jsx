@@ -1,17 +1,20 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import styles from './ContractPage.module.css';
+import { ApiContext, UserContext } from '../App';
 
 const ContractPage = () => {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const API_URL = useContext(ApiContext);
+  const { userId } = useContext(UserContext);
 
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const response = await axios.post('/api/all_requests', { user_id: 3 });
+        const response = await axios.post(`${API_URL}/api/all_requests`, { user_id: userId });
         setTasks(response.data.tasks);
       } catch (err) {
         setError('データの取得に失敗しました。');
@@ -56,7 +59,7 @@ const ContractPage = () => {
               ))
             ) : (
               <tr>
-                <td colSpan="5">依頼したタスクはありません。</td>
+                <td colSpan="5">依頼されたタスクはありません。</td>
               </tr>
             )}
           </tbody>

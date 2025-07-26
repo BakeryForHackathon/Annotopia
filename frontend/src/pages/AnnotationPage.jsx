@@ -1,22 +1,23 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import styles from './TestPage.module.css';
+import { ApiContext, UserContext } from '../App';
 
 const AnnotationPage = () => {
     const { taskId } = useParams();
     const navigate = useNavigate();
-    // const userId = '3'; // 本番ではログイン情報から動的に取得
-
+    const { userId } = useContext(UserContext);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [annotationData, setAnnotationData] = useState(null);
     const [selectedAnswerId, setSelectedAnswerId] = useState(null);
+    const API_URL = useContext(ApiContext);
 
     const handleGetAnnotationData = useCallback(async () => {
         setLoading(true);
         try {
-            const statusResponse = await axios.post('/api/is_annotation_ended', {
+            const statusResponse = await axios.post(`${API_URL}/api/is_annotation_ended`, {
                 user_id: userId,
                 task_id: taskId,
             });
@@ -27,7 +28,7 @@ const AnnotationPage = () => {
                 return; // ここで処理を中断
             }
 
-            const dataResponse = await axios.post('/api/get_annotation_data', {
+            const dataResponse = await axios.post(`${API_URL}/api/get_annotation_data`, {
                 user_id: userId,
                 task_id: taskId
             });
@@ -54,11 +55,11 @@ const AnnotationPage = () => {
     const handleMakeAnnotationData = async (e) => {
         e.preventDefault();
         if (!selectedAnswerId) {
-            alert('評価を選択してください。');
+            // alert('評価を選択してください。');
             return;
         }
         try {
-            const response = await axios.post('/api/make_annotation_data', {
+            const response = await axios.post(`${API_URL}/api/make_annotation_data`, {
                 user_id: userId,
                 task_id: taskId,
                 annotation_data_id: annotationData.annotation_data_id,
@@ -66,7 +67,7 @@ const AnnotationPage = () => {
             });
 
             if (response.data.end) {
-                alert("アノテーションのノルマが完了しました！");
+                // alert("アノテーションのノルマが完了しました！");
                 navigate('/contract');
             } else {
                 handleGetAnnotationData();

@@ -1,19 +1,21 @@
-import { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { useState, useEffect, useContext } from 'react';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import styles from './OrderPage.module.css';
-
-const API_URL = 'https://myapp-backend-q7z0.onrender.com';
+import { ApiContext, UserContext } from '../App';
 
 const OrderPage = () => {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const location = useLocation();
-  const user = location.state?.user;
-  const userId = user?.id;
+  const API_URL = useContext(ApiContext);
+  const { userId } = useContext(UserContext);
 
   useEffect(() => {
+    if (!userId) {
+      setLoading(false);
+      return;
+    }
     const fetchTasks = async () => {
       setLoading(true);
       try {
@@ -51,7 +53,6 @@ const OrderPage = () => {
             <td>{task.created_at}</td>
             <td>{task.due_date}</td>
             <td>
-              {/* テーブル内の詳細ボタン */}
               <Link to={`/task/${task.task_id}`} className={styles.detailButton}>
                 詳細を見る
               </Link>
@@ -64,13 +65,10 @@ const OrderPage = () => {
 
   return (
     <main className={styles.main}>
-      {/* このボタンはそのまま残します */}
       <Link to="/new-request" className={styles.actionButton}>
         新しい依頼
       </Link>
       <div className={styles.listTitle}>発注済み依頼リスト</div>
-      
-      {/* ここからテーブル表示 */}
       <div className={styles.tableContainer}>
         <table className={styles.taskTable}>
           <thead>
