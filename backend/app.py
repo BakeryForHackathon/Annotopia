@@ -220,8 +220,7 @@ def create_task_():
         return jsonify({
             "success": success,
             "user_id": dct["user_id"],
-            "task_id": task_id ,
-            "data": dct  # ← 確認用に全データ返してもよい（不要なら削除）
+            "task_id": task_id
         })
 
     except Exception as e:
