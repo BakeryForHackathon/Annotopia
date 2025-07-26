@@ -158,15 +158,16 @@ def make_annotation_data_():
     end = is_annotation_ended(user_id, task_id)
     return make_response(jsonify({"user_id": user_id, "task_id": task_id, "end": end}), 200)
 
-@app.route('/api/upload_task', methods=['POST'])
-def create_task(): return jsonify({"success": True, "task_id": 4})
+# 要修正
+# @app.route('/api/upload_task', methods=['POST'])
+# def create_task(): return jsonify({"success": True, "task_id": 4})
 
 @app.route('/api/requests', methods=['POST'])
 def get_requests_():
     data = request.get_json()
     user_id = str(data.get('user_id'))
     requests = get_requests(user_id)
-    return make_response(jsonify({requests}), 200)
+    return make_response(jsonify(requests), 200)
 
 # @app.route('/api/submit_test', methods=['POST'])
 # def submit_test():
