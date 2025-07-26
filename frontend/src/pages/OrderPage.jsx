@@ -22,6 +22,10 @@ const OrderPage = () => {
         const response = await axios.post(`${API_URL}/api/requests`, {
           user_id: userId,
         });
+
+        console.log("APIからのレスポンス:", response.data);
+
+        
         setTasks(response.data.tasks);
       } catch (err) {
         setError('依頼リストの取得に失敗しました。');
