@@ -8,7 +8,6 @@ const logoUrl = '/logo.png';
 
 const LoginPage = () => {
   const [username, setUsername] = useState('');
-  const [usernameHash, setUsernameHash] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
@@ -50,7 +49,6 @@ const LoginPage = () => {
 
       if (response.data.success) {
         setUserId(response.data.user.id);
-        setUsernameHash(response.data.token);
         navigate('/order');
       } else {
         setError('ユーザー名またはパスワードが違います。');
