@@ -92,14 +92,16 @@ const AnnotationPage = () => {
     return (
         <main className={styles.main}>
             <h1 className={styles.pageTitle}>アノテーション作業</h1>
-            <div className={styles.progressContainer}>
-                <div className={styles.progressBar} style={{ width: annotationData.status }}></div>
-                <span className={styles.progressText}>{annotationData.status}</span>
+            <div style={{ width: '100%', margin: '20px auto' }}>
+                <div className={styles.progressContainer}>
+                    <div className={styles.progressBar} style={{ width: annotationData.status }}></div>
+                    <span className={styles.progressText}>{annotationData.status}</span>
+                </div>
             </div>
             <form onSubmit={handleMakeAnnotationData} className={styles.testForm}>
                 <h2 className={styles.questionNumber}>問{annotationData.data_count + 1}</h2>
 
-               <div className={styles.card}>
+                <div className={styles.card}>
                     <h3 className={styles.cardTitle}>評価対象データ</h3>
                     <div className={styles.dataText}>
                         {annotationData.data.replace(/\\n/g, '\n').split('\n').map((line, index) => (
