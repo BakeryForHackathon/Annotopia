@@ -35,6 +35,34 @@ const OrderPage = () => {
 
     fetchTasks();
   }, [userId]);
+  
+const handleSendTaskId = async (taskId) => {
+  try {
+    const response = await axios.post(
+      `${API_URL}/api/finalize_task`,
+      { task_id: taskId },
+      {
+        responseType: 'blob', // CSV取得
+      }
+    );
+
+    // ブラウザでCSVをダウンロード
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', `task_${taskId}_result.csv`);
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+
+    alert('CSVファイルをダウンロードしました。');
+  } catch (err) {
+    console.error('タスクCSVダウンロードに失敗:', err);
+    alert('CSVの取得に失敗しました。');
+  }
+};
+
+
 
   const renderTaskList = () => {
     if (loading) {
@@ -54,6 +82,16 @@ const OrderPage = () => {
             <td>{task.status}</td>
             <td>{task.created_at}</td>
             <td>{task.due_date}</td>
+            <td>
+              {task.status === '100%' && (
+                <button
+                  className={styles.finalizeButton}
+                  onClick={() => handleSendTaskId(task.task_id)}
+                >
+                  ダウンロード
+                </button>
+              )}
+            </td>
           </tr>
         ))}
       </tbody>
@@ -66,7 +104,7 @@ const OrderPage = () => {
         新しい依頼
       </Link>
       <div className={styles.listTitle}>発注済み依頼リスト</div>
-      <div className={styles.tableContainer}>
+      <div className={styles.tableContainer} style={{ maxHeight: '60vh', overflowY: 'auto' }}>
         <table className={styles.taskTable}>
           <thead>
             <tr>

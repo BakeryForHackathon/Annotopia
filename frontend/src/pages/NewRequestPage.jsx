@@ -1,9 +1,9 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import commonStyles from './OrderPage.module.css';
-import formStyles from './NewRequestPage.module.css';
+import { Plus, X, Upload, Calendar, Users, Target } from 'lucide-react';
 import { ApiContext, UserContext } from '../App';
+import styles from './NewRequestPage.module.css';
 
 const NewRequestPage = () => {
     const navigate = useNavigate();
@@ -25,7 +25,7 @@ const NewRequestPage = () => {
     ]);
     const [startDate, setStartDate] = useState(new Date().toISOString().slice(0, 10));
     const [endDate, setEndDate] = useState('2025-08-07');
-    const [maxAnnotations, setMaxAnnotations] = useState(100);
+    const [maxAnnotations, setMaxAnnotations] = useState(10);
     const [threshold, setThreshold] = useState(0.5);
     const [isPrivate, setIsPrivate] = useState(true);
     const [testFile, setTestFile] = useState(null);
@@ -112,71 +112,254 @@ const NewRequestPage = () => {
     };
 
     return (
-        <main className={commonStyles.main}>
-            <form className={formStyles.formContainer} onSubmit={handleSubmit}>
-                <h2 className={formStyles.title}>新しい依頼の作成</h2>
-                <div className={formStyles.formGroup}>
-                    <label htmlFor="requestName">依頼名</label>
-                    <input id="requestName" type="text" value={title} onChange={(e) => setTitle(e.target.value)} required />
+        <main className={styles.main}>
+            <form className={styles.formContainer} onSubmit={handleSubmit}>
+                {/* ヘッダー */}
+                <div className={styles.card}>
+                    <h2 className={styles.title}>新しい依頼の作成</h2>
+                    <p className={styles.description}>評価タスクの詳細を設定してください</p>
                 </div>
-                <div className={formStyles.formGroup}>
-                    <label htmlFor="description">説明</label>
-                    <textarea id="description" rows="3" value={description} onChange={(e) => setDescription(e.target.value)} required></textarea>
+
+                {/* 基本情報 */}
+                <div className={styles.card}>
+                    <h2 className={styles.sectionTitle}>
+                        <Target className={styles.sectionIcon} />
+                        基本情報
+                    </h2>
+                    
+                    <div className={styles.formGroup}>
+                        <label htmlFor="requestName">
+                            依頼名
+                        </label>
+                        <input
+                            id="requestName"
+                            type="text"
+                            value={title}
+                            onChange={(e) => setTitle(e.target.value)}
+                            required
+                            className={styles.input}
+                        />
+                    </div>
+                    
+                    <div className={styles.formGroup}>
+                        <label htmlFor="description">
+                            説明
+                        </label>
+                        <textarea
+                            id="description"
+                            rows="3"
+                            value={description}
+                            onChange={(e) => setDescription(e.target.value)}
+                            required
+                            className={styles.textarea}
+                        />
+                    </div>
                 </div>
-                {evaluationItems.map((item, itemIndex) => (
-                    <fieldset key={itemIndex} className={formStyles.fieldset}>
-                        <legend>評価項目 {itemIndex + 1}</legend>
-                        <button type="button" onClick={() => removeEvaluationItem(itemIndex)} className={formStyles.removeButton}>項目を削除</button>
-                        <div className={formStyles.formGroup}>
-                            <label htmlFor={`itemName${itemIndex}`}>項目名</label>
-                            <input id={`itemName${itemIndex}`} type="text" value={item.name} onChange={(e) => handleItemNameChange(itemIndex, e.target.value)} required />
-                        </div>
-                        <div className={formStyles.formGroup}>
-                            <label>各段階の説明</label>
-                            <button type="button" onClick={() => addLevel(itemIndex)} className={formStyles.addButton}>段階を追加</button>
-                            {item.levels.map((level, levelIndex) => (
-                                <div key={levelIndex} className={formStyles.levelDescription}>
-                                    <span>{level.score}:</span>
-                                    <textarea rows="2" value={level.description} onChange={(e) => handleLevelDescChange(itemIndex, levelIndex, e.target.value)} required></textarea>
-                                    <button type="button" onClick={() => removeLevel(itemIndex, levelIndex)} className={formStyles.removeSmallButton}>×</button>
+
+                {/* 評価項目 */}
+                <div className={styles.card}>
+                    <div className={styles.sectionHeader}>
+                        <h2 className={styles.sectionTitle}>
+                            <Users className={styles.sectionIcon} />
+                            評価項目
+                        </h2>
+                    </div>
+
+                    <div>
+                        {evaluationItems.map((item, itemIndex) => (
+                            <fieldset key={itemIndex} className={styles.fieldset}>
+                                <div className={styles.fieldsetHeader}>
+                                    <legend>
+                                        評価項目 {itemIndex + 1}
+                                    </legend>
+                                    <button
+                                        type="button"
+                                        onClick={() => removeEvaluationItem(itemIndex)}
+                                        className={styles.removeButton}
+                                    >
+                                        項目を削除
+                                    </button>
                                 </div>
-                            ))}
+
+                                <div className={styles.formGroup}>
+                                    <label htmlFor={`itemName${itemIndex}`}>
+                                        項目名
+                                    </label>
+                                    <input
+                                        id={`itemName${itemIndex}`}
+                                        type="text"
+                                        value={item.name}
+                                        onChange={(e) => handleItemNameChange(itemIndex, e.target.value)}
+                                        required
+                                        className={styles.input}
+                                    />
+                                </div>
+
+                                <div className={styles.formGroup}>
+                                    <div className={styles.levelControls}>
+                                        <label>
+                                            各段階の説明
+                                        </label>
+                                        <button
+                                            type="button"
+                                            onClick={() => addLevel(itemIndex)}
+                                            className={styles.addLevelButton}
+                                        >
+                                            <Plus className={styles.buttonIcon} />
+                                            段階を追加
+                                        </button>
+                                    </div>
+                                    
+                                    {item.levels.map((level, levelIndex) => (
+                                        <div key={levelIndex} className={styles.levelDescription}>
+                                            <span className={styles.levelScore}>{level.score}:</span>
+                                            <textarea
+                                                rows="2"
+                                                value={level.description}
+                                                onChange={(e) => handleLevelDescChange(itemIndex, levelIndex, e.target.value)}
+                                                required
+                                                className={styles.levelTextarea}
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={() => removeLevel(itemIndex, levelIndex)}
+                                                className={styles.removeSmallButton}
+                                            >
+                                                ×
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
+                            </fieldset>
+                        ))}
+                    </div>
+
+                    <button
+                        type="button"
+                        onClick={addEvaluationItem}
+                        className={styles.addButton}
+                    >
+                        <Plus className={styles.buttonIcon} />
+                        評価項目を追加
+                    </button>
+                </div>
+
+                {/* 設定項目 */}
+                <div className={styles.card}>
+                    <h2 className={styles.sectionTitle}>
+                        <Calendar className={styles.sectionIcon} />
+                        詳細設定
+                    </h2>
+
+                    <div className={styles.grid}>
+                        <div className={styles.formGroup}>
+                            <label htmlFor="startDate">
+                                開始日
+                            </label>
+                            <input
+                                id="startDate"
+                                type="date"
+                                value={startDate}
+                                onChange={(e) => setStartDate(e.target.value)}
+                                required
+                                className={`${styles.input} ${styles.shortInput}`}
+                            />
                         </div>
-                    </fieldset>
-                ))}
-                <button type="button" onClick={addEvaluationItem} className={formStyles.addButton}>評価項目を追加</button>
-                <div className={formStyles.formGroup}>
-                    <label htmlFor="startDate">開始日</label>
-                    <input id="startDate" type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} required className={formStyles.shortInput} />
+
+                        <div className={styles.formGroup}>
+                            <label htmlFor="endDate">
+                                終了日
+                            </label>
+                            <input
+                                id="endDate"
+                                type="date"
+                                value={endDate}
+                                onChange={(e) => setEndDate(e.target.value)}
+                                required
+                                className={`${styles.input} ${styles.shortInput}`}
+                            />
+                        </div>
+
+                        <div className={styles.formGroup}>
+                            <label htmlFor="maxAnnotations">
+                                一人当たりのデータ数
+                            </label>
+                            <input
+                                id="maxAnnotations"
+                                type="number"
+                                value={maxAnnotations}
+                                onChange={(e) => setMaxAnnotations(e.target.value)}
+                                className={`${styles.input} ${styles.shortInput}`}
+                            />
+                        </div>
+
+                        <div className={styles.formGroup}>
+                            <label htmlFor="threshold">
+                                テストの閾値
+                            </label>
+                            <input
+                                id="threshold"
+                                type="text"
+                                value={threshold}
+                                onChange={(e) => setThreshold(e.target.value)}
+                                className={`${styles.input} ${styles.shortInput}`}
+                            />
+                        </div>
+                    </div>
+
+                    <div className={styles.formGroup}>
+                        <label className={styles.checkboxLabel}>
+                            <input
+                                type="checkbox"
+                                checked={isPrivate}
+                                onChange={(e) => setIsPrivate(e.target.checked)}
+                                className={styles.checkbox}
+                            />
+                            <span className={styles.checkboxText}>プライベートモード</span>
+                        </label>
+                    </div>
                 </div>
-                <div className={formStyles.formGroup}>
-                    <label htmlFor="endDate">終了日</label>
-                    <input id="endDate" type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} required className={formStyles.shortInput} />
+
+                {/* ファイルアップロード */}
+                <div className={styles.card}>
+                    <h2 className={styles.sectionTitle}>
+                        <Upload className={styles.sectionIcon} />
+                        データファイル
+                    </h2>
+
+                    <div className={styles.formGroup}>
+                        <label>
+                            テストデータのアップロード (CSV)
+                        </label>
+                        <input
+                            type="file"
+                            accept=".csv"
+                            onChange={(e) => setTestFile(e.target.files[0])}
+                            className={styles.fileInput}
+                        />
+                    </div>
+
+                    <div className={styles.formGroup}>
+                        <label>
+                            評価データのアップロード (CSV)
+                        </label>
+                        <input
+                            type="file"
+                            accept=".csv"
+                            onChange={(e) => setDataFile(e.target.files[0])}
+                            className={styles.fileInput}
+                        />
+                    </div>
                 </div>
-                <div className={formStyles.formGroup}>
-                    <label htmlFor="maxAnnotations">一人当たりのデータ数</label>
-                    <input id="maxAnnotations" type="number" value={maxAnnotations} onChange={(e) => setMaxAnnotations(e.target.value)} className={formStyles.shortInput} />
-                </div>
-                <div className={formStyles.formGroup}>
-                    <label htmlFor="threshold">テストの閾値</label>
-                    <input id="threshold" type="text" value={threshold} onChange={(e) => setThreshold(e.target.value)} className={formStyles.shortInput} />
-                </div>
-                <div className={formStyles.formGroup}>
-                    <label>
-                        <input type="checkbox" checked={isPrivate} onChange={(e) => setIsPrivate(e.target.checked)} />
-                        プライベートモード
-                    </label>
-                </div>
-                <div className={formStyles.formGroup}>
-                    <label>テストデータのアップロード (CSV)</label>
-                    <input type="file" accept=".csv" onChange={(e) => setTestFile(e.target.files[0])} />
-                </div>
-                <div className={formStyles.formGroup}>
-                    <label>評価データのアップロード (CSV)</label>
-                    <input type="file" accept=".csv" onChange={(e) => setDataFile(e.target.files[0])} />
-                </div>
-                <div className={formStyles.submitContainer}>
-                    <button type="submit" className={formStyles.submitButton}>送信してタスクを作成</button>
+
+                {/* 送信ボタン */}
+                <div className={styles.submitContainer}>
+                    <button
+                        type="submit"
+                        className={styles.submitButton}
+                    >
+                        送信してタスクを作成
+                    </button>
                 </div>
             </form>
         </main>

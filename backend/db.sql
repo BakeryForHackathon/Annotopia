@@ -9,7 +9,7 @@ DROP TABLE IF EXISTS
   tasks,
   users
 CASCADE;
--- ユーザーテーブル
+
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     name VARCHAR NOT NULL,
@@ -20,7 +20,6 @@ INSERT INTO users (name, password) VALUES ('user1', 'password1');
 INSERT INTO users (name, password) VALUES ('user2', 'password2');
 INSERT INTO users (name, password) VALUES ('user3', 'password3');
 
--- タスクテーブル
 CREATE TABLE tasks (
     id SERIAL PRIMARY KEY,
     client_id INTEGER NOT NULL REFERENCES users(id),
@@ -37,14 +36,12 @@ CREATE TABLE tasks (
     threshold DECIMAL(5, 4)
 );
 
--- 質問テーブル
 CREATE TABLE questions (
     id SERIAL PRIMARY KEY,
     task_id INTEGER NOT NULL REFERENCES tasks(id),
     title VARCHAR NOT NULL
 );
 
--- 質問詳細テーブル
 CREATE TABLE question_details (
     id SERIAL PRIMARY KEY,
     question_id INTEGER NOT NULL REFERENCES questions(id),
@@ -52,14 +49,12 @@ CREATE TABLE question_details (
     scale VARCHAR
 );
 
--- テストデータテーブル
 CREATE TABLE test_data (
     id SERIAL PRIMARY KEY,
     task_id INTEGER NOT NULL REFERENCES tasks(id),
     data TEXT NOT NULL
 );
 
--- テスト詳細テーブル
 CREATE TABLE test_details (
     id SERIAL PRIMARY KEY,
     test_id INTEGER NOT NULL REFERENCES test_data(id),
@@ -67,14 +62,12 @@ CREATE TABLE test_details (
     user_id INTEGER NOT NULL REFERENCES users(id)
 );
 
--- アノテーションデータテーブル
 CREATE TABLE annotation_data (
     id SERIAL PRIMARY KEY,
     task_id INTEGER NOT NULL REFERENCES tasks(id),
     data TEXT NOT NULL
 );
 
--- アノテーション詳細テーブル
 CREATE TABLE annotation_details (
     id SERIAL PRIMARY KEY,
     annotation_id INTEGER NOT NULL REFERENCES annotation_data(id),

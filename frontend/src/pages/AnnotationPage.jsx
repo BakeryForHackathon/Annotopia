@@ -13,6 +13,7 @@ const AnnotationPage = () => {
     const [annotationData, setAnnotationData] = useState(null);
     const [selectedAnswerId, setSelectedAnswerId] = useState(null);
     const API_URL = useContext(ApiContext);
+    console.log("userId:", userId, "taskId:", taskId); // ここを入れてログ確認
 
     const handleGetAnnotationData = useCallback(async () => {
         setLoading(true);
@@ -21,6 +22,7 @@ const AnnotationPage = () => {
                 user_id: userId,
                 task_id: taskId,
             });
+            console.log("statusResponse:", statusResponse.data); // ステータスレスポンスのログ確認
 
             if (statusResponse.data.end) {
                 // alert("このタスクのノルマは既に完了しています。");
@@ -32,6 +34,7 @@ const AnnotationPage = () => {
                 user_id: userId,
                 task_id: taskId
             });
+            console.log("dataResponse:", dataResponse.data); // アノテーションデータのレスポンスログ確認
 
             if (dataResponse.data.end) {
                 // alert("このタスクの全てのアノテーションが完了しました！");
@@ -41,6 +44,8 @@ const AnnotationPage = () => {
                 setSelectedAnswerId(null);
             }
         } catch (err) {
+            console.log("userId:", userId, "taskId:", taskId); // ここを入れてログ確認
+
             setError('アノテーションデータの取得中にエラーが発生しました。');
             console.error(err);
         } finally {
@@ -59,7 +64,7 @@ const AnnotationPage = () => {
             return;
         }
         try {
-            const response = await axios.post(`${API_URL}/api/make_annotation_data`, {
+            const response = await axios.post(`${API_URL}/api/get_make_annotation_data`, {
                 user_id: userId,
                 task_id: taskId,
                 annotation_data_id: annotationData.annotation_data_id,
@@ -87,20 +92,22 @@ const AnnotationPage = () => {
     return (
         <main className={styles.main}>
             <h1 className={styles.pageTitle}>アノテーション作業</h1>
-            <div className={styles.progressContainer}>
-                <div className={styles.progressBar} style={{ width: annotationData.status }}></div>
-                <span className={styles.progressText}>{annotationData.status}</span>
+            <div style={{ width: '100%', margin: '20px auto' }}>
+                <div className={styles.progressContainer}>
+                    <div className={styles.progressBar} style={{ width: annotationData.status }}></div>
+                    <span className={styles.progressText}>{annotationData.status}</span>
+                </div>
             </div>
             <form onSubmit={handleMakeAnnotationData} className={styles.testForm}>
                 <h2 className={styles.questionNumber}>問{annotationData.data_count + 1}</h2>
 
                 <div className={styles.card}>
                     <h3 className={styles.cardTitle}>評価対象データ</h3>
-                    <p className={styles.dataText}>
-                        {annotationData.data.split('\n').map((line, index) => (
-                            <span key={index}>{line}<br /></span>
+                    <div className={styles.dataText}>
+                        {annotationData.data.replace(/\\n/g, '\n').split('\n').map((line, index) => (
+                            <div key={index}>{line || '\u00A0'}</div>
                         ))}
-                    </p>
+                    </div>
                 </div>
 
                 <div className={styles.card}>

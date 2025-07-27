@@ -1,5 +1,7 @@
 import logging
-from flask import Flask, request, make_response, jsonify
+import io
+import hashlib
+from flask import Flask, request, make_response, jsonify, send_file
 from flask_cors import CORS
 from auth_utils import authenticate_user 
 from make_request_table import get_requests  
@@ -15,10 +17,11 @@ from get_QWK import get_qwk  # Import the function to get QWK data
 from get_annotation_data import get_annotation_data
 from is_annotation_ended import is_annotation_ended
 from make_annotation_data import make_annotation_data
+from get_task_annotated_data import get_task_annotated_data  # Import the function to get annotated data for a task
 
 
 app = Flask(__name__)
-CORS(app, origins="https://myapp-frontend-e29x.onrender.com", supports_credentials=True)
+CORS(app, origins="https://myapp-frontend-y8f2.onrender.com", supports_credentials=True)
 app.logger.setLevel(logging.DEBUG)
 
 
@@ -47,9 +50,8 @@ def login_user_():
     
     authenticated_user = authenticate_user(username, password)
     
-
     if authenticated_user:
-        token = "eyJhbGciOiJIUzI1NiIs..." 
+        token = str(hashlib.sha256(username.encode()).hexdigest())
         response_data = {
             "success": True,
             "token": token,
@@ -233,6 +235,26 @@ def get_requests_():
     requests = get_requests(user_id)
     return make_response(jsonify(requests), 200)
 
+
+@app.route('/api/finalize_task', methods=['POST'])
+def download_():
+    data = request.get_json()
+    task_id = str(data.get('task_id'))
+    requests_df = get_task_annotated_data(task_id)  # DataFrameで返る前提
+
+    # CSVに変換
+    csv_buffer = io.StringIO()
+    requests_df.to_csv(csv_buffer, index=False)
+    csv_buffer.seek(0)
+
+    filename = f"task_{task_id}_result.csv"
+    return send_file(
+        io.BytesIO(csv_buffer.getvalue().encode('utf-8')),
+        mimetype='text/csv',
+        as_attachment=True,
+        download_name=filename
+    )
+
 # @app.route('/api/submit_test', methods=['POST'])
 # def submit_test():
 #     data = request.get_json()
@@ -248,13 +270,10 @@ def get_requests_():
 
 #     return jsonify({"success": True, "score": score, "passed": passed})
 
-
 @app.route('/api/debag_create_task', methods=['POST'])
 def debag_create_task_():
-    
     test_df = pd.read_csv("test.csv",header=None)
     data_df = pd.read_csv("annotate.csv",header=None)
-
     task_dict = {
         "user_id": 1,
         "title": "機械翻訳の評価",

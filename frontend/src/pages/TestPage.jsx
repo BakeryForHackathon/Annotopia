@@ -61,7 +61,6 @@ const TestPage = () => {
           user_id: userId,
           task_id: taskId,
         });
-        console.log(qwk_data.data);
 
         // qwk = [{"question": question_map[group_id], "qwk": qwk, "clear": flag}, ...]
         const qwk = qwk_data.data
@@ -84,21 +83,23 @@ const TestPage = () => {
 
   return (
     <main className={styles.main}>
-        <h1 className={styles.pageTitle}>適正テスト</h1>
-      <div className={styles.progressContainer}>
-        <div className={styles.progressBar} style={{ width: status }}></div>
-        <span className={styles.progressText}>{status}</span>
+      <h1 className={styles.pageTitle}>適正テスト</h1>
+      <div style={{ width: '100%', margin: '20px auto' }}>
+        <div className={styles.progressContainer}>
+          <div className={styles.progressBar} style={{ width: status }}></div>
+          <span className={styles.progressText}>{status}</span>
+        </div>
       </div>
 
       <form onSubmit={handleSubmit} className={styles.testForm}>
         <h2 className={styles.questionNumber}>問{data_count + 1}</h2>
         <div className={styles.card}>
-            <h3 className={styles.cardTitle}>評価対象テキスト</h3>
-            <p className={styles.dataText}>
-                {data.split('\n').map((line, index) => (
-                    <span key={index}>{line}<br /></span>
-                ))}
-            </p>
+          <h3 className={styles.cardTitle}>評価対象テキスト</h3>
+          <div className={styles.dataText}>
+            {data.replace(/\\n/g, '\n').split('\n').map((line, index) => (
+              <div key={index}>{line || '\u00A0'}</div>
+            ))}
+          </div>
         </div>
 
         <div className={styles.card}>
