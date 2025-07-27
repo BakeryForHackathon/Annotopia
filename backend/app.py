@@ -15,7 +15,7 @@ from get_QWK import get_qwk  # Import the function to get QWK data
 from get_annotation_data import get_annotation_data
 from is_annotation_ended import is_annotation_ended
 from make_annotation_data import make_annotation_data
-from get_task_annotated_data import get_task_annotated_data
+from get_task_annotated_data import get_task_annotated_data  # Import the function to get annotated data for a task
 
 
 app = Flask(__name__)
