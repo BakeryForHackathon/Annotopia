@@ -122,6 +122,8 @@ def group_by_group_id(client_test_data):
 
 from sklearn.metrics import cohen_kappa_score
 
+import numpy as np
+
 def calculate_qwk(y_true, y_pred):
     """
     2つのリスト y_true, y_pred を受け取り、
@@ -129,7 +131,18 @@ def calculate_qwk(y_true, y_pred):
     """
     if len(y_true) != len(y_pred):
         raise ValueError("リストの長さが一致しません。")
-
-    # sklearnのcohen_kappa_scoreで重み付けkappaを計算（weight='quadratic'）
+    
+    # すべてのラベルが同じ（片方または両方）の場合の処理
+    if len(set(y_true)) == 1 and len(set(y_pred)) == 1:
+        if y_true == y_pred:
+            return 1.0  # 完全一致
+        else:
+            return 0.0  # ラベルが一種類ずつだが一致していない
+    
     qwk_score = cohen_kappa_score(y_true, y_pred, weights='quadratic')
+
+    # NaNが出る場合があるのでチェック
+    if np.isnan(qwk_score):
+        return 0.0
+
     return qwk_score

@@ -55,16 +55,17 @@ const TestPage = () => {
         test_data_id: annotationData.test_data_id,
         answers: [selectedAnswer],
       });
-
+      
       if (response.data.end) {
         const qwk_data = await axios.post(`${API_URL}/api/get_qwk`, {
           user_id: userId,
           task_id: taskId,
         });
+        console.log(qwk_data.data);
 
         // qwk = [{"question": question_map[group_id], "qwk": qwk, "clear": flag}, ...]
-        const qwk = qwk_data.data.qwk_data
-        navigate(`/task/${taskId}/result`, { state: { qwk: qwk } });
+        const qwk = qwk_data.data
+        navigate(`/task/${taskId}/result`, { state: { qwkList: qwk } });
       } else {
         fetchNextAnnotationData();
       }

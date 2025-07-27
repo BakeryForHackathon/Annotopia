@@ -110,3 +110,13 @@
 .error {
     color: red;
 }
+.resultList {
+  list-style: none;
+  padding: 0;
+  margin-top: 1rem;
+}
+
+.resultItem {
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+}

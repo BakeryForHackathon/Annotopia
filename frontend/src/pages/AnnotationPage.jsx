@@ -41,6 +41,8 @@ const AnnotationPage = () => {
                 setSelectedAnswerId(null);
             }
         } catch (err) {
+            console.log("userId:", userId, "taskId:", taskId); // ここを入れてログ確認
+            
             setError('アノテーションデータの取得中にエラーが発生しました。');
             console.error(err);
         } finally {
