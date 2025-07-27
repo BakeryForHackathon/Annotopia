@@ -83,10 +83,12 @@ const TestPage = () => {
 
   return (
     <main className={styles.main}>
-        <h1 className={styles.pageTitle}>適正テスト</h1>
-      <div className={styles.progressContainer}>
-        <div className={styles.progressBar} style={{ width: status }}></div>
-        <span className={styles.progressText}>{status}</span>
+      <h1 className={styles.pageTitle}>適正テスト</h1>
+      <div style={{ width: '100%', margin: '20px auto' }}>
+        <div className={styles.progressContainer}>
+          <div className={styles.progressBar} style={{ width: status }}></div>
+          <span className={styles.progressText}>{status}</span>
+        </div>
       </div>
 
       <form onSubmit={handleSubmit} className={styles.testForm}>

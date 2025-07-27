@@ -85,7 +85,7 @@
 }
 
 /* テーブル内の詳細ボタン用のスタイル */
-.detailButton {
+.finalizeButton {
   background-color: #f58220;
   color: white;
   border: none;
@@ -100,6 +100,6 @@
   display: inline-block;
 }
 
-.detailButton:hover {
+.finalizeButton:hover {
   background-color:	#d96e1c;
 }
