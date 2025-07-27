@@ -116,3 +116,7 @@
   font-weight: bold;
   cursor: pointer;
 }
+
+.submitButton:hover {
+  background-color: #d96e1c;
+}

@@ -18,8 +18,6 @@ const MainLayout = () => {
     location.pathname.startsWith('/task')
   ) {
     activeBasePath = '/contract';
-  } else if (location.pathname.startsWith('/profile')) {
-    activeBasePath = '/profile';
   }
 
   useEffect(() => {
@@ -76,18 +74,6 @@ const MainLayout = () => {
                   }
                 >
                   依頼リスト
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  to="/profile"
-                  className={
-                    activeBasePath === '/profile'
-                      ? styles.activeMenuLink
-                      : styles.menuLink
-                  }
-                >
-                  プロフィール
                 </NavLink>
               </li>
             </ul>
