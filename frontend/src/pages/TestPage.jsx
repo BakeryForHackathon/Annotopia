@@ -65,7 +65,7 @@ const TestPage = () => {
 
         // qwk = [{"question": question_map[group_id], "qwk": qwk, "clear": flag}, ...]
         const qwk = qwk_data.data.qwk_data
-        navigate(`/task/${taskId}/result`, { state: qwk });
+        navigate(`/task/${taskId}/result`, { state: { qwkList: qwk } });
       } else {
         fetchNextAnnotationData();
       }

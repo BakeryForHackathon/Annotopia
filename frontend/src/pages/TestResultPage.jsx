@@ -5,7 +5,7 @@ const TestResultPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { taskId } = useParams();
-  const qwkList = location.state;
+  const qwkList = location.state?.qwkList;
   console.log("QWK List:", qwkList);
   if (!qwkList || !Array.isArray(qwkList)) {
     return (
