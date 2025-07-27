@@ -5,3 +5,4 @@ gunicorn
 pandas>=1.5.0
 scikit-learn
 gevent
+numpy
