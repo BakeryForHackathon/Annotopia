@@ -38,6 +38,21 @@ def make_annotation_data(user_id, annotation_data_id, answers):
                     user_id = %s
                 WHERE id = %s
             """, (question_detail_id, user_id, annotation_detail_id))
+
+        # === annotated_data_count を +1 にする処理 ===
+        cur.execute("""
+            SELECT task_id FROM annotation_data
+            WHERE id = %s
+        """, (annotation_data_id,))
+        task_row = cur.fetchone()
+
+        if task_row:
+            task_id = task_row[0]
+            cur.execute("""
+                UPDATE tasks
+                SET annotated_data_count = annotated_data_count + 1
+                WHERE id = %s
+            """, (task_id,))
         
         conn.commit()
         clean_reservations(user_id)
