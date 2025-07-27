@@ -85,7 +85,7 @@ const LoginPage = () => {
             className={styles.input}
             placeholder="ユーザー名"
             value={username}
-            onChange={(e) => handleChange(e.target.value)}
+            onChange={(e) => handleChange(e)}
           />
           <input
             type="password"
