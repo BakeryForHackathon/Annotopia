@@ -98,9 +98,11 @@ const AnnotationPage = () => {
 
                 <div className={styles.card}>
                     <h3 className={styles.cardTitle}>評価対象データ</h3>
-                    <p className={styles.dataText} style={{ whiteSpace: 'pre-wrap' }}>
-                        {annotationData.data}
-                    </p>
+                    <div className={styles.dataText}>
+                        {annotationData.data.split('\n').map((line, index) => (
+                            <div key={index}>{line || '\u00A0'}</div>
+                        ))}
+                    </div>
                 </div>
 
                 <div className={styles.card}>

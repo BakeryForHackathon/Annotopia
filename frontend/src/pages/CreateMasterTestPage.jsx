@@ -91,11 +91,12 @@ const CreateMasterTestPage = () => {
         <h2 className={styles.questionNumber}>問{data_count + 1}</h2>
         <div className={styles.card}>
           <h3 className={styles.cardTitle}>評価対象テキスト</h3>
-          <p className={styles.dataText} style={{ whiteSpace: 'pre-wrap' }}>
-            {data}
-          </p>
+          <div className={styles.dataText}>
+            {data.split('\n').map((line, index) => (
+              <div key={index}>{line || '\u00A0'}</div>
+            ))}
+          </div>
         </div>
-
         <div className={styles.card}>
           <h3 className={styles.cardTitle}>{questionInfo.question}</h3>
           <div className={styles.radioGroup}>
