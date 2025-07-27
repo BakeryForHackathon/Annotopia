@@ -21,7 +21,7 @@ from get_task_annotated_data import get_task_annotated_data  # Import the functi
 
 
 app = Flask(__name__)
-CORS(app, origins="https://myapp-frontend-y8f2.onrender.com", supports_credentials=True)
+CORS(app, origins="https://myapp-frontend-7fb8.onrender.com", supports_credentials=True)
 app.logger.setLevel(logging.DEBUG)
 
 
