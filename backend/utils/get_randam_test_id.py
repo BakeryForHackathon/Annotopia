@@ -8,9 +8,10 @@ from utils.get_ids import get_ids_by_task_id  # ← 実際のファイル構成�
 
 from utils.connect_db import get_db_connection
 
-def get_answered_test_ids(user_id):
+def get_answered_test_ids(user_id, task_id):
     """
-    指定ユーザーが回答済みの test_id をセットで返す。
+    指定ユーザーとタスクに対応する、回答済みの test_id をセットで返す。
+    question_detail_id が NULL でないもののみ対象。
     """
     conn = None
     cur = None
@@ -21,9 +22,14 @@ def get_answered_test_ids(user_id):
 
         cur = conn.cursor()
         cur.execute("""
-            SELECT DISTINCT test_id FROM test_details
-            WHERE user_id = %s AND question_detail_id IS NOT NULL
-        """, (user_id,))
+            SELECT DISTINCT td.test_id
+            FROM test_details td
+            JOIN test_data tdata ON td.test_id = tdata.id
+            WHERE td.user_id = %s
+              AND tdata.task_id = %s
+              AND td.question_detail_id IS NOT NULL
+        """, (user_id, task_id))
+        
         return {row[0] for row in cur.fetchall()}
 
     except Exception as e:
@@ -46,7 +52,7 @@ def get_unanswered_test_ids(user_id, task_id):
         print("該当する test_data がありません。")
         return []
 
-    answered_ids = get_answered_test_ids(user_id)
+    answered_ids = get_answered_test_ids(user_id,task_id)
     return list(set(all_test_ids) - answered_ids)
 
 import random
