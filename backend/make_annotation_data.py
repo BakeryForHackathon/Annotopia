@@ -67,7 +67,7 @@ def make_annotation_data(user_id, annotation_data_id, answers):
         unanswered_count = len(unanswered_annotation_ids) if unanswered_annotation_ids is not None else 0
 
         # === annotated_data_count を再計算して更新 ===
-        new_annotated_count = total_data_count - unanswered_count
+        new_annotated_count = total_data_count - unanswered_count +1
         if new_annotated_count < 0:
             new_annotated_count = 0  # 念のためマイナスを防ぐ
 
