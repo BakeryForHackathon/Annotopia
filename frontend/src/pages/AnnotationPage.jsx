@@ -99,13 +99,13 @@ const AnnotationPage = () => {
             <form onSubmit={handleMakeAnnotationData} className={styles.testForm}>
                 <h2 className={styles.questionNumber}>問{annotationData.data_count + 1}</h2>
 
-                <div className={styles.card}>
+               <div className={styles.card}>
                     <h3 className={styles.cardTitle}>評価対象データ</h3>
-                    <p className={styles.dataText}>
-                        {annotationData.data.split('\n').map((line, index) => (
-                            <span key={index}>{line}<br /></span>
+                    <div className={styles.dataText}>
+                        {annotationData.data.replace(/\\n/g, '\n').split('\n').map((line, index) => (
+                            <div key={index}>{line || '\u00A0'}</div>
                         ))}
-                    </p>
+                    </div>
                 </div>
 
                 <div className={styles.card}>

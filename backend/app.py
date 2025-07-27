@@ -18,7 +18,7 @@ from make_annotation_data import make_annotation_data
 
 
 app = Flask(__name__)
-CORS(app, origins="https://myapp-frontend-e29x.onrender.com", supports_credentials=True)
+CORS(app, origins="https://myapp-frontend-y8f2.onrender.com", supports_credentials=True)
 app.logger.setLevel(logging.DEBUG)
 
 
@@ -248,13 +248,10 @@ def get_requests_():
 
 #     return jsonify({"success": True, "score": score, "passed": passed})
 
-
 @app.route('/api/debag_create_task', methods=['POST'])
 def debag_create_task_():
-    
     test_df = pd.read_csv("test.csv",header=None)
     data_df = pd.read_csv("annotate.csv",header=None)
-
     task_dict = {
         "user_id": 1,
         "title": "機械翻訳の評価",
