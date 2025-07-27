@@ -61,7 +61,6 @@ const TestPage = () => {
           user_id: userId,
           task_id: taskId,
         });
-        console.log(qwk_data.data);
 
         // qwk = [{"question": question_map[group_id], "qwk": qwk, "clear": flag}, ...]
         const qwk = qwk_data.data

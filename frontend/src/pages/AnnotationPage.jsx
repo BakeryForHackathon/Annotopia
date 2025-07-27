@@ -13,6 +13,7 @@ const AnnotationPage = () => {
     const [annotationData, setAnnotationData] = useState(null);
     const [selectedAnswerId, setSelectedAnswerId] = useState(null);
     const API_URL = useContext(ApiContext);
+    console.log("userId:", userId, "taskId:", taskId); // ここを入れてログ確認
 
     const handleGetAnnotationData = useCallback(async () => {
         setLoading(true);
@@ -21,6 +22,7 @@ const AnnotationPage = () => {
                 user_id: userId,
                 task_id: taskId,
             });
+            console.log("statusResponse:", statusResponse.data); // ステータスレスポンスのログ確認
 
             if (statusResponse.data.end) {
                 // alert("このタスクのノルマは既に完了しています。");
@@ -32,6 +34,7 @@ const AnnotationPage = () => {
                 user_id: userId,
                 task_id: taskId
             });
+            console.log("dataResponse:", dataResponse.data); // アノテーションデータのレスポンスログ確認
 
             if (dataResponse.data.end) {
                 // alert("このタスクの全てのアノテーションが完了しました！");
@@ -42,7 +45,7 @@ const AnnotationPage = () => {
             }
         } catch (err) {
             console.log("userId:", userId, "taskId:", taskId); // ここを入れてログ確認
-            
+
             setError('アノテーションデータの取得中にエラーが発生しました。');
             console.error(err);
         } finally {
