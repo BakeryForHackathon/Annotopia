@@ -90,6 +90,7 @@
 
 .actionButton:hover {
   background-color:	#d96e1c;
+  color: white;
 }
 
 .actionButton:disabled {
