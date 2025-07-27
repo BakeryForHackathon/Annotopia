@@ -92,7 +92,7 @@ const CreateMasterTestPage = () => {
         <div className={styles.card}>
           <h3 className={styles.cardTitle}>評価対象テキスト</h3>
           <div className={styles.dataText}>
-            {data.split('\n').map((line, index) => (
+            {data.replace(/\\n/g, '\n').split('\n').map((line, index) => (
               <div key={index}>{line || '\u00A0'}</div>
             ))}
           </div>
