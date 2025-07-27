@@ -42,7 +42,7 @@ def get_test_data(user_id, task_id):
     test_data_id = random.choice(unanswered_ids)
 
     # 回答済みの件数を取得
-    answered_ids = get_answered_test_ids(user_id)
+    answered_ids = get_answered_test_ids(user_id,task_id)
     data_count = len(answered_ids)
 
     # DBから test_data の原文と訳文を取得、total_data_count も取得
@@ -67,15 +67,8 @@ def get_test_data(user_id, task_id):
         data_str = row[0] 
 
         # total_data_count 取得
-        cur.execute("""
-            SELECT total_data_count FROM tasks
-            WHERE id = %s
-        """, (task_id,))
-        row = cur.fetchone()
-        if not row:
-            print("該当する task が見つかりません。")
-            return None
-        total_data_count = row[0]
+        
+        total_data_count = len(get_ids_by_task_id(task_id, "test_data"))
         progress_percent = int((len(answered_ids) / total_data_count) * 100)
 
         # 質問一覧を取得

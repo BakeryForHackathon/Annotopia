@@ -5,9 +5,8 @@ const TestResultPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { taskId } = useParams();
-  const result = location.state?.result;
-
-  if (!result) {
+  const qwkList = location.state?.qwkList;
+  if (!qwkList || !Array.isArray(qwkList)) {
     return (
       <main className={styles.main}>
         <div className={styles.card}>
@@ -27,11 +26,14 @@ const TestResultPage = () => {
   return (
     <main className={styles.main}>
       <div className={styles.card}>
-        <p className={styles.subTitle}>依頼者との一致率...</p>
-        <h1 className={styles.score}>{result.score}%</h1>
-        <p className={styles.message}>
-          {result.passed ? "合格です。" : "不合格です。"}
-        </p>
+        <p className={styles.subTitle}>各評価項目の一致率と判定結果</p>
+        <ul className={styles.resultList}>
+          {qwkList.map((item, index) => (
+            <li key={index} className={styles.resultItem}>
+              <strong>{item.question}:</strong> 一致率 {Math.round(item.qwk * 100)}% - {item.clear ? "合格" : "不合格"}
+            </li>
+          ))}
+        </ul>
         <button onClick={handleReturn} className={styles.button}>
           依頼画面に戻る
         </button>

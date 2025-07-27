@@ -55,7 +55,7 @@ const TestPage = () => {
         test_data_id: annotationData.test_data_id,
         answers: [selectedAnswer],
       });
-
+      
       if (response.data.end) {
         const qwk_data = await axios.post(`${API_URL}/api/get_qwk`, {
           user_id: userId,
@@ -63,8 +63,8 @@ const TestPage = () => {
         });
 
         // qwk = [{"question": question_map[group_id], "qwk": qwk, "clear": flag}, ...]
-        const qwk = qwk_data.data.qwk_data
-        navigate(`/task/${taskId}/result`, { state: { qwk: qwk } });
+        const qwk = qwk_data.data
+        navigate(`/task/${taskId}/result`, { state: { qwkList: qwk } });
       } else {
         fetchNextAnnotationData();
       }
@@ -92,12 +92,12 @@ const TestPage = () => {
       <form onSubmit={handleSubmit} className={styles.testForm}>
         <h2 className={styles.questionNumber}>問{data_count + 1}</h2>
         <div className={styles.card}>
-            <h3 className={styles.cardTitle}>評価対象テキスト</h3>
-            <p className={styles.dataText}>
-                {data.split('\n').map((line, index) => (
-                    <span key={index}>{line}<br /></span>
-                ))}
-            </p>
+          <h3 className={styles.cardTitle}>評価対象テキスト</h3>
+          <div className={styles.dataText}>
+            {data.replace(/\\n/g, '\n').split('\n').map((line, index) => (
+              <div key={index}>{line || '\u00A0'}</div>
+            ))}
+          </div>
         </div>
 
         <div className={styles.card}>
