@@ -55,12 +55,13 @@ const TestPage = () => {
         test_data_id: annotationData.test_data_id,
         answers: [selectedAnswer],
       });
-      console.log(response.data);
+      
       if (response.data.end) {
         const qwk_data = await axios.post(`${API_URL}/api/get_qwk`, {
           user_id: userId,
           task_id: taskId,
         });
+        console.log(qwk_data.data);
 
         // qwk = [{"question": question_map[group_id], "qwk": qwk, "clear": flag}, ...]
         const qwk = qwk_data.data.qwk_data
