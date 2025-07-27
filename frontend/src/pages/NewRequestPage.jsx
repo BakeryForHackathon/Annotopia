@@ -1,8 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import commonStyles from './OrderPage.module.css';
-import formStyles from './NewRequestPage.module.css';
+import { Plus, X, Upload, Calendar, Users, Target } from 'lucide-react';
 import { ApiContext, UserContext } from '../App';
 
 const NewRequestPage = () => {
@@ -112,71 +111,252 @@ const NewRequestPage = () => {
     };
 
     return (
-        <main className={commonStyles.main}>
-            <form className={formStyles.formContainer} onSubmit={handleSubmit}>
-                <h2 className={formStyles.title}>新しい依頼の作成</h2>
-                <div className={formStyles.formGroup}>
-                    <label htmlFor="requestName">依頼名</label>
-                    <input id="requestName" type="text" value={title} onChange={(e) => setTitle(e.target.value)} required />
+        <main className="bg-orange-50 flex-1 py-8 px-10 box-border overflow-y-auto">
+            <form className="w-full max-w-4xl mx-auto space-y-6" onSubmit={handleSubmit}>
+                {/* ヘッダー */}
+                <div className="bg-white rounded-xl shadow-sm p-8 border border-orange-100">
+                    <h2 className="text-3xl font-bold text-gray-800 mb-2 mt-0">新しい依頼の作成</h2>
+                    <p className="text-gray-600 mt-0 mb-0">評価タスクの詳細を設定してください</p>
                 </div>
-                <div className={formStyles.formGroup}>
-                    <label htmlFor="description">説明</label>
-                    <textarea id="description" rows="3" value={description} onChange={(e) => setDescription(e.target.value)} required></textarea>
+
+                {/* 基本情報 */}
+                <div className="bg-white rounded-xl shadow-sm p-8 border border-orange-100">
+                    <h2 className="text-xl font-semibold text-gray-800 mb-6 flex items-center">
+                        <Target className="w-5 h-5 mr-2 text-orange-500" />
+                        基本情報
+                    </h2>
+                    
+                    <div className="mb-6">
+                        <label htmlFor="requestName" className="block font-bold mb-2 text-gray-700">
+                            依頼名
+                        </label>
+                        <input
+                            id="requestName"
+                            type="text"
+                            value={title}
+                            onChange={(e) => setTitle(e.target.value)}
+                            required
+                            className="w-full py-2.5 px-3 border border-gray-300 rounded focus:ring-2 focus:ring-orange-500 focus:border-transparent text-base font-inherit box-border"
+                        />
+                    </div>
+                    
+                    <div className="mb-6">
+                        <label htmlFor="description" className="block font-bold mb-2 text-gray-700">
+                            説明
+                        </label>
+                        <textarea
+                            id="description"
+                            rows="3"
+                            value={description}
+                            onChange={(e) => setDescription(e.target.value)}
+                            required
+                            className="w-full py-2.5 px-3 border border-gray-300 rounded text-base font-inherit box-border resize-none"
+                        />
+                    </div>
                 </div>
-                {evaluationItems.map((item, itemIndex) => (
-                    <fieldset key={itemIndex} className={formStyles.fieldset}>
-                        <legend>評価項目 {itemIndex + 1}</legend>
-                        <button type="button" onClick={() => removeEvaluationItem(itemIndex)} className={formStyles.removeButton}>項目を削除</button>
-                        <div className={formStyles.formGroup}>
-                            <label htmlFor={`itemName${itemIndex}`}>項目名</label>
-                            <input id={`itemName${itemIndex}`} type="text" value={item.name} onChange={(e) => handleItemNameChange(itemIndex, e.target.value)} required />
-                        </div>
-                        <div className={formStyles.formGroup}>
-                            <label>各段階の説明</label>
-                            <button type="button" onClick={() => addLevel(itemIndex)} className={formStyles.addButton}>段階を追加</button>
-                            {item.levels.map((level, levelIndex) => (
-                                <div key={levelIndex} className={formStyles.levelDescription}>
-                                    <span>{level.score}:</span>
-                                    <textarea rows="2" value={level.description} onChange={(e) => handleLevelDescChange(itemIndex, levelIndex, e.target.value)} required></textarea>
-                                    <button type="button" onClick={() => removeLevel(itemIndex, levelIndex)} className={formStyles.removeSmallButton}>×</button>
+
+                {/* 評価項目 */}
+                <div className="bg-white rounded-xl shadow-sm p-8 border border-orange-100">
+                    <div className="flex items-center justify-between mb-6">
+                        <h2 className="text-xl font-semibold text-gray-800 flex items-center">
+                            <Users className="w-5 h-5 mr-2 text-orange-500" />
+                            評価項目
+                        </h2>
+                    </div>
+
+                    <div className="space-y-6">
+                        {evaluationItems.map((item, itemIndex) => (
+                            <fieldset key={itemIndex} className="border border-gray-300 rounded-lg p-6 mb-6">
+                                <div className="flex items-center justify-between mb-4">
+                                    <legend className="font-bold px-2 text-gray-800">
+                                        評価項目 {itemIndex + 1}
+                                    </legend>
+                                    <button
+                                        type="button"
+                                        onClick={() => removeEvaluationItem(itemIndex)}
+                                        className="py-1 px-3 border border-red-500 bg-red-50 rounded text-red-700 cursor-pointer font-bold text-sm hover:bg-red-100 transition-colors"
+                                    >
+                                        項目を削除
+                                    </button>
                                 </div>
-                            ))}
+
+                                <div className="mb-6">
+                                    <label htmlFor={`itemName${itemIndex}`} className="block font-bold mb-2 text-gray-700">
+                                        項目名
+                                    </label>
+                                    <input
+                                        id={`itemName${itemIndex}`}
+                                        type="text"
+                                        value={item.name}
+                                        onChange={(e) => handleItemNameChange(itemIndex, e.target.value)}
+                                        required
+                                        className="w-full py-2.5 px-3 border border-gray-300 rounded text-base font-inherit box-border"
+                                    />
+                                </div>
+
+                                <div className="mb-6">
+                                    <div className="flex items-center justify-between mb-3">
+                                        <label className="block font-bold mb-2 text-gray-700">
+                                            各段階の説明
+                                        </label>
+                                        <button
+                                            type="button"
+                                            onClick={() => addLevel(itemIndex)}
+                                            className="py-1 px-3 border border-green-500 bg-green-50 rounded text-green-700 cursor-pointer font-bold text-sm hover:bg-green-100 transition-colors"
+                                        >
+                                            段階を追加
+                                        </button>
+                                    </div>
+                                    
+                                    {item.levels.map((level, levelIndex) => (
+                                        <div key={levelIndex} className="flex items-center gap-2.5 mt-2">
+                                            <span className="font-bold text-gray-700">{level.score}:</span>
+                                            <textarea
+                                                rows="2"
+                                                value={level.description}
+                                                onChange={(e) => handleLevelDescChange(itemIndex, levelIndex, e.target.value)}
+                                                required
+                                                className="flex-1 py-2.5 px-3 border border-gray-300 rounded text-base font-inherit box-border resize-none"
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={() => removeLevel(itemIndex, levelIndex)}
+                                                className="w-8 h-8 bg-red-100 text-red-600 rounded-full flex items-center justify-center hover:bg-red-200 transition-colors cursor-pointer border-0 text-lg font-bold"
+                                            >
+                                                ×
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
+                            </fieldset>
+                        ))}
+                    </div>
+
+                    <button
+                        type="button"
+                        onClick={addEvaluationItem}
+                        className="py-2 px-4 border border-orange-500 bg-orange-50 rounded text-orange-700 cursor-pointer font-bold hover:bg-orange-100 transition-colors"
+                    >
+                        評価項目を追加
+                    </button>
+                </div>
+
+                {/* 設定項目 */}
+                <div className="bg-white rounded-xl shadow-sm p-8 border border-orange-100">
+                    <h2 className="text-xl font-semibold text-gray-800 mb-6 flex items-center">
+                        <Calendar className="w-5 h-5 mr-2 text-orange-500" />
+                        詳細設定
+                    </h2>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="mb-6">
+                            <label htmlFor="startDate" className="block font-bold mb-2 text-gray-700">
+                                開始日
+                            </label>
+                            <input
+                                id="startDate"
+                                type="date"
+                                value={startDate}
+                                onChange={(e) => setStartDate(e.target.value)}
+                                required
+                                className="max-w-xs py-2.5 px-3 border border-gray-300 rounded text-base font-inherit box-border"
+                            />
                         </div>
-                    </fieldset>
-                ))}
-                <button type="button" onClick={addEvaluationItem} className={formStyles.addButton}>評価項目を追加</button>
-                <div className={formStyles.formGroup}>
-                    <label htmlFor="startDate">開始日</label>
-                    <input id="startDate" type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} required className={formStyles.shortInput} />
+
+                        <div className="mb-6">
+                            <label htmlFor="endDate" className="block font-bold mb-2 text-gray-700">
+                                終了日
+                            </label>
+                            <input
+                                id="endDate"
+                                type="date"
+                                value={endDate}
+                                onChange={(e) => setEndDate(e.target.value)}
+                                required
+                                className="max-w-xs py-2.5 px-3 border border-gray-300 rounded text-base font-inherit box-border"
+                            />
+                        </div>
+
+                        <div className="mb-6">
+                            <label htmlFor="maxAnnotations" className="block font-bold mb-2 text-gray-700">
+                                一人当たりのデータ数
+                            </label>
+                            <input
+                                id="maxAnnotations"
+                                type="number"
+                                value={maxAnnotations}
+                                onChange={(e) => setMaxAnnotations(e.target.value)}
+                                className="max-w-xs py-2.5 px-3 border border-gray-300 rounded text-base font-inherit box-border"
+                            />
+                        </div>
+
+                        <div className="mb-6">
+                            <label htmlFor="threshold" className="block font-bold mb-2 text-gray-700">
+                                テストの閾値
+                            </label>
+                            <input
+                                id="threshold"
+                                type="text"
+                                value={threshold}
+                                onChange={(e) => setThreshold(e.target.value)}
+                                className="max-w-xs py-2.5 px-3 border border-gray-300 rounded text-base font-inherit box-border"
+                            />
+                        </div>
+                    </div>
+
+                    <div className="mb-6">
+                        <label className="flex items-center">
+                            <input
+                                type="checkbox"
+                                checked={isPrivate}
+                                onChange={(e) => setIsPrivate(e.target.checked)}
+                                className="w-5 h-5 mr-3"
+                            />
+                            <span className="font-bold text-gray-700">プライベートモード</span>
+                        </label>
+                    </div>
                 </div>
-                <div className={formStyles.formGroup}>
-                    <label htmlFor="endDate">終了日</label>
-                    <input id="endDate" type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} required className={formStyles.shortInput} />
+
+                {/* ファイルアップロード */}
+                <div className="bg-white rounded-xl shadow-sm p-8 border border-orange-100">
+                    <h2 className="text-xl font-semibold text-gray-800 mb-6 flex items-center">
+                        <Upload className="w-5 h-5 mr-2 text-orange-500" />
+                        データファイル
+                    </h2>
+
+                    <div className="mb-6">
+                        <label className="block font-bold mb-2 text-gray-700">
+                            テストデータのアップロード (CSV)
+                        </label>
+                        <input
+                            type="file"
+                            accept=".csv"
+                            onChange={(e) => setTestFile(e.target.files[0])}
+                            className="w-full py-2.5 px-3 border border-gray-300 rounded text-base font-inherit box-border"
+                        />
+                    </div>
+
+                    <div className="mb-6">
+                        <label className="block font-bold mb-2 text-gray-700">
+                            評価データのアップロード (CSV)
+                        </label>
+                        <input
+                            type="file"
+                            accept=".csv"
+                            onChange={(e) => setDataFile(e.target.files[0])}
+                            className="w-full py-2.5 px-3 border border-gray-300 rounded text-base font-inherit box-border"
+                        />
+                    </div>
                 </div>
-                <div className={formStyles.formGroup}>
-                    <label htmlFor="maxAnnotations">一人当たりのデータ数</label>
-                    <input id="maxAnnotations" type="number" value={maxAnnotations} onChange={(e) => setMaxAnnotations(e.target.value)} className={formStyles.shortInput} />
-                </div>
-                <div className={formStyles.formGroup}>
-                    <label htmlFor="threshold">テストの閾値</label>
-                    <input id="threshold" type="text" value={threshold} onChange={(e) => setThreshold(e.target.value)} className={formStyles.shortInput} />
-                </div>
-                <div className={formStyles.formGroup}>
-                    <label>
-                        <input type="checkbox" checked={isPrivate} onChange={(e) => setIsPrivate(e.target.checked)} />
-                        プライベートモード
-                    </label>
-                </div>
-                <div className={formStyles.formGroup}>
-                    <label>テストデータのアップロード (CSV)</label>
-                    <input type="file" accept=".csv" onChange={(e) => setTestFile(e.target.files[0])} />
-                </div>
-                <div className={formStyles.formGroup}>
-                    <label>評価データのアップロード (CSV)</label>
-                    <input type="file" accept=".csv" onChange={(e) => setDataFile(e.target.files[0])} />
-                </div>
-                <div className={formStyles.submitContainer}>
-                    <button type="submit" className={formStyles.submitButton}>送信してタスクを作成</button>
+
+                {/* 送信ボタン */}
+                <div className="mt-8 text-right">
+                    <button
+                        type="submit"
+                        className="py-3 px-6 bg-orange-500 text-white border-0 rounded-lg text-lg font-bold cursor-pointer hover:bg-orange-600 transition-colors shadow-lg"
+                    >
+                        送信してタスクを作成
+                    </button>
                 </div>
             </form>
         </main>
