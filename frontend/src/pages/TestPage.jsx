@@ -64,7 +64,7 @@ const TestPage = () => {
         console.log(qwk_data.data);
 
         // qwk = [{"question": question_map[group_id], "qwk": qwk, "clear": flag}, ...]
-        const qwk = qwk_data.data.qwk_data
+        const qwk = qwk_data.data
         navigate(`/task/${taskId}/result`, { state: { qwkList: qwk } });
       } else {
         fetchNextAnnotationData();
