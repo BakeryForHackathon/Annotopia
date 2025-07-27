@@ -55,7 +55,7 @@ const TestPage = () => {
         test_data_id: annotationData.test_data_id,
         answers: [selectedAnswer],
       });
-
+      console.log(response.data);
       if (response.data.end) {
         const qwk_data = await axios.post(`${API_URL}/api/get_qwk`, {
           user_id: userId,
