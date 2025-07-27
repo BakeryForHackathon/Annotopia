@@ -1,6 +1,5 @@
 import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import CryptoJS from 'crypto-js';
 import axios from 'axios';
 import styles from './LoginPage.module.css';
 import { ApiContext, UserContext } from '../App';
@@ -33,15 +32,6 @@ const LoginPage = () => {
     return null;
   };
 
-
-  function handleChange(e) {
-    const value = e.target.value;
-    setUsername(value);
-
-    const hash = CryptoJS.SHA256(value).toString(CryptoJS.enc.Hex);
-    setUsernameHash(hash);
-  }
-
   const handleLogin = async () => {
     const validationError = validateInput();
     if (validationError) {
@@ -60,6 +50,7 @@ const LoginPage = () => {
 
       if (response.data.success) {
         setUserId(response.data.user.id);
+        setUsernameHash(response.data.token);
         navigate('/order');
       } else {
         setError('ユーザー名またはパスワードが違います。');
@@ -85,7 +76,7 @@ const LoginPage = () => {
             className={styles.input}
             placeholder="ユーザー名"
             value={username}
-            onChange={(e) => handleChange(e)}
+            onChange={(e) => setUsername(e.target.value)}
           />
           <input
             type="password"

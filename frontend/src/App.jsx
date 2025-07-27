@@ -1,6 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { createContext, useState, useContext, useEffect } from 'react';
-import CryptoJS from 'crypto-js';
 import LoginPage from './pages/LoginPage';
 import MainLayout from './layouts/MainLayout';
 import OrderPage from './pages/OrderPage';

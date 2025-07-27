@@ -48,7 +48,6 @@ def login_user_():
     
     authenticated_user = authenticate_user(username, password)
     
-
     if authenticated_user:
         token = str(hashlib.sha256(username.encode()).hexdigest())
         response_data = {
