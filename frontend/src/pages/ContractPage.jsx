@@ -31,7 +31,7 @@ const ContractPage = () => {
   return (
     <main className={styles.main}>
       <h1 className={styles.title}>依頼リスト</h1>
-      <div className={styles.tableContainer}>
+      <div className={styles.tableContainer} style={{ maxHeight: '60vh', overflowY: 'auto' }}>
         <table className={styles.taskTable}>
           <thead>
             <tr>

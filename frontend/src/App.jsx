@@ -11,7 +11,6 @@ import TestResultPage from './pages/TestResultPage';
 import CreateTestPage from './pages/CreateTestPage';
 import CreateMasterTestPage from './pages/CreateMasterTestPage';
 import AnnotationPage from './pages/AnnotationPage';
-// import ProfilePage from './pages/ProfilePage';     // プロフィールページ
 
 export const ApiContext = createContext(null);
 export const UserContext = createContext(null);

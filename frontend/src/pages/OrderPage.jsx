@@ -36,6 +36,21 @@ const OrderPage = () => {
     fetchTasks();
   }, [userId]);
 
+  const handleSendTaskId = async (taskId) => {
+    try {
+      const response = await axios.post(`${API_URL}/api/finalize_task`, {
+        task_id: taskId,
+      });
+      alert('完了処理が送信されました。');
+      // 必要に応じて再読み込み
+      // fetchTasks(); ← useEffect外に移動して呼べるようにしてもOK
+    } catch (err) {
+      console.error('タスク送信に失敗:', err);
+      alert('タスクの送信に失敗しました。');
+    }
+  };
+
+
   const renderTaskList = () => {
     if (loading) {
       return <tbody><tr><td colSpan="5" className={styles.loading}>読み込み中...</td></tr></tbody>;
@@ -54,6 +69,16 @@ const OrderPage = () => {
             <td>{task.status}</td>
             <td>{task.created_at}</td>
             <td>{task.due_date}</td>
+            <td>
+              {task.status === '100%' && (
+                <button
+                  className={styles.finalizeButton}
+                  onClick={() => handleSendTaskId(task.task_id)}
+                >
+                  完了処理を送信
+                </button>
+              )}
+            </td>
           </tr>
         ))}
       </tbody>
@@ -66,7 +91,7 @@ const OrderPage = () => {
         新しい依頼
       </Link>
       <div className={styles.listTitle}>発注済み依頼リスト</div>
-      <div className={styles.tableContainer}>
+      <div className={styles.tableContainer} style={{ maxHeight: '60vh', overflowY: 'auto' }}>
         <table className={styles.taskTable}>
           <thead>
             <tr>
