@@ -93,12 +93,10 @@ const TestPage = () => {
       <form onSubmit={handleSubmit} className={styles.testForm}>
         <h2 className={styles.questionNumber}>問{data_count + 1}</h2>
         <div className={styles.card}>
-            <h3 className={styles.cardTitle}>評価対象テキスト</h3>
-            <p className={styles.dataText}>
-                {data.split('\n').map((line, index) => (
-                    <span key={index}>{line}<br /></span>
-                ))}
-            </p>
+          <h3 className={styles.cardTitle}>評価対象テキスト</h3>
+          <p className={styles.dataText} style={{ whiteSpace: 'pre-wrap' }}>
+            {data}
+          </p>
         </div>
 
         <div className={styles.card}>
