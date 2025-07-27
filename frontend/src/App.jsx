@@ -11,7 +11,6 @@ import TestResultPage from './pages/TestResultPage';
 import CreateTestPage from './pages/CreateTestPage';
 import CreateMasterTestPage from './pages/CreateMasterTestPage';
 import AnnotationPage from './pages/AnnotationPage';
-// import ProfilePage from './pages/ProfilePage';     // プロフィールページ
 
 export const ApiContext = createContext(null);
 export const UserContext = createContext(null);
@@ -22,7 +21,7 @@ const ProtectedRoutes = () => {
 };
 
 function App() {
-  const API_URL = 'https://myapp-backend-y8f2.onrender.com';
+  const API_URL = 'http://127.0.0.1:5001';
   const [userId, setUserId] = useState(() => localStorage.getItem('userId'));
   useEffect(() => {
     if (userId) localStorage.setItem('userId', userId);

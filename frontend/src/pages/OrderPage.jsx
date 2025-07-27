@@ -66,7 +66,7 @@ const OrderPage = () => {
         新しい依頼
       </Link>
       <div className={styles.listTitle}>発注済み依頼リスト</div>
-      <div className={styles.tableContainer}>
+      <div className={styles.tableContainer} style={{ maxHeight: '60vh', overflowY: 'auto' }}>
         <table className={styles.taskTable}>
           <thead>
             <tr>
