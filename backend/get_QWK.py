@@ -38,7 +38,7 @@ def get_qwk(user_id, task_id):
     print("client_test_data", client_test_data)
     print("user_test_data", user_test_data)
     for group_id in question_group_dct.keys():
-        qwk = safe_qwk(client_test_data[group_id], user_test_data[group_id])
+        qwk = calculate_qwk(client_test_data[group_id], user_test_data[group_id])
         if qwk >= threshold:
             flag = True
         else:
@@ -122,16 +122,27 @@ def group_by_group_id(client_test_data):
 
 from sklearn.metrics import cohen_kappa_score
 
-def safe_qwk(y_true, y_pred, labels=[1, 2, 3, 4, 5]):
-    unique_true = set(y_true)
-    unique_pred = set(y_pred)
+import numpy as np
+
+def calculate_qwk(y_true, y_pred):
+    """
+    2つのリスト y_true, y_pred を受け取り、
+    Quadratic Weighted Kappa (QWK) を返す。
+    """
+    if len(y_true) != len(y_pred):
+        raise ValueError("リストの長さが一致しません。")
     
-    # どちらかまたは両方のラベルが1種類しかない場合
-    if len(unique_true) <= 1 or len(unique_pred) <= 1:
+    # すべてのラベルが同じ（片方または両方）の場合の処理
+    if len(set(y_true)) == 1 and len(set(y_pred)) == 1:
         if y_true == y_pred:
-            return 1.0  # 完全一致（1.0）とみなす
+            return 1.0  # 完全一致
         else:
-            return 0.0  # 不一致（0.0）とみなす
-    else:
-        # 通常通りQWKを計算
-        return cohen_kappa_score(y_true, y_pred, weights='quadratic', labels=labels)
+            return 0.0  # ラベルが一種類ずつだが一致していない
+    
+    qwk_score = cohen_kappa_score(y_true, y_pred, weights='quadratic')
+
+    # NaNが出る場合があるのでチェック
+    if np.isnan(qwk_score):
+        return 0.0
+
+    return qwk_score
