@@ -77,6 +77,8 @@ const CreateMasterTestPage = () => {
   const { data, data_count, status, questions } = annotationData;
   const questionInfo = questions[0];
 
+  console.log("Annotation Data:", annotationData);
+
   return (
     <main className={styles.main}>
         <h1 className={styles.pageTitle}>アノテーション作業</h1>
