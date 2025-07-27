@@ -1,6 +1,7 @@
 import logging
+import io
 import hashlib
-from flask import Flask, request, make_response, jsonify
+from flask import Flask, request, make_response, jsonify, send_file
 from flask_cors import CORS
 from auth_utils import authenticate_user 
 from make_request_table import get_requests  
@@ -16,10 +17,11 @@ from get_QWK import get_qwk  # Import the function to get QWK data
 from get_annotation_data import get_annotation_data
 from is_annotation_ended import is_annotation_ended
 from make_annotation_data import make_annotation_data
+from get_task_annotated_data import get_task_annotated_data  # Import the function to get annotated data for a task
 
 
 app = Flask(__name__)
-CORS(app, origins="https://myapp-frontend-3p4k.onrender.com", supports_credentials=True)
+CORS(app, origins="https://myapp-frontend-e29x.onrender.com", supports_credentials=True)
 app.logger.setLevel(logging.DEBUG)
 
 
@@ -232,6 +234,26 @@ def get_requests_():
     user_id = str(data.get('user_id'))
     requests = get_requests(user_id)
     return make_response(jsonify(requests), 200)
+
+
+@app.route('/api/finalize_task', methods=['POST'])
+def download_():
+    data = request.get_json()
+    task_id = str(data.get('task_id'))
+    requests_df = get_task_annotated_data(task_id)  # DataFrameで返る前提
+
+    # CSVに変換
+    csv_buffer = io.StringIO()
+    requests_df.to_csv(csv_buffer, index=False)
+    csv_buffer.seek(0)
+
+    filename = f"task_{task_id}_result.csv"
+    return send_file(
+        io.BytesIO(csv_buffer.getvalue().encode('utf-8')),
+        mimetype='text/csv',
+        as_attachment=True,
+        download_name=filename
+    )
 
 # @app.route('/api/submit_test', methods=['POST'])
 # def submit_test():
