@@ -1,4 +1,5 @@
 import logging
+import hashlib
 from flask import Flask, request, make_response, jsonify
 from flask_cors import CORS
 from auth_utils import authenticate_user 
@@ -18,7 +19,7 @@ from make_annotation_data import make_annotation_data
 
 
 app = Flask(__name__)
-CORS(app, origins="https://myapp-frontend-y8f2.onrender.com", supports_credentials=True)
+CORS(app, origins="https://myapp-frontend-3p4k.onrender.com", supports_credentials=True)
 app.logger.setLevel(logging.DEBUG)
 
 
@@ -47,9 +48,8 @@ def login_user_():
     
     authenticated_user = authenticate_user(username, password)
     
-
     if authenticated_user:
-        token = "eyJhbGciOiJIUzI1NiIs..." 
+        token = str(hashlib.sha256(username.encode()).hexdigest())
         response_data = {
             "success": True,
             "token": token,
