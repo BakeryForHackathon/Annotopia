@@ -90,14 +90,13 @@ const CreateMasterTestPage = () => {
       <form onSubmit={handleSubmit} className={styles.testForm}>
         <h2 className={styles.questionNumber}>問{data_count + 1}</h2>
         <div className={styles.card}>
-            <h3 className={styles.cardTitle}>評価対象テキスト</h3>
-            <p className={styles.dataText}>
-                {data.split('\n').map((line, index) => (
-                    <span key={index}>{line}<br /></span>
-                ))}
-            </p>
+          <h3 className={styles.cardTitle}>評価対象テキスト</h3>
+          <div className={styles.dataText}>
+            {data.replace(/\\n/g, '\n').split('\n').map((line, index) => (
+              <div key={index}>{line || '\u00A0'}</div>
+            ))}
+          </div>
         </div>
-
         <div className={styles.card}>
           <h3 className={styles.cardTitle}>{questionInfo.question}</h3>
           <div className={styles.radioGroup}>
