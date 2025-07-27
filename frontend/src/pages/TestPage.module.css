@@ -1,0 +1,122 @@
+.main {
+  background-color: #FFF9F3;
+  flex: 1;
+  padding: 30px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+.progressContainer {
+  width: 100%;
+  background-color: #E0E0E0;
+  border-radius: 10px;
+  height: 20px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progressBar {
+  height: 100%;
+  background-color: #007BFF;
+  border-radius: 10px;
+  transition: width 0.3s ease-in-out;
+}
+
+.progressText {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-weight: bold;
+  font-size: 0.8rem;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
+
+.testForm {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.questionNumber {
+  font-size: 1.8rem;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.card {
+  background-color: #FFFFFF;
+  border-radius: 8px;
+  padding: 25px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.cardTitle {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin: 0 0 15px 0;
+  border-bottom: 1px solid #F0F0F0;
+  padding-bottom: 10px;
+}
+
+.radioGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.radioLabel {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1rem;
+  cursor: pointer;
+  line-height: 1.5;
+}
+
+.radioLabel input[type="radio"] {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.submitButton {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 15px 30px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1.2rem;
+  transition: background-color 0.2s;
+  align-self: center;
+  margin-top: 20px;
+}
+
+.submitButton:hover {
+  background-color: #218838;
+}
+
+.error {
+    color: red;
+}
+.resultList {
+  list-style: none;
+  padding: 0;
+  margin-top: 1rem;
+}
+
+.resultItem {
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+}

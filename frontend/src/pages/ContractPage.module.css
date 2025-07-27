@@ -1,0 +1,77 @@
+.main {
+  background-color: #FFF9F3;
+  flex: 1;
+  padding: 30px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 0;
+  text-align: left;
+}
+
+.error {
+  color: red;
+}
+
+.tableContainer {
+  background-color: #FFFFFF;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  overflow: hidden;
+}
+
+.taskTable {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.taskTable th,
+.taskTable td {
+  padding: 15px 20px;
+  border-bottom: 1px solid #F0F0F0;
+}
+
+.taskTable th {
+  background-color: #FAFAFA;
+  font-weight: bold;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.taskTable td {
+  font-size: 1rem;
+}
+
+.taskTable tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.taskTable tbody tr:hover {
+  background-color: #F5F5F5;
+}
+
+.actionButton {
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 0.9rem;
+  transition: background-color 0.2s;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.actionButton:hover {
+  background-color: #0056b3;
+}

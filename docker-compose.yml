@@ -1,0 +1,28 @@
+# Docker Composeのバージョンを指定
+version: '3.8'
+
+# 起動するサービス（コンテナ）を定義
+services:
+  # バックエンドサービス (Flask)
+  backend:
+    # ./backend ディレクトリのDockerfileを使ってビルド
+    build: ./backend
+    container_name: myapp-backend
+    # ローカルマシンの5001番ポートをコンテナの5001番ポートにマッピング
+    ports:
+      - "5001:5001"
+    # ローカルのコードをコンテナにマウントして、コード変更を即時反映（開発用）
+    volumes:
+      - ./backend:/app
+
+  # フロントエンドサービス (React + Nginx)
+  frontend:
+    # ./frontend ディレクトリのDockerfileを使ってビルド
+    build: ./frontend
+    container_name: myapp-frontend
+    # ローカルマシンの8080番ポートをコンテナの80番ポートにマッピング
+    ports:
+      - "8080:80"
+    # backendサービスが起動してからfrontendサービスを起動する
+    depends_on:
+      - backend
