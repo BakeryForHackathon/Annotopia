@@ -25,7 +25,7 @@ const NewRequestPage = () => {
     ]);
     const [startDate, setStartDate] = useState(new Date().toISOString().slice(0, 10));
     const [endDate, setEndDate] = useState('2025-08-07');
-    const [maxAnnotations, setMaxAnnotations] = useState(100);
+    const [maxAnnotations, setMaxAnnotations] = useState(10);
     const [threshold, setThreshold] = useState(0.5);
     const [isPrivate, setIsPrivate] = useState(true);
     const [testFile, setTestFile] = useState(null);
