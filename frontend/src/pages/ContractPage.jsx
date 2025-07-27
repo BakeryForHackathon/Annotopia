@@ -36,7 +36,7 @@ const ContractPage = () => {
           <thead>
             <tr>
               <th>タスク名</th>
-              <th>ステータス</th>
+              <th>説明</th>
               <th>依頼日</th>
               <th>納期</th>
               <th></th>
@@ -47,7 +47,7 @@ const ContractPage = () => {
               tasks.map((task) => (
                 <tr key={task.task_id}>
                   <td>{task.title}</td>
-                  <td>{task.status}</td>
+                  <td>{task.description}</td>
                   <td>{task.created_at}</td>
                   <td>{task.due_date}</td>
                   <td>

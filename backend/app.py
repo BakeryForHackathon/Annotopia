@@ -75,7 +75,6 @@ def get_task_detail_():
     task_id = str(data.get('task_id'))
     task_detail = get_task_detail(user_id, task_id)
     if not task_detail: return jsonify({"success": False, "message": "Task not found"}), 404
-    task_detail['test_ended'] = is_test_ended(user_id, task_id)
     return make_response(jsonify(task_detail), 200)
 
 @app.route('/api/get_test_data', methods=['POST'])
@@ -159,11 +158,73 @@ def make_annotation_data_():
     return make_response(jsonify({"user_id": user_id, "task_id": task_id, "end": end}), 200)
 
 # 要修正
-# @app.route('/api/upload_task', methods=['POST'])
-# def create_task():
-#     response_data = {
-#         "success": True, "user_id": 1, "task_id": 1}
-#     return jsonify(response_data)
+import json
+@app.route('/api/upload_task', methods=['POST'])
+def create_task_():
+    try:
+        # フォームデータの取得
+        user_id = request.form.get('user_id')
+        title = request.form.get('title')
+        description = request.form.get('description')
+        question_count = int(request.form.get('question_count', 0))
+        questions = json.loads(request.form.get('questions', '[]'))
+        private = request.form.get('private') == 'true'
+        start_day = request.form.get('start_day')
+        end_day = request.form.get('end_day')
+        max_annotations_per_user = int(request.form.get('max_annotations_per_user', 1))
+        test = request.form.get('test') == 'true'
+        threshold = float(request.form.get('threshold', 0.5))
+
+        # ファイルの取得とDataFrame化
+
+        try:
+            test_data_file = request.files.get('test_data')
+            if test_data_file is None:
+                raise ValueError("test_data ファイルがアップロードされていません。")
+            test_df = pd.read_csv(test_data_file,header=None)
+        except Exception as e:
+            return jsonify({"success": False, "error": f"test_data ファイルの読み込みに失敗しました: {str(e)}"}), 400
+
+        try:
+            data_file = request.files.get('data')
+            if data_file is None:
+                raise ValueError("data ファイルがアップロードされていません。")
+            data_df = pd.read_csv(data_file,header=None)
+        except Exception as e:
+            return jsonify({"success": False, "error": f"data ファイルの読み込みに失敗しました: {str(e)}"}), 400
+
+
+        # 結果の辞書を構築
+        dct = {
+            "user_id": int(user_id),
+            "title": title,
+            "description": description,
+            "question_count": question_count,
+            "questions": questions,
+            "private": private,
+            "start_day": start_day,
+            "end_day": end_day,
+            "max_annotations_per_user": max_annotations_per_user,
+            "test": test,
+            "threshold": threshold,
+            "test_data": test_df,
+            "data": data_df
+        }
+
+        task_id = create_task(dct)  # create_task関数を呼び出してタスクを作成
+        if not task_id:
+            success = False
+        else:
+            success = True
+        # 成功レスポンス
+        return jsonify({
+            "success": success,
+            "user_id": dct["user_id"],
+            "task_id": task_id
+        })
+
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 400
 
 @app.route('/api/requests', methods=['POST'])
 def get_requests_():

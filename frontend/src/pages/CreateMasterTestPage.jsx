@@ -22,13 +22,15 @@ const CreateMasterTestPage = () => {
         task_id: taskId,
       });
 
-      if (response.data.end) {
-        // alert("このタスクのアノテーションは完了しました。");
-        navigate('/order');
-      } else {
+      // if (response.data.end) {
+      //   // alert("このタスクのアノテーションは完了しました。");
+      //   navigate('/order');
+      // } else {
+      //   setAnnotationData(response.data);
+      //   setSelectedAnswer(null);
+      // }
         setAnnotationData(response.data);
         setSelectedAnswer(null);
-      }
     } catch (err) {
       console.error(err);
       setError('アノテーションデータの取得に失敗しました。');
@@ -74,6 +76,8 @@ const CreateMasterTestPage = () => {
 
   const { data, data_count, status, questions } = annotationData;
   const questionInfo = questions[0];
+
+  console.log("Annotation Data:", annotationData);
 
   return (
     <main className={styles.main}>

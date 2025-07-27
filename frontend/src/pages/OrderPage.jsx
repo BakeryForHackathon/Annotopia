@@ -22,6 +22,8 @@ const OrderPage = () => {
         const response = await axios.post(`${API_URL}/api/requests`, {
           user_id: userId,
         });
+
+
         setTasks(response.data.tasks);
       } catch (err) {
         setError('依頼リストの取得に失敗しました。');
@@ -52,11 +54,6 @@ const OrderPage = () => {
             <td>{task.status}</td>
             <td>{task.created_at}</td>
             <td>{task.due_date}</td>
-            <td>
-              <Link to={`/task/${task.task_id}`} className={styles.detailButton}>
-                詳細を見る
-              </Link>
-            </td>
           </tr>
         ))}
       </tbody>

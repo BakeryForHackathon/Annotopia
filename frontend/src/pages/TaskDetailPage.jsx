@@ -20,6 +20,8 @@ const TaskDetailPage = () => {
           user_id: userId,
           task_id: taskId,
         });
+        
+        
         setTaskDetail(response.data);
       } catch (err) {
         setError('タスク詳細の取得に失敗しました。');
@@ -31,6 +33,7 @@ const TaskDetailPage = () => {
 
     fetchTaskDetail();
   }, [taskId, userId]);
+
 
   const handleStartTest = async () => {
     try {
@@ -70,8 +73,8 @@ const TaskDetailPage = () => {
         <div key={index} className={styles.card}>
           <h2 className={styles.questionTitle}>評価項目{index + 1}: {q.question}</h2>
           <ul className={styles.scaleList}>
-            {q.scale_discription.slice().sort((a, b) => b.score - a.score).map((desc, i) => (
-              <li key={i}>{desc.description}</li>
+            {(q.details ?? []).slice().sort((a, b) => b.scale - a.scale).map((desc, i) => (
+              <li key={i}>{desc.scale_description}</li>
             ))}
           </ul>
         </div>

@@ -88,7 +88,8 @@ const NewRequestPage = () => {
         formData.append('start_day', startDate.replace(/-/g, '/'));
         formData.append('end_day', endDate.replace(/-/g, '/'));
         formData.append('max_annotations_per_user', maxAnnotations);
-        formData.append('test', !!testFile);
+        formData.append('test', true);
+        formData.append('test_data', !!testFile);
         formData.append('threshold', threshold);
         if (testFile) {
             formData.append('test_data', testFile);
