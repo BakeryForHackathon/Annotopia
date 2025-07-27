@@ -15,6 +15,7 @@ from get_QWK import get_qwk  # Import the function to get QWK data
 from get_annotation_data import get_annotation_data
 from is_annotation_ended import is_annotation_ended
 from make_annotation_data import make_annotation_data
+from get_task_annotated_data import get_task_annotated_data
 
 
 app = Flask(__name__)
@@ -231,6 +232,13 @@ def get_requests_():
     data = request.get_json()
     user_id = str(data.get('user_id'))
     requests = get_requests(user_id)
+    return make_response(jsonify(requests), 200)
+
+@app.route('/api/finalize_task', methods=['POST'])
+def download_():
+    data = request.get_json()
+    task_id = str(data.get('task_id'))
+    requests = get_task_annotated_data(task_id)
     return make_response(jsonify(requests), 200)
 
 # @app.route('/api/submit_test', methods=['POST'])

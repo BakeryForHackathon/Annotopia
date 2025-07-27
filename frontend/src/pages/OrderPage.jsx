@@ -75,7 +75,7 @@ const OrderPage = () => {
                   className={styles.finalizeButton}
                   onClick={() => handleSendTaskId(task.task_id)}
                 >
-                  完了処理を送信
+                  ダウンロード
                 </button>
               )}
             </td>
