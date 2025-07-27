@@ -1,118 +1,304 @@
+/* Main container */
 .main {
-  background-color: #FFF9F3;
+  background-color: #FFF7ED;
   flex: 1;
-  padding: 30px 40px;
+  padding: 2rem 2.5rem;
   box-sizing: border-box;
   overflow-y: auto;
 }
 
+/* Form container */
 .formContainer {
   width: 100%;
-  max-width: 800px;
+  max-width: 56rem;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
-.formContainer h2 {
-  margin-top: 0;
-  font-size: 1.8rem;
+/* Card sections */
+.card {
+  background-color: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  padding: 2rem;
+  border: 1px solid #FED7AA;
 }
 
-.formContainer {
-  width: 100%;
-  max-width: 800px;
-}
-
+/* Headers */
 .title {
-  margin-top: 0;
-  font-size: 1.8rem;
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: #1F2937;
   margin-bottom: 0.5rem;
+  margin-top: 0;
 }
 
 .description {
-  color: #555;
+  color: #6B7280;
   margin-top: 0;
-  margin-bottom: 2.5rem;
+  margin-bottom: 0;
 }
 
+.sectionTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1F2937;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+}
+
+.sectionIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-right: 0.5rem;
+  color: #F97316;
+}
+
+/* Form groups */
 .formGroup {
   margin-bottom: 1.5rem;
 }
 
 .formGroup label {
   display: block;
-  font-weight: bold;
+  font-weight: 700;
   margin-bottom: 0.5rem;
+  color: #374151;
 }
 
-.formGroup input[type="text"],
-.formGroup input[type="number"],
-.formGroup textarea {
+/* Input fields */
+.input,
+.textarea {
   width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  padding: 0.625rem 0.75rem;
+  border: 1px solid #D1D5DB;
+  border-radius: 0.25rem;
+  font-size: 1rem;
+  font-family: inherit;
+  box-sizing: border-box;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.input:focus,
+.textarea:focus {
+  outline: none;
+  border-color: transparent;
+  box-shadow: 0 0 0 2px #F97316;
+}
+
+.textarea {
+  resize: none;
+}
+
+.shortInput {
+  max-width: 20rem;
+}
+
+/* Fieldset for evaluation items */
+.fieldset {
+  border: 1px solid #D1D5DB;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  background-color: #F9FAFB;
+}
+
+.fieldset legend {
+  font-weight: 700;
+  padding: 0 0.5rem;
+  color: #1F2937;
+}
+
+.fieldsetHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+/* Level description */
+.levelDescription {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  margin-top: 0.5rem;
+}
+
+.levelScore {
+  font-weight: 700;
+  color: #374151;
+}
+
+.levelTextarea {
+  flex: 1;
+  padding: 0.625rem 0.75rem;
+  border: 1px solid #D1D5DB;
+  border-radius: 0.25rem;
+  font-size: 1rem;
+  font-family: inherit;
+  box-sizing: border-box;
+  resize: none;
+}
+
+/* Buttons */
+.button {
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 0.875rem;
+  transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid;
+  text-decoration: none;
+}
+
+.addButton {
+  background-color: #FEF3C7;
+  color: #92400E;
+  border-color: #F59E0B;
+}
+
+.addButton:hover {
+  background-color: #FDE68A;
+}
+
+.removeButton {
+  background-color: #FEE2E2;
+  color: #DC2626;
+  border-color: #EF4444;
+}
+
+.removeButton:hover {
+  background-color: #FECACA;
+}
+
+.addLevelButton {
+  background-color: #D1FAE5;
+  color: #065F46;
+  border-color: #10B981;
+}
+
+.addLevelButton:hover {
+  background-color: #A7F3D0;
+}
+
+.removeSmallButton {
+  width: 2rem;
+  height: 2rem;
+  background-color: #FEE2E2;
+  color: #DC2626;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  font-size: 1.125rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.15s ease-in-out;
+}
+
+.removeSmallButton:hover {
+  background-color: #FECACA;
+}
+
+/* Grid layout */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* Checkbox */
+.checkbox {
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-right: 0.75rem;
+}
+
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+}
+
+.checkboxText {
+  font-weight: 700;
+  color: #374151;
+}
+
+/* File upload */
+.fileInput {
+  width: 100%;
+  padding: 0.625rem 0.75rem;
+  border: 1px solid #D1D5DB;
+  border-radius: 0.25rem;
   font-size: 1rem;
   font-family: inherit;
   box-sizing: border-box;
 }
 
-.shortInput {
-  max-width: 150px;
-}
-
-.fieldset {
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  padding: 1.5rem;
-  margin-bottom: 1.5rem;
-}
-
-.fieldset legend {
-  font-weight: bold;
-  padding: 0 0.5rem;
-}
-
-.levelDescription {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-top: 0.5rem;
-}
-.levelDescription span {
-  font-weight: bold;
-}
-
-.toggle {
-  width: 20px;
-  height: 20px;
-}
-
-.dateRange {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.uploadButton {
-  padding: 10px 15px;
-  border: 1px solid #333;
-  background-color: #fff;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: bold;
-}
-
+/* Submit section */
 .submitContainer {
   margin-top: 2rem;
   text-align: right;
 }
 
 .submitButton {
-  padding: 12px 25px;
-  background-color: #f58220;
-  color: #ffffff;
-  border: none;
-  border-radius: 8px;
-  font-size: 1.1rem;
-  font-weight: bold;
+  padding: 0.75rem 1.5rem;
+  background-color: #F97316;
+  color: white;
+  border: 0;
+  border-radius: 0.5rem;
+  font-size: 1.125rem;
+  font-weight: 700;
   cursor: pointer;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.submitButton:hover {
+  background-color: #d96e1c;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.submitButton:focus {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.2);
+}
+
+/* Icon spacing */
+.buttonIcon {
+  width: 1rem;
+  height: 1rem;
+  margin-right: 0.5rem;
+}
+
+/* Section header with button */
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.levelControls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.levelControls label {
+  margin-bottom: 0.5rem;
 }
