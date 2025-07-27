@@ -34,21 +34,24 @@ def get_qwk(user_id, task_id):
 
     threshold = get_threshold_by_task_id(task_id)
     qwk_data = []
-    print("quwstion_group_dct", question_group_dct)
-    print("client_test_data", client_test_data)
-    print("user_test_data", user_test_data)
+
+    total_flag = True
+
     for group_id in question_group_dct.keys():
         qwk = calculate_qwk(client_test_data[group_id], user_test_data[group_id])
         if qwk >= threshold:
             flag = True
         else:
             flag = False
+            total_flag = False
         qwk_data.append({
             "question": question_map[group_id],
             "qwk": qwk,
             "clear": flag
         })
         
+    if total_flag == False:
+        delete_test_details_by_user_and_tests(user_id, test_ids)
 
     dct = {
         "user_id": user_id,
@@ -146,3 +149,45 @@ def calculate_qwk(y_true, y_pred):
         return 0.0
 
     return qwk_score
+
+from utils.connect_db import get_db_connection
+
+def delete_test_details_by_user_and_tests(user_id, test_ids):
+    """
+    指定した user_id と test_id のリストに一致する test_details の行をすべて削除します。
+    """
+    if not test_ids:
+        print("削除対象の test_id が空です。")
+        return False
+
+    conn = None
+    cur = None
+    try:
+        conn = get_db_connection()
+        if not conn:
+            return False
+
+        cur = conn.cursor()
+        
+        # IN 句のパラメータを安全に作成
+        sql = f"""
+            DELETE FROM test_details
+            WHERE user_id = %s AND test_id = ANY(%s)
+        """
+        cur.execute(sql, (user_id, test_ids))
+
+        conn.commit()
+        print(f"{cur.rowcount} 件の test_details を削除しました。")
+        return True
+
+    except Exception as e:
+        print(f"test_details 削除中にエラーが発生しました: {e}")
+        if conn:
+            conn.rollback()
+        return False
+
+    finally:
+        if cur:
+            cur.close()
+        if conn:
+            conn.close()
