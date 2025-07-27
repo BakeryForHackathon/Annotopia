@@ -64,7 +64,7 @@ const AnnotationPage = () => {
             return;
         }
         try {
-            const response = await axios.post(`${API_URL}/api/make_annotation_data`, {
+            const response = await axios.post(`${API_URL}/api/get_make_annotation_data`, {
                 user_id: userId,
                 task_id: taskId,
                 annotation_data_id: annotationData.annotation_data_id,
