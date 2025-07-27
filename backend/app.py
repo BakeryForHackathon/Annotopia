@@ -1,4 +1,5 @@
 import logging
+import hashlib
 from flask import Flask, request, make_response, jsonify
 from flask_cors import CORS
 from auth_utils import authenticate_user 
@@ -49,7 +50,7 @@ def login_user_():
     
 
     if authenticated_user:
-        token = "eyJhbGciOiJIUzI1NiIs..." 
+        token = str(hashlib.sha256(username.encode()).hexdigest())
         response_data = {
             "success": True,
             "token": token,
