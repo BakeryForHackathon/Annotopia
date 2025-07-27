@@ -5,7 +5,9 @@ def get_task_annotated_data(task_id):
     requests = get_questions_by_task(task_id)
 
     dct = get_annotation_data_with_answers(task_id)
-    return dct
+    annotated_df = convert_to_dataframe(dct, requests)
+
+    return annotated_df
 
 
 
@@ -65,3 +67,47 @@ def get_annotation_data_with_answers(task_id):
             cur.close()
         if conn:
             conn.close()
+
+
+    
+import pandas as pd
+
+def convert_to_dataframe(dct, requests):
+    # 1. requests から {question_detail_id: (question, scale)} 辞書を作る
+    detail_id_to_question_scale = {}
+    for item in requests:
+        question = item["question"]
+        for detail in item["details"]:
+            qd_id = detail["question_details_id"]
+            scale = detail["scale"]
+            detail_id_to_question_scale[qd_id] = (question, scale)
+
+    # 2. 結果格納用リスト
+    rows = []
+
+    # 3. dctをannotation_id（key）で昇順ソートして処理
+    for annotation_id in sorted(dct.keys()):
+        entry = dct[annotation_id]
+        data_value = entry["data"]
+        answers = entry["answers"]
+
+        # 複数のユーザー回答がある場合は1件ずつ処理
+        for ans in answers:
+            row = {
+                "id": annotation_id,
+                "data": data_value,
+                "user_id": ans["user_id"]
+            }
+
+            qd_id = ans["question_detail_id"]
+            question_info = detail_id_to_question_scale.get(qd_id)
+            if question_info:
+                question, scale = question_info
+                row[question] = scale  # 質問名を列名として使う
+
+            rows.append(row)
+
+    # 4. DataFrame に変換（列が揃うよう自動補完）
+    df = pd.DataFrame(rows)
+
+    return df

@@ -1,5 +1,6 @@
 import logging
-from flask import Flask, request, make_response, jsonify
+import io
+from flask import Flask, request, make_response, jsonify, send_file
 from flask_cors import CORS
 from auth_utils import authenticate_user 
 from make_request_table import get_requests  
@@ -234,12 +235,25 @@ def get_requests_():
     requests = get_requests(user_id)
     return make_response(jsonify(requests), 200)
 
+
 @app.route('/api/finalize_task', methods=['POST'])
 def download_():
     data = request.get_json()
     task_id = str(data.get('task_id'))
-    requests = get_task_annotated_data(task_id)
-    return make_response(jsonify(requests), 200)
+    requests_df = get_task_annotated_data(task_id)  # DataFrameで返る前提
+
+    # CSVに変換
+    csv_buffer = io.StringIO()
+    requests_df.to_csv(csv_buffer, index=False)
+    csv_buffer.seek(0)
+
+    filename = f"task_{task_id}_result.csv"
+    return send_file(
+        io.BytesIO(csv_buffer.getvalue().encode('utf-8')),
+        mimetype='text/csv',
+        as_attachment=True,
+        download_name=filename
+    )
 
 # @app.route('/api/submit_test', methods=['POST'])
 # def submit_test():
