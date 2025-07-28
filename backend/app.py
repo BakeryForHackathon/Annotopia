@@ -18,7 +18,7 @@ from get_annotation_data import get_annotation_data
 from is_annotation_ended import is_annotation_ended
 from make_annotation_data import make_annotation_data
 from get_task_annotated_data import get_task_annotated_data  # Import the function to get annotated data for a task
-
+from sign_in import sign_in_user
 
 app = Flask(__name__)
 CORS(app, origins="https://myapp-frontend-e29x.onrender.com", supports_credentials=True)
@@ -37,6 +37,19 @@ TEST_COMPLETION_STATUS = {
 def health_check():
     """Renderのヘルスチェックに応答するためのエンドポイント"""
     return jsonify({"status": "ok"}), 200
+
+@app.route('/api/signin', methods = ['POST'])
+def sign_in_():
+    data = request.get_json()
+    user_name = data.get('user_name')
+    password = data.get('password')
+
+    user_id = sign_in_user(user_name,user_id)
+    if user_id:
+        success = True
+    else:
+        success = False
+    return json({"success":success,"user_id":user_id})
 
 @app.route("/api/login", methods=['POST'])
 def login_user_():
