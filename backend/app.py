@@ -49,7 +49,7 @@ def sign_in_():
         success = True
     else:
         success = False
-    return json({"success":success,"user_id":user_id})
+    return make_response(jsonify({"success":success,"user_id":user_id}))
 
 @app.route("/api/login", methods=['POST'])
 def login_user_():
