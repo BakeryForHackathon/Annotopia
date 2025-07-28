@@ -38,13 +38,13 @@ def health_check():
     """Renderのヘルスチェックに応答するためのエンドポイント"""
     return jsonify({"status": "ok"}), 200
 
-@app.route('/api/signin', methods = ['POST'])
+@app.route('/api/signup', methods = ['POST'])
 def sign_in_():
     data = request.get_json()
     user_name = data.get('user_name')
     password = data.get('password')
 
-    user_id = sign_up_user(user_name,user_id)
+    user_id = sign_up_user(user_name,password)
     if user_id:
         success = True
     else:
