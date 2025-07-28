@@ -6,12 +6,14 @@
 <table align=center>
   <tr>
     <td>
-      <img width=500px src="./docs/4.png">
+      <img width=600px src="./docs/4.png">
     </td>
   </tr>
+</table>
+<table align=center>
   <tr>
     <td>
-      <img width=500px src="./docs/6.png">
+      <img width=600px src="./docs/6.png">
     </td>
   </tr>
 </table>
@@ -20,7 +22,7 @@
 <table align=center>
   <tr>
     <td>
-      <img width=500px src="./docs/8.png">
+      <img width=600px src="./docs/8.png">
     </td>
   </tr>
 </table>
