@@ -18,7 +18,7 @@ from get_annotation_data import get_annotation_data
 from is_annotation_ended import is_annotation_ended
 from make_annotation_data import make_annotation_data
 from get_task_annotated_data import get_task_annotated_data  # Import the function to get annotated data for a task
-from sign_in import sign_in_user
+from sign_up import sign_up_user
 
 app = Flask(__name__)
 CORS(app, origins="https://myapp-frontend-e29x.onrender.com", supports_credentials=True)
@@ -44,7 +44,7 @@ def sign_in_():
     user_name = data.get('user_name')
     password = data.get('password')
 
-    user_id = sign_in_user(user_name,user_id)
+    user_id = sign_up_user(user_name,user_id)
     if user_id:
         success = True
     else:
