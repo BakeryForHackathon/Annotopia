@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { createContext, useState, useContext, useEffect } from 'react';
 import LoginPage from './pages/LoginPage';
+import SignUpPage from './pages/SignUpPage';
 import MainLayout from './layouts/MainLayout';
 import OrderPage from './pages/OrderPage';
 import NewRequestPage from './pages/NewRequestPage';
@@ -35,6 +36,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Navigate to="/login" />} />
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<SignUpPage />} />
 
             <Route element={<ProtectedRoutes />}>
               <Route path="order" element={<OrderPage />} />

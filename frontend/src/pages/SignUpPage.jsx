@@ -1,5 +1,5 @@
 import { useState, useContext } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import styles from './LoginPage.module.css';
 import { ApiContext, UserContext } from '../App';
@@ -40,15 +40,15 @@ const LoginPage = () => {
     setError('');
 
     try {
-      const response = await axios.post(`${API_URL}/api/login`, {
-        username: username,
+      const response = await axios.post(`${API_URL}/api/signup`, {
+        user_name: username,
         password: password,
       }, {
         withCredentials: true,
       });
 
       if (response.data.success) {
-        setUserId(response.data.user.id);
+        setUserId(response.data.user_id);
         navigate('/order');
       } else {
         setError('ユーザー名またはパスワードが違います。');
@@ -72,24 +72,21 @@ const LoginPage = () => {
           <input
             type="text"
             className={styles.input}
-            placeholder="ユーザー名"
+            placeholder="ユーザー名（4文字以上）"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
           <input
             type="password"
             className={styles.input}
-            placeholder="パスワード"
+            placeholder="パスワード（8文字以上）"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
           <button className={styles.loginButton} onClick={handleLogin}>
-            Log in
+            Sign up
           </button>
         </div>
-        <p className={styles.signUpLink}>
-          アカウントをお持ちでないですか？ <Link to="/signup">新規登録</Link>
-        </p>
       </div>
     </div>
   );
