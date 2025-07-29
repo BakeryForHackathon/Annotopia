@@ -12,7 +12,7 @@ CASCADE;
 
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
-    name VARCHAR NOT NULL,
+    name VARCHAR(128) NOT NULL,
     password VARCHAR NOT NULL
 );
 
