@@ -61,3 +61,7 @@
 .loginButton:hover {
   background-color: #d96e1c;
 }
+
+.signUPLink {
+  color: #000000;
+}
